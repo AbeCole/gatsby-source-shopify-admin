@@ -1,6 +1,6 @@
 {
     "name": "gatsby-source-shopify-admin",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "Gatsby source plugin for building websites using Shopify's storefront and admin graphql API's.",
     "scripts": {
         "build": "babel src --out-dir .",
@@ -8,10 +8,10 @@
         "prepublish": "npm run build",
         "watch": "npm run build -- --watch"
     },
-    "homepage": "https://github.com/iamducke/gatsby-source-shopify-admin",
+    "homepage": "https://github.com/AbeCole/gatsby-source-shopify-admin",
     "repository": {
         "type": "git",
-        "url": "https://github.com/iamducke/gatsby-source-shopify-admin.git"
+        "url": "https://github.com/AbeCole/gatsby-source-shopify-admin.git"
     },
     "keywords": [
         "gatsby",
@@ -19,7 +19,7 @@
         "gatsby-source-plugin",
         "shopify"
     ],
-    "author": "Matt Short",
+    "author": "Abe Cole",
     "license": "MIT",
     "devDependencies": {
         "babel-cli": "^6.26.0",

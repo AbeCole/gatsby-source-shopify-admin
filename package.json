@@ -1,0 +1,44 @@
+{
+    "name": "gatsby-source-shopify-admin",
+    "version": "0.0.2",
+    "description": "Gatsby source plugin for building websites using Shopify's storefront and admin graphql API's.",
+    "scripts": {
+        "build": "babel src --out-dir .",
+        "format": "prettier --write 'src/**/*.js' README.md",
+        "prepublish": "npm run build",
+        "watch": "npm run build -- --watch"
+    },
+    "homepage": "https://github.com/iamducke/gatsby-source-shopify-admin",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/iamducke/gatsby-source-shopify-admin.git"
+    },
+    "keywords": [
+        "gatsby",
+        "gatsby-plugin",
+        "gatsby-source-plugin",
+        "shopify"
+    ],
+    "author": "Matt Short",
+    "license": "MIT",
+    "devDependencies": {
+        "babel-cli": "^6.26.0",
+        "babel-plugin-transform-async-to-generator": "^6.24.1",
+        "babel-plugin-transform-object-rest-spread": "^6.26.0",
+        "babel-plugin-transform-runtime": "^6.23.0",
+        "babel-preset-env": "^1.7.0",
+        "prettier": "^1.13.0"
+    },
+    "dependencies": {
+        "chalk": "^2.4.1",
+        "gatsby": "^2.0.19",
+        "gatsby-node-helpers": "^0.3.0",
+        "gatsby-source-filesystem": "^2.0.1-rc.6",
+        "graphql-request": "^1.6.0",
+        "lodash": "^4.17.4",
+        "p-iteration": "^1.1.7",
+        "prettyjson": "^1.2.1",
+        "react": "^16.4.2",
+        "react-dom": "^16.4.2"
+    }
+}

@@ -17,29 +17,22 @@ export const printGraphQLError = e => {
         if (e.request) console.error(prettyjson.render(e.request, prettyjsonOptions))
     }
 
-/**
- * Request a query from a client.
- * @author Angelo Ashmore
- */
+// /**
+//  * Request a query from a client.
+//  * @author Angelo Ashmore
+//  */
+//
+// function sleep (time) {
+//     return new Promise((resolve) => setTimeout(resolve, time));
+// }
 
-function sleep (time) {
-    return new Promise((resolve) => setTimeout(resolve, time));
-}
-
-let requestCount = 0;
-let resolveCount = 0;
 const limiter = rateLimiter();
 
 export const queryOnce = async (allArgs) => {
-    requestCount += 1;
-    const { client, query, args = {first: 250}, attempts = 2 } = allArgs;
+    const { client, query, args = {first: 250}} = allArgs;
+    console.log('queryOnce called in shopify-source-admin');
     return new Promise((resolve, reject) => {
-      // resolve(null);
-        limiter(allArgs, { resolve: (d) => {
-          resolveCount += 1;
-          console.log('resovle called', requestCount, resolveCount);
-          resolve(d);
-        }, reject });
+        limiter(allArgs, { resolve:, reject });
     })
 }
 //

@@ -46,15 +46,8 @@ var request = function request(allArgs, promise) {
       args = _allArgs$args === undefined ? { first: 250 } : _allArgs$args;
   var resolve = promise.resolve,
       reject = promise.reject;
-  // console.log(
-  //   "limiter request started",
-  //   queue.length,
-  //   available,
-  //   queueTimer === null
-  // );
 
   return client.rawRequest(query, args).then(function (response) {
-    console.log("successful response in limiter", queue.length, available, queueTimer === null);
     resolve(response);
 
     if (response.extensions) available = response.extensions.cost.throttleStatus.currentlyAvailable;
@@ -72,24 +65,15 @@ var request = function request(allArgs, promise) {
             case 0:
               _error$response = error.response, errors = _error$response.errors, extensions = _error$response.extensions;
 
-              console.log("Caught response in limiter", queue.length, available, queueTimer === null, errors, calledByTimeout);
+
+              if (calledByTimeout) queueTimer = null;
 
               if (errors && extensions && errors[0].message === "Throttled") {
-                // console.log(
-                //   "Creating queue timeout after throttled response",
-                //   queue.length,
-                //   available,
-                //   queueTimer === null,
-                //   calledByTimeout
-                // );
-                if (calledByTimeout) queueTimer = null;
-                // if (calledByTimeout) queueTimer = null;
-                // else
                 queue.push({
                   args: allArgs,
                   promise: promise
                 });
-                console.log('createQueueTimeout', createQueueTimeout(extensions.cost));
+                createQueueTimeout(extensions.cost);
               } else {
                 reject(error);
               }
@@ -132,27 +116,14 @@ var createQueueTimeout = function createQueueTimeout(cost) {
 };
 
 var limiter = function limiter() {
-  // console.log(
-  //   "limiter contruct caleld once",
-  //   queue.length,
-  //   available,
-  //   queueTimer === null
-  // );
 
   return function (args, promise) {
-    // console.log(
-    //   "requestLimiter called",
-    //   queue.length,
-    //   available,
-    //   queueTimer === null
-    // );
     if (queue.length === 0) return request(args, promise);
 
     queue.push({
       args: args,
       promise: promise
     });
-    // console.log("possibly create timeout here", queueTimer === null);
     // return createQueueTimeout();
   };
 };

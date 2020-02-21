@@ -1,7 +1,6 @@
-
-import prettyjson from 'prettyjson'
-import rateLimiter from './limiter'
-import { get, last } from 'lodash/fp'
+import prettyjson from "prettyjson";
+import rateLimiter from "./limiter";
+import { get, last } from "lodash/fp";
 
 /**
  * Print an error from a GraphQL client
@@ -9,13 +8,13 @@ import { get, last } from 'lodash/fp'
  */
 
 export const printGraphQLError = e => {
-    const prettyjsonOptions = { keysColor: 'red', dashColor: 'red' }
+  const prettyjsonOptions = { keysColor: "red", dashColor: "red" };
 
-        if (e.response && e.response.errors)
-        console.error(prettyjson.render(e.response.errors, prettyjsonOptions))
+  if (e.response && e.response.errors)
+    console.error(prettyjson.render(e.response.errors, prettyjsonOptions));
 
-        if (e.request) console.error(prettyjson.render(e.request, prettyjsonOptions))
-    }
+  if (e.request) console.error(prettyjson.render(e.request, prettyjsonOptions));
+};
 
 // /**
 //  * Request a query from a client.
@@ -28,13 +27,12 @@ export const printGraphQLError = e => {
 
 const limiter = rateLimiter();
 
-export const queryOnce = async (allArgs) => {
-    const { client, query, args = {first: 250}} = allArgs;
-    console.log('queryOnce called in shopify-source-admin');
-    return new Promise((resolve, reject) => {
-        limiter(allArgs, { resolve, reject });
-    })
-}
+export const queryOnce = async allArgs => {
+  const { client, query, args = { first: 250 } } = allArgs;
+  return new Promise((resolve, reject) =>
+    limiter(allArgs, { resolve, reject })
+  );
+};
 //
 // export const queryOnce = async ({ client, query, args = {first: 250}, attempts = 2 }) => {
 //     requestCount += 1;
@@ -88,32 +86,30 @@ export const queryOnce = async (allArgs) => {
  * @author Angelo Ashmore
  */
 
-export const queryAll = async(
-    client,
-    path,
-    query,
-    args = {first: 250},
-    aggregatedResponse,
+export const queryAll = async (
+  client,
+  path,
+  query,
+  args = { first: 250 },
+  aggregatedResponse
 ) => {
-    const { data, errors, extensions, headers, status } = await queryOnce({ client, query, args })
+  const { data, errors, extensions, headers, status } = await queryOnce({
+    client,
+    query,
+    args
+  });
 
-    const edges = get([...path, 'edges'], data)
-    const nodes = edges.map(edge => edge.node)
+  const edges = get([...path, "edges"], data);
+  const nodes = edges.map(edge => edge.node);
 
-    aggregatedResponse
-        ? (aggregatedResponse = aggregatedResponse.concat(nodes))
-        : (aggregatedResponse = nodes)
+  aggregatedResponse
+    ? (aggregatedResponse = aggregatedResponse.concat(nodes))
+    : (aggregatedResponse = nodes);
 
-    if (get([...path, 'pageInfo', 'hasNextPage'], false, data)){
-        args.after = last(edges).cursor;
-        return queryAll(
-            client,
-            path,
-            query,
-            args,
-            aggregatedResponse
-        )
-    }
+  if (get([...path, "pageInfo", "hasNextPage"], false, data)) {
+    args.after = last(edges).cursor;
+    return queryAll(client, path, query, args, aggregatedResponse);
+  }
 
-    return aggregatedResponse
-}
+  return aggregatedResponse;
+};

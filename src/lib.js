@@ -32,7 +32,7 @@ export const queryOnce = async (allArgs) => {
     const { client, query, args = {first: 250}} = allArgs;
     console.log('queryOnce called in shopify-source-admin');
     return new Promise((resolve, reject) => {
-        limiter(allArgs, { resolve:, reject });
+        limiter(allArgs, { resolve, reject });
     })
 }
 //

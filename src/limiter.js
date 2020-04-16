@@ -38,6 +38,11 @@ const request = (allArgs, promise, calledByTimeout = false) => {
       processQueue();
     })
     .catch(async error => {
+      if (!error.response) {
+        console.error('This is a big issue as we currently always expect a "response" attribute on the error');
+        console.log('The error:', error);
+      }
+
       let { errors, extensions } = error.response;
 
       if (calledByTimeout) queueTimer = null;

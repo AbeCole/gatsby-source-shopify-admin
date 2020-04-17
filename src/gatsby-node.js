@@ -15,18 +15,19 @@ exports.sourceNodes = async (
     { storeName, apiKey, adminApiKey, verbose = false, imageMetafields = null }) => {
 
         const { createTypes } = actions
-        const typeDefs = `
+        let typeDefs = `
           type ShopifyImage implements Node @infer {
             id: String
             altText: String
             originalSrc: String
             localFile: File
           }
-          type ShopifyProduct implements Node @infer {
-            preview: ShopifyImage
-            preview_h: ShopifyImage
-          }
         `
+        if (imageMetafields.product) {
+          typeDefs += `type ShopifyProduct implements Node @infer {
+            ${imageMetafields.product.map(m => `${m}: ShopifyImage`).join('\n')}
+          }`
+        }
         createTypes(typeDefs)
 
         const format = msg => chalk`{blue gatsby-source-shopify-admin/${storeName}} ${msg}`

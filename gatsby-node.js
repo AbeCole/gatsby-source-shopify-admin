@@ -65,8 +65,14 @@ exports.sourceNodes = function () {
                                 switch (_context.prev = _context.next) {
                                         case 0:
                                                 createTypes = actions.createTypes;
-                                                typeDefs = '\n          type ShopifyImage implements Node @infer {\n            id: String\n            altText: String\n            originalSrc: String\n            localFile: File\n          }\n          type ShopifyProduct implements Node @infer {\n            preview: ShopifyImage\n            preview_h: ShopifyImage\n          }\n        ';
+                                                typeDefs = '\n          type ShopifyImage implements Node @infer {\n            id: String\n            altText: String\n            originalSrc: String\n            localFile: File\n          }\n        ';
 
+                                                if (imageMetafields.product) {
+                                                        typeDefs += 'type ShopifyProduct implements Node @infer {\n            ' + imageMetafields.product.map(function (m) {
+                                                                return m + ': ShopifyImage';
+                                                        }).join('\n') + '\n          }';
+                                                }
+                                                console.log('imageMetafields', typeDefs);
                                                 createTypes(typeDefs);
 
                                                 format = function format(msg) {
@@ -101,16 +107,16 @@ exports.sourceNodes = function () {
 
                                                 if (verbose) console.time(timerLabel);
 
-                                                _context.next = 17;
+                                                _context.next = 19;
                                                 return _promise2.default.all([(0, _nodes.createProductNodes)({ clients: clients, nodeHelpers: nodeHelpers, imageHelpers: imageHelpers, debugHelpers: debugHelpers, imageMetafields: imageMetafields.product }), (0, _nodes.createCollectionNodes)({ clients: clients, nodeHelpers: nodeHelpers, imageHelpers: imageHelpers, debugHelpers: debugHelpers, imageMetafields: imageMetafields.collection })]
                                                 //createPolicyNodes({ storefrontClient })
                                                 );
 
-                                        case 17:
+                                        case 19:
 
                                                 if (verbose) console.timeEnd(timerLabel);
 
-                                        case 18:
+                                        case 20:
                                         case 'end':
                                                 return _context.stop();
                                 }

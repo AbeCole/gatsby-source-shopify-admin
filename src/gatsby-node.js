@@ -11,8 +11,23 @@ import createNodeHelpers from 'gatsby-node-helpers'
 const TYPE_PREFIX = "shopify"
 
 exports.sourceNodes = async (
-    { boundActionCreators: { createNode, touchNode }, store, cache, createNodeId },
+    { boundActionCreators: { createNode, touchNode }, store, cache, createNodeId, actions },
     { storeName, apiKey, adminApiKey, verbose = false, imageMetafields = null }) => {
+
+        const { createTypes } = actions
+        const typeDefs = `
+          type ShopifyImage implements Node @infer {
+            id: String
+            altText: String
+            originalSrc: String
+            localFile: File
+          }
+          type ShopifyProduct implements Node @infer {
+            preview: ShopifyImage
+            preview_h: ShopifyImage
+          }
+        `
+        createTypes(typeDefs)
 
         const format = msg => chalk`{blue gatsby-source-shopify-admin/${storeName}} ${msg}`
 

@@ -42,77 +42,83 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var TYPE_PREFIX = "shopify";
 
 exports.sourceNodes = function () {
-    var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(_ref2, _ref3) {
-        var _createNodeHelpers;
+        var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(_ref2, _ref3) {
+                var _createNodeHelpers;
 
-        var _ref2$boundActionCrea = _ref2.boundActionCreators,
-            createNode = _ref2$boundActionCrea.createNode,
-            touchNode = _ref2$boundActionCrea.touchNode,
-            store = _ref2.store,
-            cache = _ref2.cache,
-            createNodeId = _ref2.createNodeId;
-        var storeName = _ref3.storeName,
-            apiKey = _ref3.apiKey,
-            adminApiKey = _ref3.adminApiKey,
-            _ref3$verbose = _ref3.verbose,
-            verbose = _ref3$verbose === undefined ? false : _ref3$verbose,
-            _ref3$imageMetafields = _ref3.imageMetafields,
-            imageMetafields = _ref3$imageMetafields === undefined ? null : _ref3$imageMetafields;
-        var format, storefront, admin, createNodeFactory, generateNodeId, nodeHelpers, clients, imageHelpers, debugHelpers, timerLabel;
-        return _regenerator2.default.wrap(function _callee$(_context) {
-            while (1) {
-                switch (_context.prev = _context.next) {
-                    case 0:
-                        format = function format(msg) {
-                            return (0, _chalk2.default)(_templateObject, storeName, msg);
-                        };
+                var _ref2$boundActionCrea = _ref2.boundActionCreators,
+                    createNode = _ref2$boundActionCrea.createNode,
+                    touchNode = _ref2$boundActionCrea.touchNode,
+                    store = _ref2.store,
+                    cache = _ref2.cache,
+                    createNodeId = _ref2.createNodeId,
+                    actions = _ref2.actions;
+                var storeName = _ref3.storeName,
+                    apiKey = _ref3.apiKey,
+                    adminApiKey = _ref3.adminApiKey,
+                    _ref3$verbose = _ref3.verbose,
+                    verbose = _ref3$verbose === undefined ? false : _ref3$verbose,
+                    _ref3$imageMetafields = _ref3.imageMetafields,
+                    imageMetafields = _ref3$imageMetafields === undefined ? null : _ref3$imageMetafields;
+                var createTypes, typeDefs, format, storefront, admin, createNodeFactory, generateNodeId, nodeHelpers, clients, imageHelpers, debugHelpers, timerLabel;
+                return _regenerator2.default.wrap(function _callee$(_context) {
+                        while (1) {
+                                switch (_context.prev = _context.next) {
+                                        case 0:
+                                                createTypes = actions.createTypes;
+                                                typeDefs = '\n          type ShopifyImage implements Node @infer {\n            id: String\n            altText: String\n            originalSrc: String\n            localFile: File\n          }\n          type ShopifyProduct implements Node @infer {\n            preview: ShopifyImage\n            preview_h: ShopifyImage\n          }\n        ';
 
-                        if (verbose) console.log(format("starting data fetch"));
+                                                createTypes(typeDefs);
 
-                        storefront = new _graphqlRequest.GraphQLClient('https://' + storeName + '.myshopify.com/api/graphql', {
-                            headers: {
-                                'X-Shopify-Storefront-Access-Token': apiKey
-                            }
-                        });
-                        admin = new _graphqlRequest.GraphQLClient('https://' + storeName + '.myshopify.com/admin/api/graphql.json', {
-                            headers: {
-                                'X-Shopify-Access-Token': adminApiKey
-                            }
-                        });
-                        createNodeFactory = void 0, generateNodeId = void 0;
-                        nodeHelpers = (_createNodeHelpers = (0, _gatsbyNodeHelpers2.default)({ typePrefix: TYPE_PREFIX }), createNodeFactory = _createNodeHelpers.createNodeFactory, generateNodeId = _createNodeHelpers.generateNodeId, _createNodeHelpers);
-                        clients = { admin: admin, storefront: storefront };
+                                                format = function format(msg) {
+                                                        return (0, _chalk2.default)(_templateObject, storeName, msg);
+                                                };
 
-                        nodeHelpers = (0, _extends3.default)({
-                            createNode: createNode,
-                            createNodeId: createNodeId,
-                            touchNode: touchNode,
-                            TYPE_PREFIX: TYPE_PREFIX
-                        }, nodeHelpers);
-                        imageHelpers = (0, _extends3.default)({}, nodeHelpers, { store: store, cache: cache });
-                        debugHelpers = { format: format, verbose: verbose };
-                        timerLabel = format("finished data fetch");
+                                                if (verbose) console.log(format("starting data fetch"));
 
-                        if (verbose) console.time(timerLabel);
+                                                storefront = new _graphqlRequest.GraphQLClient('https://' + storeName + '.myshopify.com/api/graphql', {
+                                                        headers: {
+                                                                'X-Shopify-Storefront-Access-Token': apiKey
+                                                        }
+                                                });
+                                                admin = new _graphqlRequest.GraphQLClient('https://' + storeName + '.myshopify.com/admin/api/graphql.json', {
+                                                        headers: {
+                                                                'X-Shopify-Access-Token': adminApiKey
+                                                        }
+                                                });
+                                                createNodeFactory = void 0, generateNodeId = void 0;
+                                                nodeHelpers = (_createNodeHelpers = (0, _gatsbyNodeHelpers2.default)({ typePrefix: TYPE_PREFIX }), createNodeFactory = _createNodeHelpers.createNodeFactory, generateNodeId = _createNodeHelpers.generateNodeId, _createNodeHelpers);
+                                                clients = { admin: admin, storefront: storefront };
 
-                        _context.next = 14;
-                        return _promise2.default.all([(0, _nodes.createProductNodes)({ clients: clients, nodeHelpers: nodeHelpers, imageHelpers: imageHelpers, debugHelpers: debugHelpers, imageMetafields: imageMetafields.product }), (0, _nodes.createCollectionNodes)({ clients: clients, nodeHelpers: nodeHelpers, imageHelpers: imageHelpers, debugHelpers: debugHelpers, imageMetafields: imageMetafields.collection })]
-                        //createPolicyNodes({ storefrontClient })
-                        );
+                                                nodeHelpers = (0, _extends3.default)({
+                                                        createNode: createNode,
+                                                        createNodeId: createNodeId,
+                                                        touchNode: touchNode,
+                                                        TYPE_PREFIX: TYPE_PREFIX
+                                                }, nodeHelpers);
+                                                imageHelpers = (0, _extends3.default)({}, nodeHelpers, { store: store, cache: cache });
+                                                debugHelpers = { format: format, verbose: verbose };
+                                                timerLabel = format("finished data fetch");
 
-                    case 14:
+                                                if (verbose) console.time(timerLabel);
 
-                        if (verbose) console.timeEnd(timerLabel);
+                                                _context.next = 17;
+                                                return _promise2.default.all([(0, _nodes.createProductNodes)({ clients: clients, nodeHelpers: nodeHelpers, imageHelpers: imageHelpers, debugHelpers: debugHelpers, imageMetafields: imageMetafields.product }), (0, _nodes.createCollectionNodes)({ clients: clients, nodeHelpers: nodeHelpers, imageHelpers: imageHelpers, debugHelpers: debugHelpers, imageMetafields: imageMetafields.collection })]
+                                                //createPolicyNodes({ storefrontClient })
+                                                );
 
-                    case 15:
-                    case 'end':
-                        return _context.stop();
-                }
-            }
-        }, _callee, undefined);
-    }));
+                                        case 17:
 
-    return function (_x, _x2) {
-        return _ref.apply(this, arguments);
-    };
+                                                if (verbose) console.timeEnd(timerLabel);
+
+                                        case 18:
+                                        case 'end':
+                                                return _context.stop();
+                                }
+                        }
+                }, _callee, undefined);
+        }));
+
+        return function (_x, _x2) {
+                return _ref.apply(this, arguments);
+        };
 }();

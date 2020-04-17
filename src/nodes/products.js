@@ -31,25 +31,23 @@ export const createProductNodes = async ({
 
     if (node.metafields && imageMetafields) {
         await Promise.all(
-            imageMetafields.map(async metafieldKey => {
+            imageMetafields.filter(metafieldKey => {
                 const metafield = node.metafields.find(m => m.key === metafieldKey)
                 // this is very basic 'URL validation', something better should be done here
                 // this was added because if you passed a non-valid URL to 'downloadImageAndCreateFileNode'
                 // it would throw an error and stop the build process
-                if (!metafield || !metafield.value.startsWith('http')) {
-                    node[metafieldKey] = 'test';
-                } else {
-                    node[metafieldKey] = {
+                return metafield && metafield.value.startsWith('http');
+            }).map(async metafieldKey => {
+                node[metafieldKey] = {
+                    id: metafield.value,
+                    originalSrc: metafield.value,
+                    localFile___NODE: await downloadImageAndCreateFileNode({
                         id: metafield.value,
-                        originalSrc: metafield.value,
-                        localFile___NODE: await downloadImageAndCreateFileNode({
-                            id: metafield.value,
-                            url: metafield.value,
-                            prefix: nodeHelpers.TYPE_PREFIX,
-                            ...imageHelpers
-                        }),
-                    };
-                }
+                        url: metafield.value,
+                        prefix: nodeHelpers.TYPE_PREFIX,
+                        ...imageHelpers
+                    }),
+                };
             })
         );
     }

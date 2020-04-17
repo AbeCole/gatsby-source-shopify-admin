@@ -103,40 +103,30 @@ var createProductNodes = exports.createProductNodes = function () {
                                                 }
 
                                                 _context3.next = 7;
-                                                return _promise2.default.all(imageMetafields.map(function () {
+                                                return _promise2.default.all(imageMetafields.filter(function (metafieldKey) {
+                                                    var metafield = node.metafields.find(function (m) {
+                                                        return m.key === metafieldKey;
+                                                    });
+                                                    // this is very basic 'URL validation', something better should be done here
+                                                    // this was added because if you passed a non-valid URL to 'downloadImageAndCreateFileNode'
+                                                    // it would throw an error and stop the build process
+                                                    return metafield && metafield.value.startsWith('http');
+                                                }).map(function () {
                                                     var _ref5 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(metafieldKey) {
-                                                        var metafield;
                                                         return _regenerator2.default.wrap(function _callee2$(_context2) {
                                                             while (1) {
                                                                 switch (_context2.prev = _context2.next) {
                                                                     case 0:
-                                                                        metafield = node.metafields.find(function (m) {
-                                                                            return m.key === metafieldKey;
-                                                                        });
-                                                                        // this is very basic 'URL validation', something better should be done here
-                                                                        // this was added because if you passed a non-valid URL to 'downloadImageAndCreateFileNode'
-                                                                        // it would throw an error and stop the build process
-
-                                                                        if (!(!metafield || !metafield.value.startsWith('http'))) {
-                                                                            _context2.next = 5;
-                                                                            break;
-                                                                        }
-
-                                                                        node[metafieldKey] = 'test';
-                                                                        _context2.next = 11;
-                                                                        break;
-
-                                                                    case 5:
                                                                         _context2.t0 = metafield.value;
                                                                         _context2.t1 = metafield.value;
-                                                                        _context2.next = 9;
+                                                                        _context2.next = 4;
                                                                         return (0, _file.downloadImageAndCreateFileNode)((0, _extends3.default)({
                                                                             id: metafield.value,
                                                                             url: metafield.value,
                                                                             prefix: nodeHelpers.TYPE_PREFIX
                                                                         }, imageHelpers));
 
-                                                                    case 9:
+                                                                    case 4:
                                                                         _context2.t2 = _context2.sent;
                                                                         node[metafieldKey] = {
                                                                             id: _context2.t0,
@@ -144,7 +134,7 @@ var createProductNodes = exports.createProductNodes = function () {
                                                                             localFile___NODE: _context2.t2
                                                                         };
 
-                                                                    case 11:
+                                                                    case 6:
                                                                     case "end":
                                                                         return _context2.stop();
                                                                 }

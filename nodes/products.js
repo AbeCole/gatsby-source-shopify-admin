@@ -113,20 +113,24 @@ var createProductNodes = exports.createProductNodes = function () {
                                                     return metafield && metafield.value.startsWith('http');
                                                 }).map(function () {
                                                     var _ref5 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(metafieldKey) {
+                                                        var metafield;
                                                         return _regenerator2.default.wrap(function _callee2$(_context2) {
                                                             while (1) {
                                                                 switch (_context2.prev = _context2.next) {
                                                                     case 0:
-                                                                        _context2.t0 = metafield.value;
+                                                                        metafield = node.metafields.find(function (m) {
+                                                                            return m.key === metafieldKey;
+                                                                        });
+                                                                        _context2.t0 = metafield.id;
                                                                         _context2.t1 = metafield.value;
-                                                                        _context2.next = 4;
+                                                                        _context2.next = 5;
                                                                         return (0, _file.downloadImageAndCreateFileNode)((0, _extends3.default)({
-                                                                            id: metafield.value,
+                                                                            id: metafield.id,
                                                                             url: metafield.value,
                                                                             prefix: nodeHelpers.TYPE_PREFIX
                                                                         }, imageHelpers));
 
-                                                                    case 4:
+                                                                    case 5:
                                                                         _context2.t2 = _context2.sent;
                                                                         node[metafieldKey] = {
                                                                             id: _context2.t0,
@@ -134,7 +138,7 @@ var createProductNodes = exports.createProductNodes = function () {
                                                                             localFile___NODE: _context2.t2
                                                                         };
 
-                                                                    case 6:
+                                                                    case 7:
                                                                     case "end":
                                                                         return _context2.stop();
                                                                 }
@@ -181,18 +185,18 @@ var createProductNodes = exports.createProductNodes = function () {
                                                 return (0, _lib.queryOnce)({
                                                     client: clients.admin,
                                                     query: queryProductMetafields,
-                                                    args: { first: 1, query: "handle:'" + product.handle + "'" },
+                                                    args: { handle: product.handle },
                                                     attempts: 15
                                                 });
 
                                             case 2:
                                                 _ref7 = _context4.sent;
                                                 data = _ref7.data;
-                                                productData = (0, _fp.get)(["products", "edges"], data)[0];
+                                                productData = data.productByHandle;
 
                                                 // set the metafields and variants
 
-                                                metafields = (0, _fp.get)(["node", "metafields", "edges"], productData);
+                                                metafields = (0, _fp.get)(["metafields", "edges"], productData);
 
                                                 if (metafields) {
                                                     product.metafields = metafields.map(function (edge) {
@@ -200,7 +204,7 @@ var createProductNodes = exports.createProductNodes = function () {
                                                     });
                                                 }
 
-                                                variants = (0, _fp.get)(["node", "variants", "edges"], productData);
+                                                variants = (0, _fp.get)(["variants", "edges"], productData);
 
                                                 if (variants) {
                                                     product.variants = variants.map(function (edge) {
@@ -217,9 +221,10 @@ var createProductNodes = exports.createProductNodes = function () {
                                             case 11:
                                                 node = _context4.sent;
 
+                                                console.log('preview after', node.preview);
                                                 nodeHelpers.createNode(node);
 
-                                            case 13:
+                                            case 14:
                                             case "end":
                                                 return _context4.stop();
                                         }
@@ -251,12 +256,11 @@ var createProductNodes = exports.createProductNodes = function () {
 // internal libs
 
 var queryProductMetafields = (0, _metafields.queryMetafields)({
-    queryRoot: "products",
+    queryRoot: "productByHandle",
     args: {
-        first: "Int!",
-        query: "String"
+        handle: "String!"
     },
-    query: "\n        edges {\n            node {\n                metafields(first: 30) {\n                    edges {\n                        node {\n                            namespace\n                            key\n                            value\n                            valueType\n                            description\n                        }\n                    }\n                }\n                variants(first:10){\n                    edges {\n                        node {\n                            id\n                            title\n                            sku\n                            price\n                            compareAtPrice\n                            availableForSale\n                            selectedOptions {\n                                name\n                                value\n                            }\n                            image {\n                                src: originalSrc\n                            }\n                            metafields(first: 30) {\n                                edges {\n                                    node {\n                                        namespace\n                                        key\n                                        value\n                                        valueType\n                                        description\n                                    }\n                                }\n                            }\n                        }\n                    }\n                }\n            }\n        }\n    "
+    query: "\n          metafields(first: 30) {\n              edges {\n                  node {\n                      id\n                      namespace\n                      key\n                      value\n                      valueType\n                      description\n                  }\n              }\n          }\n          variants(first:10){\n              edges {\n                  node {\n                      id\n                      title\n                      sku\n                      storefrontId\n                      price\n                      compareAtPrice\n                      availableForSale\n                      selectedOptions {\n                          name\n                          value\n                      }\n                      image {\n                          src: originalSrc\n                      }\n                      metafields(first: 30) {\n                          edges {\n                              node {\n                                  namespace\n                                  key\n                                  value\n                                  valueType\n                                  description\n                              }\n                          }\n                      }\n                  }\n              }\n          }\n    "
 });
 
 var queryProducts = "\nquery($first: Int!, $after: String) {\n    shop {\n        products(first: $first, after: $after) {\n            pageInfo {\n                hasNextPage\n            }\n            edges {\n                cursor\n                node {\n                    id\n                    handle\n                    title\n                    description\n                    descriptionHtml\n                    tags\n                    productType\n                    vendor\n                    createdAt\n                    images(first: 250) {\n                        edges {\n                            node {\n                                id\n                                altText\n                                originalSrc\n                            }\n                        }\n                    }\n                    options {\n                        id\n                        name\n                        values\n                    }\n                    priceRange {\n                        minVariantPrice {\n                            amount\n                            currencyCode\n                        }\n                        maxVariantPrice {\n                            amount\n                            currencyCode\n                        }\n                    }\n                    variants(first: 250) {\n                        edges {\n                            node {\n                                id\n                                title\n                                sku\n                                price\n                                compareAtPrice\n                                availableForSale\n                                selectedOptions {\n                                    name\n                                    value\n                                }\n                                weight\n                                weightUnit\n                                image {\n                                    altText\n                                    id\n                                    originalSrc\n                                }\n                            }\n                        }\n                    }\n                }\n            }\n        }\n    }\n}\n";

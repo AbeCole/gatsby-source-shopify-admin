@@ -38,11 +38,12 @@ export const createProductNodes = async ({
                 // it would throw an error and stop the build process
                 return metafield && metafield.value.startsWith('http');
             }).map(async metafieldKey => {
+                const metafield = node.metafields.find(m => m.key === metafieldKey)
                 node[metafieldKey] = {
-                    id: metafield.value,
+                    id: metafield.id,
                     originalSrc: metafield.value,
                     localFile___NODE: await downloadImageAndCreateFileNode({
-                        id: metafield.value,
+                        id: metafield.id,
                         url: metafield.value,
                         prefix: nodeHelpers.TYPE_PREFIX,
                         ...imageHelpers
@@ -61,19 +62,19 @@ export const createProductNodes = async ({
       const { data } = await queryOnce({
         client: clients.admin,
         query: queryProductMetafields,
-        args: { first: 1, query: `handle:'${product.handle}'` },
+        args: { handle: product.handle },
         attempts: 15
       });
-      const productData = get(["products", "edges"], data)[0];
+      const productData = data.productByHandle;
 
       // set the metafields and variants
 
-      let metafields = get(["node", "metafields", "edges"], productData);
+      let metafields = get(["metafields", "edges"], productData);
       if (metafields) {
         product.metafields = metafields.map(edge => edge.node);
       }
 
-      let variants = get(["node", "variants", "edges"], productData);
+      let variants = get(["variants", "edges"], productData);
       if (variants) {
         product.variants = variants.map(edge => {
           edge.node.metafields = get(["node", "metafields", "edges"], edge).map(
@@ -90,57 +91,54 @@ export const createProductNodes = async ({
 };
 
 const queryProductMetafields = queryMetafields({
-  queryRoot: "products",
+  queryRoot: "productByHandle",
   args: {
-    first: "Int!",
-    query: "String"
+    handle: "String!"
   },
   query: `
-        edges {
-            node {
-                metafields(first: 30) {
-                    edges {
-                        node {
-                            namespace
-                            key
-                            value
-                            valueType
-                            description
-                        }
-                    }
-                }
-                variants(first:10){
-                    edges {
-                        node {
-                            id
-                            title
-                            sku
-                            price
-                            compareAtPrice
-                            availableForSale
-                            selectedOptions {
-                                name
-                                value
-                            }
-                            image {
-                                src: originalSrc
-                            }
-                            metafields(first: 30) {
-                                edges {
-                                    node {
-                                        namespace
-                                        key
-                                        value
-                                        valueType
-                                        description
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+          metafields(first: 30) {
+              edges {
+                  node {
+                      id
+                      namespace
+                      key
+                      value
+                      valueType
+                      description
+                  }
+              }
+          }
+          variants(first:10){
+              edges {
+                  node {
+                      id
+                      title
+                      sku
+                      storefrontId
+                      price
+                      compareAtPrice
+                      availableForSale
+                      selectedOptions {
+                          name
+                          value
+                      }
+                      image {
+                          src: originalSrc
+                      }
+                      metafields(first: 30) {
+                          edges {
+                              node {
+                                  namespace
+                                  key
+                                  value
+                                  valueType
+                                  description
+                              }
+                          }
+                      }
+                  }
+              }
+          }
     `
 });
 

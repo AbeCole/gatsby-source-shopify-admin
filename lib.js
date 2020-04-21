@@ -59,18 +59,15 @@ var limiter = (0, _limiter2.default)();
 
 var queryOnce = exports.queryOnce = function () {
   var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(allArgs) {
-    var client, query, _allArgs$args, args;
-
     return _regenerator2.default.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            client = allArgs.client, query = allArgs.query, _allArgs$args = allArgs.args, args = _allArgs$args === undefined ? { first: 250 } : _allArgs$args;
             return _context.abrupt("return", new _promise2.default(function (resolve, reject) {
               return limiter(allArgs, { resolve: resolve, reject: reject });
             }));
 
-          case 2:
+          case 1:
           case "end":
             return _context.stop();
         }
@@ -82,7 +79,7 @@ var queryOnce = exports.queryOnce = function () {
     return _ref.apply(this, arguments);
   };
 }();
-//
+
 // export const queryOnce = async ({ client, query, args = {first: 250}, attempts = 2 }) => {
 //     requestCount += 1;
 //     console.log("Query Once, attempts " + attempts, requestCount, resolveCount);

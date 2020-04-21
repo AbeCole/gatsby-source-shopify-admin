@@ -27,13 +27,9 @@ export const printGraphQLError = e => {
 
 const limiter = rateLimiter();
 
-export const queryOnce = async allArgs => {
-  const { client, query, args = { first: 250 } } = allArgs;
-  return new Promise((resolve, reject) =>
-    limiter(allArgs, { resolve, reject })
-  );
-};
-//
+export const queryOnce = async allArgs =>
+  new Promise((resolve, reject) => limiter(allArgs, { resolve, reject }));
+
 // export const queryOnce = async ({ client, query, args = {first: 250}, attempts = 2 }) => {
 //     requestCount += 1;
 //     console.log("Query Once, attempts " + attempts, requestCount, resolveCount);

@@ -59,21 +59,27 @@ exports.sourceNodes = function () {
                     verbose = _ref3$verbose === undefined ? false : _ref3$verbose,
                     _ref3$imageMetafields = _ref3.imageMetafields,
                     imageMetafields = _ref3$imageMetafields === undefined ? null : _ref3$imageMetafields;
-                var createTypes, typeDefs, format, storefront, admin, createNodeFactory, generateNodeId, nodeHelpers, clients, imageHelpers, debugHelpers, timerLabel;
+                var format, storefront, admin, createNodeFactory, generateNodeId, nodeHelpers, clients, imageHelpers, debugHelpers, timerLabel;
                 return _regenerator2.default.wrap(function _callee$(_context) {
                         while (1) {
                                 switch (_context.prev = _context.next) {
                                         case 0:
-                                                createTypes = actions.createTypes;
-                                                typeDefs = '\n          type ShopifyImage implements Node @infer {\n            id: String\n            altText: String\n            originalSrc: String\n            localFile: File\n          }\n        ';
 
-                                                if (imageMetafields.product) {
-                                                        typeDefs += 'type ShopifyProduct implements Node @infer {\n            ' + imageMetafields.product.map(function (m) {
-                                                                return m + ': ShopifyImage';
-                                                        }).join('\n') + '\n          }';
-                                                }
-                                                console.log('imageMetafields', typeDefs);
-                                                createTypes(typeDefs);
+                                                // const { createTypes } = actions
+                                                // let typeDefs = `
+                                                //   type ShopifyImage implements Node @infer {
+                                                //     id: String
+                                                //     altText: String
+                                                //     originalSrc: String
+                                                //     localFile: File
+                                                //   }
+                                                // `
+                                                // if (imageMetafields.product) {
+                                                //   typeDefs += `type ShopifyProduct implements Node @infer {
+                                                //     ${imageMetafields.product.map(m => `${m}: ShopifyImage`).join('\n')}
+                                                //   }`
+                                                // }
+                                                // createTypes(typeDefs)
 
                                                 format = function format(msg) {
                                                         return (0, _chalk2.default)(_templateObject, storeName, msg);
@@ -107,16 +113,16 @@ exports.sourceNodes = function () {
 
                                                 if (verbose) console.time(timerLabel);
 
-                                                _context.next = 19;
+                                                _context.next = 14;
                                                 return _promise2.default.all([(0, _nodes.createProductNodes)({ clients: clients, nodeHelpers: nodeHelpers, imageHelpers: imageHelpers, debugHelpers: debugHelpers, imageMetafields: imageMetafields.product }), (0, _nodes.createCollectionNodes)({ clients: clients, nodeHelpers: nodeHelpers, imageHelpers: imageHelpers, debugHelpers: debugHelpers, imageMetafields: imageMetafields.collection })]
                                                 //createPolicyNodes({ storefrontClient })
                                                 );
 
-                                        case 19:
+                                        case 14:
 
                                                 if (verbose) console.timeEnd(timerLabel);
 
-                                        case 20:
+                                        case 15:
                                         case 'end':
                                                 return _context.stop();
                                 }

@@ -45,6 +45,9 @@ export const createCollectionNodes = async ({ clients, nodeHelpers, imageHelpers
                 )
 
             const node = await CollectionNode(collection)
+            if (collection.handle === 'shop') {
+              console.log('collection', collection.handle, node);
+            }
             nodeHelpers.createNode(node)
         },
     )

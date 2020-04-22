@@ -119,12 +119,9 @@ var createCollectionNodes = exports.createCollectionNodes = function () {
                                             case 10:
                                                 node = _context2.sent;
 
-                                                if (collection.handle === 'shop') {
-                                                    console.log('collection', collection.handle, node);
-                                                }
                                                 nodeHelpers.createNode(node);
 
-                                            case 13:
+                                            case 12:
                                             case 'end':
                                                 return _context2.stop();
                                         }

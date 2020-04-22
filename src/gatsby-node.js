@@ -14,21 +14,21 @@ exports.sourceNodes = async (
     { boundActionCreators: { createNode, touchNode }, store, cache, createNodeId, actions },
     { storeName, apiKey, adminApiKey, verbose = false, imageMetafields = null }) => {
 
-        // const { createTypes } = actions
-        // let typeDefs = `
-        //   type ShopifyImage implements Node @infer {
-        //     id: String
-        //     altText: String
-        //     originalSrc: String
-        //     localFile: File
-        //   }
-        // `
-        // if (imageMetafields.product) {
-        //   typeDefs += `type ShopifyProduct implements Node @infer {
-        //     ${imageMetafields.product.map(m => `${m}: ShopifyImage`).join('\n')}
-        //   }`
-        // }
-        // createTypes(typeDefs)
+        const { createTypes } = actions
+        let typeDefs = `
+          type ShopifyImage implements Node @infer {
+            id: String
+            altText: String
+            originalSrc: String
+            localFile: File
+          }
+        `
+        if (imageMetafields.product) {
+          typeDefs += `type ShopifyProduct implements Node @infer {
+            ${imageMetafields.product.map(m => `${m}: ShopifyImage`).join('\n')}
+          }`
+        }
+        createTypes(typeDefs)
 
         const format = msg => chalk`{blue gatsby-source-shopify-admin/${storeName}} ${msg}`
 

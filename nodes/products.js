@@ -221,10 +221,9 @@ var createProductNodes = exports.createProductNodes = function () {
                                             case 11:
                                                 node = _context4.sent;
 
-                                                console.log('preview after', node.preview);
                                                 nodeHelpers.createNode(node);
 
-                                            case 14:
+                                            case 13:
                                             case "end":
                                                 return _context4.stop();
                                         }

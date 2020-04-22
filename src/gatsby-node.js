@@ -16,7 +16,7 @@ exports.sourceNodes = async (
 
         const { createTypes } = actions
         let typeDefs = `
-          type ShopifyImage implements Node @infer {
+          type ShopifyImage implements Node {
             id: String
             altText: String
             originalSrc: String
@@ -24,7 +24,7 @@ exports.sourceNodes = async (
           }
         `
         if (imageMetafields.product) {
-          typeDefs += `type ShopifyProduct implements Node @infer {
+          typeDefs += `type ShopifyProduct implements Node {
             ${imageMetafields.product.map(m => `${m}: ShopifyImage`).join('\n')}
           }`
         }

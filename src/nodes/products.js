@@ -96,7 +96,7 @@ const queryProductMetafields = queryMetafields({
     handle: "String!"
   },
   query: `
-          metafields(first: 30) {
+          metafields(first: 40) {
               edges {
                   node {
                       id
@@ -125,7 +125,7 @@ const queryProductMetafields = queryMetafields({
                       image {
                           src: originalSrc
                       }
-                      metafields(first: 30) {
+                      metafields(first: 25) {
                           edges {
                               node {
                                   namespace

@@ -14,6 +14,10 @@ exports.sourceNodes = async (
     { boundActionCreators: { createNode, touchNode }, store, cache, createNodeId, actions },
     { storeName, apiKey, adminApiKey, verbose = false, imageMetafields = null }) => {
 
+        // Gatsby tries to infer all the type definitions
+        // However this doesn't work if fields are set for some products
+        // i.e. if compareAtPrice is only set on 1 out of 100 products, it is
+        // unlikely that Gatsby will pick it up as a field
         const { createTypes } = actions
         let typeDefs = `
           type ShopifyImage implements Node {
@@ -21,6 +25,9 @@ exports.sourceNodes = async (
             altText: String
             originalSrc: String
             localFile: File
+          }
+          type ShopifyProductVariants implements Node {
+            compareAtPrice: Int
           }
         `
         if (imageMetafields.product) {

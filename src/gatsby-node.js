@@ -27,7 +27,7 @@ exports.sourceNodes = async (
             localFile: File
           }
           type ShopifyProductVariants implements Node {
-            compareAtPrice: Int
+            compareAtPrice: String
           }
         `
         if (imageMetafields.product) {

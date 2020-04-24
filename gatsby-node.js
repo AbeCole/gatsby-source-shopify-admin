@@ -64,6 +64,11 @@ exports.sourceNodes = function () {
                         while (1) {
                                 switch (_context.prev = _context.next) {
                                         case 0:
+
+                                                // Gatsby tries to infer all the type definitions
+                                                // However this doesn't work if fields are set for some products
+                                                // i.e. if compareAtPrice is only set on 1 out of 100 products, it is
+                                                // unlikely that Gatsby will pick it up as a field
                                                 createTypes = actions.createTypes;
                                                 typeDefs = '\n          type ShopifyImage implements Node {\n            id: String\n            altText: String\n            originalSrc: String\n            localFile: File\n          }\n          type ShopifyProductVariants implements Node {\n            compareAtPrice: Int\n          }\n        ';
 

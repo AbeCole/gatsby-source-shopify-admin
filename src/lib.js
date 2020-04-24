@@ -102,10 +102,10 @@ export const queryAll = async (
     ? (aggregatedResponse = aggregatedResponse.concat(nodes))
     : (aggregatedResponse = nodes);
 
-  if (get([...path, "pageInfo", "hasNextPage"], false, data)) {
-    args.after = last(edges).cursor;
-    return queryAll(client, path, query, args, aggregatedResponse);
-  }
+  // if (get([...path, "pageInfo", "hasNextPage"], false, data)) {
+  //   args.after = last(edges).cursor;
+  //   return queryAll(client, path, query, args, aggregatedResponse);
+  // }
 
   return aggregatedResponse;
 };

@@ -103,17 +103,9 @@ var createProductNodes = exports.createProductNodes = function () {
                                                 }
 
                                                 _context3.next = 7;
-                                                return _promise2.default.all(imageMetafields.filter(function (metafieldKey) {
-                                                    var metafield = node.metafields.find(function (m) {
-                                                        return m.key === metafieldKey;
-                                                    });
-                                                    // this is very basic 'URL validation', something better should be done here
-                                                    // this was added because if you passed a non-valid URL to 'downloadImageAndCreateFileNode'
-                                                    // it would throw an error and stop the build process
-                                                    return metafield && metafield.value.startsWith('http');
-                                                }).map(function () {
+                                                return _promise2.default.all(imageMetafields.map(function () {
                                                     var _ref5 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(metafieldKey) {
-                                                        var metafield;
+                                                        var metafield, fileNodeId;
                                                         return _regenerator2.default.wrap(function _callee2$(_context2) {
                                                             while (1) {
                                                                 switch (_context2.prev = _context2.next) {
@@ -121,8 +113,18 @@ var createProductNodes = exports.createProductNodes = function () {
                                                                         metafield = node.metafields.find(function (m) {
                                                                             return m.key === metafieldKey;
                                                                         });
-                                                                        _context2.t0 = metafield.id;
-                                                                        _context2.t1 = metafield.value;
+                                                                        // this is very basic 'URL validation', something better should be done here
+                                                                        // this was added because if you passed a non-valid URL to 'downloadImageAndCreateFileNode'
+                                                                        // it would throw an error and stop the build process
+
+                                                                        if (!(!metafield || !metafield.value.startsWith('http'))) {
+                                                                            _context2.next = 3;
+                                                                            break;
+                                                                        }
+
+                                                                        return _context2.abrupt("return", null);
+
+                                                                    case 3:
                                                                         _context2.next = 5;
                                                                         return (0, _file.downloadImageAndCreateFileNode)((0, _extends3.default)({
                                                                             id: metafield.id,
@@ -131,14 +133,19 @@ var createProductNodes = exports.createProductNodes = function () {
                                                                         }, imageHelpers));
 
                                                                     case 5:
-                                                                        _context2.t2 = _context2.sent;
-                                                                        node[metafieldKey] = {
-                                                                            id: _context2.t0,
-                                                                            originalSrc: _context2.t1,
-                                                                            localFile___NODE: _context2.t2
-                                                                        };
+                                                                        fileNodeId = _context2.sent;
 
-                                                                    case 7:
+                                                                        if (fileNodeId) {
+                                                                            node[metafieldKey] = {
+                                                                                id: metafield.id,
+                                                                                originalSrc: metafield.value,
+                                                                                localFile___NODE: fileNodeId
+                                                                            };
+                                                                        }
+
+                                                                        return _context2.abrupt("return", null);
+
+                                                                    case 8:
                                                                     case "end":
                                                                         return _context2.stop();
                                                                 }
@@ -149,7 +156,9 @@ var createProductNodes = exports.createProductNodes = function () {
                                                     return function (_x4) {
                                                         return _ref5.apply(this, arguments);
                                                     };
-                                                }()));
+                                                }()).filter(function (m) {
+                                                    return m;
+                                                }));
 
                                             case 7:
                                                 return _context3.abrupt("return", node);

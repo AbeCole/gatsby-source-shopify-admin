@@ -48,12 +48,12 @@ export const createProductNodes = async ({
                  node[metafieldKey] = {
                    id: metafield.id,
                    originalSrc: metafield.value,
-                   localFile___NODE:,
+                   localFile___NODE: fileNodeId,
                  };
                }
 
                return null;
-            }).filter(m => m);
+            }).filter(m => m)
         );
     }
 

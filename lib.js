@@ -165,14 +165,18 @@ var queryAll = exports.queryAll = function () {
 
             aggregatedResponse ? aggregatedResponse = aggregatedResponse.concat(nodes) : aggregatedResponse = nodes;
 
-            // if (get([...path, "pageInfo", "hasNextPage"], false, data)) {
-            //   args.after = last(edges).cursor;
-            //   return queryAll(client, path, query, args, aggregatedResponse);
-            // }
+            if (!(0, _fp.get)([].concat((0, _toConsumableArray3.default)(path), ["pageInfo", "hasNextPage"]), false, data)) {
+              _context2.next = 14;
+              break;
+            }
 
+            args.after = (0, _fp.last)(edges).cursor;
+            return _context2.abrupt("return", queryAll(client, path, query, args, aggregatedResponse));
+
+          case 14:
             return _context2.abrupt("return", aggregatedResponse);
 
-          case 12:
+          case 15:
           case "end":
             return _context2.stop();
         }

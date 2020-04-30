@@ -41,6 +41,7 @@ const request = (allArgs, promise, calledByTimeout = false) => {
       if (!error.response) {
         console.error('This is a big issue as we currently always expect a "response" attribute on the error');
         console.log('The error:', error);
+        return reject('This is a big issue as we currently always expect a "response" attribute on the error');
       }
 
       let { errors, extensions } = error.response;

@@ -24,7 +24,7 @@ exports.sourceNodes = async (
             id: String
             altText: String
             originalSrc: String
-            localFile: File @fileByRelativePath
+            localFile: File
           }
           type ShopifyProductVariants implements Node {
             compareAtPrice: String

@@ -70,7 +70,7 @@ exports.sourceNodes = function () {
                                                 // i.e. if compareAtPrice is only set on 1 out of 100 products, it is
                                                 // unlikely that Gatsby will pick it up as a field
                                                 createTypes = actions.createTypes;
-                                                typeDefs = '\n          type ShopifyImage implements Node {\n            id: String\n            altText: String\n            originalSrc: String\n            localFile: File @fileByRelativePath\n          }\n          type ShopifyProductVariants implements Node {\n            compareAtPrice: String\n          }\n        ';
+                                                typeDefs = '\n          type ShopifyImage implements Node {\n            id: String\n            altText: String\n            originalSrc: String\n            localFile: File\n          }\n          type ShopifyProductVariants implements Node {\n            compareAtPrice: String\n          }\n        ';
 
                                                 if (imageMetafields.product) {
                                                         typeDefs += 'type ShopifyProduct implements Node {\n            ' + imageMetafields.product.map(function (m) {

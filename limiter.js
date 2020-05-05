@@ -63,11 +63,16 @@ var request = function request(allArgs, promise) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              if (!error.response) {
-                console.error('This is a big issue as we currently always expect a "response" attribute on the error');
-                console.log('The error:', error);
+              if (error.response) {
+                _context.next = 4;
+                break;
               }
 
+              console.error('This is a big issue as we currently always expect a "response" attribute on the error');
+              console.log('The error:', error);
+              return _context.abrupt('return', reject('This is a big issue as we currently always expect a "response" attribute on the error'));
+
+            case 4:
               _error$response = error.response, errors = _error$response.errors, extensions = _error$response.extensions;
 
 
@@ -83,7 +88,7 @@ var request = function request(allArgs, promise) {
                 reject(error);
               }
 
-            case 4:
+            case 7:
             case 'end':
               return _context.stop();
           }

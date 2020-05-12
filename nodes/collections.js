@@ -109,9 +109,12 @@ var createCollectionNodes = exports.createCollectionNodes = function () {
                                                     return edge.node;
                                                 });
 
-                                                if (collection.products) collection.products___NODE = collection.products.edges.map(function (edge) {
-                                                    return nodeHelpers.generateNodeId("PRODUCT", edge.node.id);
-                                                });
+                                                if (collection.products) {
+                                                    collection.products___NODE = collection.products.edges.map(function (edge) {
+                                                        return nodeHelpers.generateNodeId("PRODUCT", edge.node.id);
+                                                    });
+                                                    collection.products = null;
+                                                }
 
                                                 _context2.next = 10;
                                                 return CollectionNode(collection);

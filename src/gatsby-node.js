@@ -20,7 +20,7 @@ exports.sourceNodes = async (
         // unlikely that Gatsby will pick it up as a field
         const { createTypes } = actions
         let typeDefs = `
-          type ShopifyImage implements Node {
+          type ShopifyImage implements Node @infer {
             id: String
             altText: String
             originalSrc: String

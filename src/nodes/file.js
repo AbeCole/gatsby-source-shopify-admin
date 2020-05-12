@@ -17,6 +17,7 @@ export const downloadImageAndCreateFileNode = async ({ prefix = "", id, url, cre
         return fileNodeID
     }
 
+    // try {
     const fileNode = await createRemoteFileNode({ url, store, cache, createNode, createNodeId })
 
     if (fileNode) {
@@ -25,6 +26,9 @@ export const downloadImageAndCreateFileNode = async ({ prefix = "", id, url, cre
 
         return fileNodeID
     }
+    // } catch(e) {
+    //     console.error('Logging error', e);
+    // }
 
     return undefined
 }

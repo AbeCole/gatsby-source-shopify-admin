@@ -39,10 +39,13 @@ export const createCollectionNodes = async ({ clients, nodeHelpers, imageHelpers
             if (metafields)
                 collection.metafields = metafields.map(edge => edge.node);
 
-            if (collection.products)
+
+            if (collection.products) {
                 collection.products___NODE = collection.products.edges.map(edge =>
-                    nodeHelpers.generateNodeId("PRODUCT", edge.node.id),
+                    nodeHelpers.generateNodeId("PRODUCT", edge.node.id)
                 )
+                collection.products = null;
+            }
 
             const node = await CollectionNode(collection)
             nodeHelpers.createNode(node)

@@ -71,8 +71,8 @@ exports.sourceNodes = async (
         if (verbose) console.time(timerLabel)
 
         await Promise.all([
-            createProductNodes({ clients, nodeHelpers, imageHelpers, debugHelpers, imageMetafields: imageMetafields.product }),
-            createCollectionNodes({ clients, nodeHelpers, imageHelpers, debugHelpers, imageMetafields: imageMetafields.collection }),
+            createProductNodes({ clients, nodeHelpers, imageHelpers, debugHelpers, imageMetafields: imageMetafields && imageMetafields.product }),
+            createCollectionNodes({ clients, nodeHelpers, imageHelpers, debugHelpers, imageMetafields: imageMetafields && imageMetafields.collection }),
             //createPolicyNodes({ storefrontClient })
         ])
 

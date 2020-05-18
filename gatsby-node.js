@@ -72,7 +72,7 @@ exports.sourceNodes = function () {
                                                 createTypes = actions.createTypes;
                                                 typeDefs = '\n          type ShopifyImage implements Node @infer {\n            id: String\n            altText: String\n            originalSrc: String\n            localFile: File\n          }\n          type ShopifyProductVariants implements Node {\n            compareAtPrice: String\n          }\n        ';
 
-                                                if (imageMetafields.product) {
+                                                if (imageMetafields && imageMetafields.product) {
                                                         typeDefs += 'type ShopifyProduct implements Node {\n            ' + imageMetafields.product.map(function (m) {
                                                                 return m + ': ShopifyImage';
                                                         }).join('\n') + '\n          }';

@@ -1,9 +1,3 @@
-# babel-compiled files (these are no longer ignored, can't understand the original process but needed to un-ignore these to get the plugin to work on production)
-# /gatsby-node.js
-# /graphQLHelper.js
-# /lib.js
-# /nodes
-
 # Logs
 logs
 *.log

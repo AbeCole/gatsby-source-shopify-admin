@@ -30,7 +30,7 @@ exports.sourceNodes = async (
             compareAtPrice: String
           }
         `
-        if (imageMetafields.product) {
+        if (imageMetafields && imageMetafields.product) {
           typeDefs += `type ShopifyProduct implements Node {
             ${imageMetafields.product.map(m => `${m}: ShopifyImage`).join('\n')}
           }`

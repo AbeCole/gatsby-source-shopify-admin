@@ -1,134 +1,233 @@
-'use strict';
+"use strict";
 
-var _regenerator = require('babel-runtime/regenerator');
+var _regenerator = require("babel-runtime/regenerator");
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _promise = require('babel-runtime/core-js/promise');
-
-var _promise2 = _interopRequireDefault(_promise);
-
-var _extends2 = require('babel-runtime/helpers/extends');
+var _extends2 = require("babel-runtime/helpers/extends");
 
 var _extends3 = _interopRequireDefault(_extends2);
 
-var _taggedTemplateLiteral2 = require('babel-runtime/helpers/taggedTemplateLiteral');
+var _taggedTemplateLiteral2 = require("babel-runtime/helpers/taggedTemplateLiteral");
 
 var _taggedTemplateLiteral3 = _interopRequireDefault(_taggedTemplateLiteral2);
 
-var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
+var _asyncToGenerator2 = require("babel-runtime/helpers/asyncToGenerator");
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-var _templateObject = (0, _taggedTemplateLiteral3.default)(['{blue gatsby-source-shopify-admin/', '} ', ''], ['{blue gatsby-source-shopify-admin/', '} ', '']);
-/* ========================================================
-    sourceNodes
-======================================================== */
+var _templateObject = (0, _taggedTemplateLiteral3.default)(["{blue gatsby-source-shopify-admin/", "} ", ""], ["{blue gatsby-source-shopify-admin/", "} ", ""]); /* ========================================================
+                                                                                                                                                                    sourceNodes
+                                                                                                                                                                ======================================================== */
 
-var _nodes = require('./nodes');
+var _graphqlRequest = require("graphql-request");
 
-var _graphqlRequest = require('graphql-request');
-
-var _chalk = require('chalk');
+var _chalk = require("chalk");
 
 var _chalk2 = _interopRequireDefault(_chalk);
 
-var _gatsbyNodeHelpers = require('gatsby-node-helpers');
+var _gatsbyNodeHelpers = require("gatsby-node-helpers");
 
 var _gatsbyNodeHelpers2 = _interopRequireDefault(_gatsbyNodeHelpers);
+
+var _collectionsQuery = require("./queries/collectionsQuery");
+
+var _collectionsQuery2 = _interopRequireDefault(_collectionsQuery);
+
+var _productsQuery = require("./queries/productsQuery");
+
+var _productsQuery2 = _interopRequireDefault(_productsQuery);
+
+var _collections = require("./nodes/collections");
+
+var _collections2 = _interopRequireDefault(_collections);
+
+var _products = require("./nodes/products");
+
+var _products2 = _interopRequireDefault(_products);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var TYPE_PREFIX = "shopify";
 
 exports.sourceNodes = function () {
-        var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(_ref2, _ref3) {
-                var _createNodeHelpers;
+  var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(_ref2, _ref3) {
+    var _createNodeHelpers;
 
-                var _ref2$boundActionCrea = _ref2.boundActionCreators,
-                    createNode = _ref2$boundActionCrea.createNode,
-                    touchNode = _ref2$boundActionCrea.touchNode,
-                    store = _ref2.store,
-                    cache = _ref2.cache,
-                    createNodeId = _ref2.createNodeId,
-                    actions = _ref2.actions;
-                var storeName = _ref3.storeName,
-                    apiKey = _ref3.apiKey,
-                    adminApiKey = _ref3.adminApiKey,
-                    _ref3$verbose = _ref3.verbose,
-                    verbose = _ref3$verbose === undefined ? false : _ref3$verbose,
-                    _ref3$imageMetafields = _ref3.imageMetafields,
-                    imageMetafields = _ref3$imageMetafields === undefined ? null : _ref3$imageMetafields;
-                var createTypes, typeDefs, format, storefront, admin, createNodeFactory, generateNodeId, nodeHelpers, clients, imageHelpers, debugHelpers, timerLabel;
-                return _regenerator2.default.wrap(function _callee$(_context) {
-                        while (1) {
-                                switch (_context.prev = _context.next) {
-                                        case 0:
+    var _ref2$boundActionCrea = _ref2.boundActionCreators,
+        createNode = _ref2$boundActionCrea.createNode,
+        touchNode = _ref2$boundActionCrea.touchNode,
+        store = _ref2.store,
+        cache = _ref2.cache,
+        createNodeId = _ref2.createNodeId,
+        actions = _ref2.actions;
+    var storeName = _ref3.storeName,
+        apiKey = _ref3.apiKey,
+        _ref3$verbose = _ref3.verbose,
+        verbose = _ref3$verbose === undefined ? false : _ref3$verbose,
+        _ref3$imageMetafields = _ref3.imageMetafields,
+        imageMetafields = _ref3$imageMetafields === undefined ? null : _ref3$imageMetafields,
+        _ref3$pollInterval = _ref3.pollInterval,
+        pollInterval = _ref3$pollInterval === undefined ? 1000 * 10 : _ref3$pollInterval;
+    var format, client, createNodeFactory, generateNodeId, nodeHelpers, imageHelpers, helpers, collections, products, createTypes, typeDefs;
+    return _regenerator2.default.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            format = function format(msg) {
+              return (0, _chalk2.default)(_templateObject, storeName, msg);
+            };
 
-                                                // Gatsby tries to infer all the type definitions
-                                                // However this doesn't work if fields are set for some products
-                                                // i.e. if compareAtPrice is only set on 1 out of 100 products, it is
-                                                // unlikely that Gatsby will pick it up as a field
-                                                createTypes = actions.createTypes;
-                                                typeDefs = '\n          type ShopifyImage implements Node @infer {\n            id: String\n            altText: String\n            originalSrc: String\n            localFile: File\n          }\n          type ShopifyProductVariants implements Node {\n            compareAtPrice: String\n          }\n        ';
+            if (verbose) console.log(format("starting: shopify queries > node creation"));
 
-                                                if (imageMetafields && imageMetafields.product) {
-                                                        typeDefs += 'type ShopifyProduct implements Node {\n            ' + imageMetafields.product.map(function (m) {
-                                                                return m + ': ShopifyImage';
-                                                        }).join('\n') + '\n          }';
-                                                }
-                                                createTypes(typeDefs);
+            client = new _graphqlRequest.GraphQLClient("https://" + storeName + ".myshopify.com/admin/api/2020-04/graphql.json", {
+              headers: {
+                "X-Shopify-Access-Token": apiKey
+              }
+            });
+            createNodeFactory = void 0, generateNodeId = void 0;
+            nodeHelpers = (_createNodeHelpers = (0, _gatsbyNodeHelpers2.default)({
+              typePrefix: TYPE_PREFIX
+            }), createNodeFactory = _createNodeHelpers.createNodeFactory, generateNodeId = _createNodeHelpers.generateNodeId, _createNodeHelpers);
 
-                                                format = function format(msg) {
-                                                        return (0, _chalk2.default)(_templateObject, storeName, msg);
-                                                };
+            nodeHelpers = (0, _extends3.default)({
+              createNode: createNode,
+              createNodeId: createNodeId,
+              touchNode: touchNode,
+              TYPE_PREFIX: TYPE_PREFIX
+            }, nodeHelpers);
+            imageHelpers = (0, _extends3.default)({}, nodeHelpers, { store: store, cache: cache, imageMetafields: imageMetafields });
+            helpers = {
+              store: store,
+              cache: cache,
+              createNodeFactory: createNodeFactory,
+              createNode: createNode,
+              createNodeId: createNodeId,
+              touchNode: touchNode,
+              generateNodeId: generateNodeId,
+              TYPE_PREFIX: TYPE_PREFIX,
+              client: client,
+              imageMetafields: imageMetafields,
+              verbose: verbose,
+              pollInterval: pollInterval,
+              format: format
+            };
 
-                                                if (verbose) console.log(format("starting data fetch"));
 
-                                                storefront = new _graphqlRequest.GraphQLClient('https://' + storeName + '.myshopify.com/api/graphql', {
-                                                        headers: {
-                                                                'X-Shopify-Storefront-Access-Token': apiKey
-                                                        }
-                                                });
-                                                admin = new _graphqlRequest.GraphQLClient('https://' + storeName + '.myshopify.com/admin/api/graphql.json', {
-                                                        headers: {
-                                                                'X-Shopify-Access-Token': adminApiKey
-                                                        }
-                                                });
-                                                createNodeFactory = void 0, generateNodeId = void 0;
-                                                nodeHelpers = (_createNodeHelpers = (0, _gatsbyNodeHelpers2.default)({ typePrefix: TYPE_PREFIX }), createNodeFactory = _createNodeHelpers.createNodeFactory, generateNodeId = _createNodeHelpers.generateNodeId, _createNodeHelpers);
-                                                clients = { admin: admin, storefront: storefront };
+            if (verbose) {
+              console.time(format("finished"));
 
-                                                nodeHelpers = (0, _extends3.default)({
-                                                        createNode: createNode,
-                                                        createNodeId: createNodeId,
-                                                        touchNode: touchNode,
-                                                        TYPE_PREFIX: TYPE_PREFIX
-                                                }, nodeHelpers);
-                                                imageHelpers = (0, _extends3.default)({}, nodeHelpers, { store: store, cache: cache });
-                                                debugHelpers = { format: format, verbose: verbose };
-                                                timerLabel = format("finished data fetch");
+              console.log(format("- starting collections query"));
+              console.time(format("collections query"));
+            }
 
-                                                if (verbose) console.time(timerLabel);
+            _context.next = 11;
+            return (0, _collectionsQuery2.default)(helpers);
 
-                                                _context.next = 18;
-                                                return _promise2.default.all([(0, _nodes.createProductNodes)({ clients: clients, nodeHelpers: nodeHelpers, imageHelpers: imageHelpers, debugHelpers: debugHelpers, imageMetafields: imageMetafields && imageMetafields.product }), (0, _nodes.createCollectionNodes)({ clients: clients, nodeHelpers: nodeHelpers, imageHelpers: imageHelpers, debugHelpers: debugHelpers, imageMetafields: imageMetafields && imageMetafields.collection })]
-                                                //createPolicyNodes({ storefrontClient })
-                                                );
+          case 11:
+            collections = _context.sent;
 
-                                        case 18:
 
-                                                if (verbose) console.timeEnd(timerLabel);
+            if (verbose) {
+              console.timeEnd(format("collections query"));
 
-                                        case 19:
-                                        case 'end':
-                                                return _context.stop();
-                                }
-                        }
-                }, _callee, undefined);
-        }));
+              console.log(format("- starting products query"));
+              console.time(format("products query"));
+            }
 
-        return function (_x, _x2) {
-                return _ref.apply(this, arguments);
-        };
+            _context.next = 15;
+            return (0, _productsQuery2.default)(helpers);
+
+          case 15:
+            products = _context.sent;
+
+
+            if (verbose) {
+              console.timeEnd(format("products query"));
+
+              console.log(format("- creating collections nodes"));
+              console.time(format("collections nodes"));
+            }
+
+            (0, _collections2.default)(collections, helpers);
+
+            if (verbose) {
+              console.timeEnd(format("collections nodes"));
+
+              console.log(format("- creating products nodes"));
+              console.time(format("products nodes"));
+            }
+
+            (0, _products2.default)(products, helpers);
+
+            if (verbose) {
+              console.timeEnd(format("products nodes"));
+
+              console.time(format("finished type definitions"));
+            }
+
+            // Gatsby tries to infer all the type definitions
+            // However this doesn't work if fields are set for some products
+            // i.e. if compareAtPrice is only set on 1 out of 100 products, it is
+            // unlikely that Gatsby will pick it up as a field
+            createTypes = actions.createTypes;
+            typeDefs = "\n    type ShopifyProductVariants implements Node {\n      compareAtPrice: String\n      storefrontId: String\n    }\n  ";
+
+            if (imageMetafields) {
+              typeDefs += "\n      type ShopifyImage implements Node @infer {\n        id: String\n        altText: String\n        originalSrc: String\n        localFile: File\n      }\n    ";
+              if (imageMetafields.product) {
+                typeDefs += "\n        type ShopifyProduct implements Node {\n          " + imageMetafields.product.map(function (m) {
+                  return m + ": ShopifyImage";
+                }).join("\n") + "\n        }\n      ";
+              }
+              if (imageMetafields.collection) {
+                typeDefs += "\n        type ShopifyCollection implements Node {\n          " + imageMetafields.collection.map(function (m) {
+                  return m + ": ShopifyImage";
+                }).join("\n") + "\n        }\n      ";
+              }
+            }
+            createTypes(typeDefs);
+
+            if (verbose) {
+              console.timeEnd(format("finished type definitions"));
+
+              console.timeEnd(format("finished"));
+            }
+
+          case 26:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee, undefined);
+  }));
+
+  return function (_x, _x2) {
+    return _ref.apply(this, arguments);
+  };
+}();
+
+exports.onPostBootstrap = function () {
+  var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(_ref5) {
+    var cache = _ref5.cache;
+    var date;
+    return _regenerator2.default.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            date = new Date();
+            _context2.next = 3;
+            return cache.set("lastRun", date.toISOString());
+
+          case 3:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2, undefined);
+  }));
+
+  return function (_x3) {
+    return _ref4.apply(this, arguments);
+  };
 }();

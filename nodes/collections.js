@@ -1,185 +1,137 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
-exports.createCollectionNodes = undefined;
 
-var _regenerator = require('babel-runtime/regenerator');
+var _regenerator = require("babel-runtime/regenerator");
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _extends2 = require('babel-runtime/helpers/extends');
+var _promise = require("babel-runtime/core-js/promise");
+
+var _promise2 = _interopRequireDefault(_promise);
+
+var _extends2 = require("babel-runtime/helpers/extends");
 
 var _extends3 = _interopRequireDefault(_extends2);
 
-var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
+var _asyncToGenerator2 = require("babel-runtime/helpers/asyncToGenerator");
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-var _pIteration = require('p-iteration');
+var _downloadImageNode = require("../helpers/downloadImageNode");
 
-var _fp = require('lodash/fp');
+var _downloadImageNode2 = _interopRequireDefault(_downloadImageNode);
 
-var _lib = require('../lib');
+var _parseImageMetafields = require("../helpers/parseImageMetafields");
 
-var _file = require('./file');
-
-var _metafields = require('./metafields');
+var _parseImageMetafields2 = _interopRequireDefault(_parseImageMetafields);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var createCollectionNodes = exports.createCollectionNodes = function () {
-    var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3(_ref2) {
-        var clients = _ref2.clients,
-            nodeHelpers = _ref2.nodeHelpers,
-            imageHelpers = _ref2.imageHelpers,
-            debugHelpers = _ref2.debugHelpers;
-        var CollectionNode;
-        return _regenerator2.default.wrap(function _callee3$(_context3) {
-            while (1) {
-                switch (_context3.prev = _context3.next) {
-                    case 0:
-                        CollectionNode = nodeHelpers.createNodeFactory("COLLECTION", function () {
-                            var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(node) {
-                                return _regenerator2.default.wrap(function _callee$(_context) {
-                                    while (1) {
-                                        switch (_context.prev = _context.next) {
-                                            case 0:
-                                                if (!node.image) {
-                                                    _context.next = 4;
-                                                    break;
-                                                }
+var collections = function () {
+  var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3(data, helpers) {
+    var CollectionNode;
+    return _regenerator2.default.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            CollectionNode = helpers.createNodeFactory("COLLECTION", function () {
+              var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(node) {
+                return _regenerator2.default.wrap(function _callee$(_context) {
+                  while (1) {
+                    switch (_context.prev = _context.next) {
+                      case 0:
+                        if (!node.image) {
+                          _context.next = 4;
+                          break;
+                        }
 
-                                                _context.next = 3;
-                                                return (0, _file.downloadImageAndCreateFileNode)((0, _extends3.default)({
-                                                    id: node.image.id,
-                                                    url: node.image.src,
-                                                    prefix: nodeHelpers.TYPE_PREFIX
-                                                }, imageHelpers));
+                        _context.next = 3;
+                        return (0, _downloadImageNode2.default)((0, _extends3.default)({
+                          id: node.image.id,
+                          url: node.image.src,
+                          prefix: helpers.TYPE_PREFIX
+                        }, helpers));
 
-                                            case 3:
-                                                node.image.localFile___NODE = _context.sent;
+                      case 3:
+                        node.image.localFile___NODE = _context.sent;
 
-                                            case 4:
-                                                return _context.abrupt('return', node);
+                      case 4:
+                        if (!(node.metafields && helpers.imageMetafields && helpers.imageMetafields.product)) {
+                          _context.next = 7;
+                          break;
+                        }
 
-                                            case 5:
-                                            case 'end':
-                                                return _context.stop();
-                                        }
-                                    }
-                                }, _callee, undefined);
-                            }));
+                        _context.next = 7;
+                        return _promise2.default.all((0, _parseImageMetafields2.default)(node, helpers.imageMetafields.product, helpers));
 
-                            return function (_x2) {
-                                return _ref3.apply(this, arguments);
-                            };
-                        }());
-                        _context3.t0 = _pIteration.forEach;
-                        _context3.next = 4;
-                        return (0, _lib.queryAll)(clients.storefront, ['shop', 'collections'], queryCollections);
+                      case 7:
+                        return _context.abrupt("return", node);
 
-                    case 4:
-                        _context3.t1 = _context3.sent;
+                      case 8:
+                      case "end":
+                        return _context.stop();
+                    }
+                  }
+                }, _callee, undefined);
+              }));
 
-                        _context3.t2 = function () {
-                            var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(collection) {
-                                var _ref5, data, collectionData, metafields, node;
+              return function (_x3) {
+                return _ref2.apply(this, arguments);
+              };
+            }());
 
-                                return _regenerator2.default.wrap(function _callee2$(_context2) {
-                                    while (1) {
-                                        switch (_context2.prev = _context2.next) {
-                                            case 0:
-                                                _context2.next = 2;
-                                                return (0, _lib.queryOnce)({
-                                                    client: clients.admin,
-                                                    query: queryCollectionMetafields,
-                                                    args: { first: 1, query: 'handle:\'' + collection.handle + '\'' },
-                                                    attempts: 15
-                                                });
 
-                                            case 2:
-                                                _ref5 = _context2.sent;
-                                                data = _ref5.data;
-                                                collectionData = (0, _fp.get)(["collections", "edges"], data)[0];
-                                                metafields = (0, _fp.get)(["node", "metafields", "edges"], collectionData);
+            data.forEach(function () {
+              var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(d) {
+                var node;
+                return _regenerator2.default.wrap(function _callee2$(_context2) {
+                  while (1) {
+                    switch (_context2.prev = _context2.next) {
+                      case 0:
+                        if (d.products) {
+                          d.products___NODE = d.products.map(function (p) {
+                            return helpers.generateNodeId("PRODUCT", p.id);
+                          });
+                          d.products = null;
+                        }
 
-                                                if (metafields) collection.metafields = metafields.map(function (edge) {
-                                                    return edge.node;
-                                                });
+                        _context2.next = 3;
+                        return CollectionNode(d);
 
-                                                if (collection.products) {
-                                                    collection.products___NODE = collection.products.edges.map(function (edge) {
-                                                        return nodeHelpers.generateNodeId("PRODUCT", edge.node.id);
-                                                    });
-                                                    collection.products = null;
-                                                }
+                      case 3:
+                        node = _context2.sent;
 
-                                                _context2.next = 10;
-                                                return CollectionNode(collection);
+                        helpers.createNode(node);
 
-                                            case 10:
-                                                node = _context2.sent;
+                      case 5:
+                      case "end":
+                        return _context2.stop();
+                    }
+                  }
+                }, _callee2, undefined);
+              }));
 
-                                                nodeHelpers.createNode(node);
+              return function (_x4) {
+                return _ref3.apply(this, arguments);
+              };
+            }());
 
-                                            case 12:
-                                            case 'end':
-                                                return _context2.stop();
-                                        }
-                                    }
-                                }, _callee2, undefined);
-                            }));
+            return _context3.abrupt("return", true);
 
-                            return function (_x3) {
-                                return _ref4.apply(this, arguments);
-                            };
-                        }();
+          case 3:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3, undefined);
+  }));
 
-                        _context3.next = 8;
-                        return (0, _context3.t0)(_context3.t1, _context3.t2);
-
-                    case 8:
-                    case 'end':
-                        return _context3.stop();
-                }
-            }
-        }, _callee3, undefined);
-    }));
-
-    return function createCollectionNodes(_x) {
-        return _ref.apply(this, arguments);
-    };
+  return function collections(_x, _x2) {
+    return _ref.apply(this, arguments);
+  };
 }();
 
-// internal libs
-
-// external libs
-
-var queryCollectionMetafields = (0, _metafields.queryMetafields)({
-    queryRoot: "collections",
-    args: {
-        first: "Int!",
-        query: "String"
-    }
-    // query: `
-    //       edges {
-    //           node {
-    //               metafields(first: 10) {
-    //                   edges {
-    //                       node {
-    //                           namespace
-    //                           key
-    //                           value
-    //                           valueType
-    //                           description
-    //                       }
-    //                   }
-    //               }
-    //           }
-    //       }
-    //   `
-});
-
-var queryCollections = '\nquery($first: Int!, $after: String) {\n    shop {\n        collections(first: $first, after: $after) {\n            pageInfo {\n                hasNextPage\n            }\n            edges {\n                cursor\n                node {\n                    id\n                    handle\n                    title\n                    description\n                    descriptionHtml\n                    image {\n                        id\n                        altText\n                        src\n                    }\n                    products(first: 50) {\n                        edges {\n                            node {\n                                id\n                            }\n                        }\n                    }\n                }\n            }\n        }\n    }\n}\n';
+exports.default = collections;

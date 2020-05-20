@@ -1,10 +1,10 @@
 # Gatsby Source Shopify Admin
 
-This is a Gatsby source plugin to pull data from Shopify using both the Storefront and Admin APIs.
+This is a Gatsby source plugin to pull data from Shopify using the Admin APIs.
 
-This has been developed while working on a client project so while I've aimed to remain project agnostic there may be code specific to our requirements. This should be improved (or removed) when found.
+This plugin was recently (Q1 2020) re-written to utilize the [Shopify Bulk API](https://shopify.dev/tutorials/perform-bulk-operations-with-admin-api#operation-restrictions).
 
-Credit to https://gitlab.com/heartofcode/gatsby-source-shopify-admin for their original work on combining Storefront and Admin API requests.
+It is highly likely to run into bugs or un-handled errors. This plugin was written to fill a void while trying to complete a client's project, since then I've tried to improve it to be project-agnostic and work better for others to use. If you find any error/issue please let me know so we can try to improve this plugin to a point where it can be used by anyone.
 
 # Installation
 
@@ -12,19 +12,25 @@ Credit to https://gitlab.com/heartofcode/gatsby-source-shopify-admin for their o
 
 # Config
 
+Configuration is relatively limited at the moment, if you come across a good use case for a new config option (that other people may actually use) please let me know so we can add it. For example, not everyone will need 'metafields' for products, we could add an option that would allow us to ignore metafields when querying Shopify, thus making a slightly lighter (and hopefully quicker) request to Shopify.
+
     {
       resolve: 'gatsby-source-shopify-admin',
       options: {
         storeName: ‘YOUR_STORE_NAME',
-        apiKey: ‘YOUR_STOREFRONT_API_KEY',
-        adminApiKey: ‘YOUR_ADMIN_API_KEY',
+        apiKey: ‘YOUR_ADMIN_API_KEY',
         verbose: true,
+        pollInterval: 1000 * 10,
+        imagesMetafields: {
+          product: null,
+          collection: null
+        }
       },
     },
 
 ## Image metafields
 
-This is kind of experimental (not tested on other Shopify Plugins): If you use a custom fields plugin to store additional data on products, such as [AirFields](https://www.airfields.io/), then we can parse the image URLs to return an `ShopifyImage` object with a `localFile` field, that can then be manipluated by `gatsby-image`. The plugin expects the Shopify metafield `key` to match the provided value (i.e. with the config below the `key` would be `preview`), it then takes the metafield's `value` attribute as the `originalSrc`.
+Experimental (not tested on other Shopify Plugins): If you use a custom fields plugin to store additional data on products/collections, such as [AirFields](https://www.airfields.io/), then we can parse the image URLs to return a `ShopifyImage` object with a `localFile` field, that can then be manipluated by `gatsby-image`. The plugin expects the Shopify metafield `key` to match the provided value (i.e. with the config below the `key` would be `'preview'`), it then takes the metafield's `value` attribute as the `originalSrc`.
 
     {
       ...yourDefaultConfigOptions,
@@ -44,3 +50,16 @@ Usage:
         }
       }
     }
+
+# Timeout issues
+
+We've had issues when trying to download any substantial amount of images from Shopify. If you run into connection issues or timeouts there are two things to try:
+
+- By default `gatsby-source-filesystem` will try to download 200 files concurrently, you can change this by adjusting the `GATSBY_CONCURRENT_DOWNLOAD` environment variable:
+
+      GATSBY_CONCURRENT_DOWNLOAD=25 gatsby develop
+
+- There is currently no way to modify the timeout of 30 seconds in `gatsby-source-filesystem`, if you want to test locally you can manually override this by modifying your `./node_modules/gatsby-source-filesystem/create-remote-file-node.js` file:
+
+      //const CONNECTION_TIMEOUT = 30000;
+      const CONNECTION_TIMEOUT = 120000;

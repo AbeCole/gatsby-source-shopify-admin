@@ -16,6 +16,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 // Author: Abe Cole (me@abecole.com)
 //
+// This is currently unused. It was built as a request limiter for Shopify's API
+// However we've switched to using Shopify's Bulk API, which does not require
+// this function, but maybe worth keeping for the future if they change their
+// API or we need to revert to using the Storefront/Admin API manually.
+//
 // Improvements:
 //  - We currently implement a 'queue' mechanism, so the next request is not made until
 //    the current request finishes. This may not be optimal as it unneccesarily blocks

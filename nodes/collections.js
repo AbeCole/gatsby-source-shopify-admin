@@ -59,13 +59,13 @@ var collections = function () {
                         node.image.localFile___NODE = _context.sent;
 
                       case 4:
-                        if (!(node.metafields && helpers.imageMetafields && helpers.imageMetafields.product)) {
+                        if (!(node.metafields && helpers.imageMetafields && helpers.imageMetafields.collection)) {
                           _context.next = 7;
                           break;
                         }
 
                         _context.next = 7;
-                        return _promise2.default.all((0, _parseImageMetafields2.default)(node, helpers.imageMetafields.product, helpers));
+                        return _promise2.default.all((0, _parseImageMetafields2.default)(node, helpers.imageMetafields.collection, helpers));
 
                       case 7:
                         return _context.abrupt("return", node);

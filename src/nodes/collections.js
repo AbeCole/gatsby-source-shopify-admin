@@ -16,10 +16,10 @@ const collections = async (data, helpers) => {
       if (
         node.metafields &&
         helpers.imageMetafields &&
-        helpers.imageMetafields.product
+        helpers.imageMetafields.collection
       ) {
         await Promise.all(
-          parseImageMetafields(node, helpers.imageMetafields.product, helpers)
+          parseImageMetafields(node, helpers.imageMetafields.collection, helpers)
         );
       }
 

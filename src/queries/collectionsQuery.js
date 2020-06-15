@@ -9,7 +9,7 @@ const collectionsQuery = async props => {
     "collections",
     props,
     `{
-      collections {
+      collections(query: "updated_at:>'2020-04-04 00:00:00'") {
         edges {
           node {
             id

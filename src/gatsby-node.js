@@ -89,30 +89,31 @@ exports.sourceNodes = async (
 
   const products = await productsQuery(helpers);
 
-  if (verbose) {
-    console.timeEnd(format("products query"));
+  if (verbose) console.timeEnd(format("products query"));
 
-    console.log(format("- creating collections nodes"));
-    console.time(format("collections nodes"));
+  if (collections) {
+    if (verbose) {
+      console.log(format("- creating collections nodes"));
+      console.time(format("collections nodes"));
+    }
+
+    createCollectionNodes(collections, helpers);
+
+    if (verbose) console.timeEnd(format("collections nodes"));
   }
 
-  createCollectionNodes(collections, helpers);
+  if (products) {
+    if (verbose) {
+      console.log(format("- creating products nodes"));
+      console.time(format("products nodes"));
+    }
 
-  if (verbose) {
-    console.timeEnd(format("collections nodes"));
+    createProductNodes(products, helpers);
 
-    console.log(format("- creating products nodes"));
-    console.time(format("products nodes"));
+    if (verbose) console.timeEnd(format("products nodes"));
   }
 
-  createProductNodes(products, helpers);
-
-  if (verbose) {
-    console.timeEnd(format("products nodes"));
-
-    console.time(format("finished type definitions"));
-  }
-
+  if (verbose) console.time(format("finished type definitions"));
   // Gatsby tries to infer all the type definitions
   // However this doesn't work if fields are set for some products
   // i.e. if compareAtPrice is only set on 1 out of 100 products, it is

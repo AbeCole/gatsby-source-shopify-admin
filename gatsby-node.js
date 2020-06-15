@@ -142,30 +142,31 @@ exports.sourceNodes = function () {
             products = _context.sent;
 
 
-            if (verbose) {
-              console.timeEnd(format("products query"));
+            if (verbose) console.timeEnd(format("products query"));
 
-              console.log(format("- creating collections nodes"));
-              console.time(format("collections nodes"));
+            if (collections) {
+              if (verbose) {
+                console.log(format("- creating collections nodes"));
+                console.time(format("collections nodes"));
+              }
+
+              (0, _collections2.default)(collections, helpers);
+
+              if (verbose) console.timeEnd(format("collections nodes"));
             }
 
-            (0, _collections2.default)(collections, helpers);
+            if (products) {
+              if (verbose) {
+                console.log(format("- creating products nodes"));
+                console.time(format("products nodes"));
+              }
 
-            if (verbose) {
-              console.timeEnd(format("collections nodes"));
+              (0, _products2.default)(products, helpers);
 
-              console.log(format("- creating products nodes"));
-              console.time(format("products nodes"));
+              if (verbose) console.timeEnd(format("products nodes"));
             }
 
-            (0, _products2.default)(products, helpers);
-
-            if (verbose) {
-              console.timeEnd(format("products nodes"));
-
-              console.time(format("finished type definitions"));
-            }
-
+            if (verbose) console.time(format("finished type definitions"));
             // Gatsby tries to infer all the type definitions
             // However this doesn't work if fields are set for some products
             // i.e. if compareAtPrice is only set on 1 out of 100 products, it is
@@ -194,7 +195,7 @@ exports.sourceNodes = function () {
               console.timeEnd(format("finished"));
             }
 
-          case 26:
+          case 25:
           case "end":
             return _context.stop();
         }

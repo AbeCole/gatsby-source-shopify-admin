@@ -55,7 +55,7 @@ var fetchShopifyData = function () {
             }
 
             // todo: better error handling (needs to be based on context)
-            console.error("bulk " + objectType + " query failed", queryStatus.userErrors);
+            console.error(format("bulk " + objectType + " query failed"), queryStatus.userErrors);
             return _context.abrupt("return", null);
 
           case 9:

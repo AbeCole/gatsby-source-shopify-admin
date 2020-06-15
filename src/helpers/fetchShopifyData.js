@@ -12,7 +12,7 @@ const fetchShopifyData = async (objectType, helpers, query, parseAttrs) => {
   const { bulkOperation } = queryStatus;
   if (!bulkOperation || bulkOperation.status !== "CREATED") {
     // todo: better error handling (needs to be based on context)
-    console.error(`bulk ${objectType} query failed`, queryStatus.userErrors);
+    console.error(format(`bulk ${objectType} query failed`), queryStatus.userErrors);
     return null;
   }
 

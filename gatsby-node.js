@@ -65,6 +65,8 @@ exports.sourceNodes = function () {
         apiKey = _ref3.apiKey,
         _ref3$verbose = _ref3.verbose,
         verbose = _ref3$verbose === undefined ? false : _ref3$verbose,
+        _ref3$onlyPublished = _ref3.onlyPublished,
+        onlyPublished = _ref3$onlyPublished === undefined ? false : _ref3$onlyPublished,
         _ref3$imageMetafields = _ref3.imageMetafields,
         imageMetafields = _ref3$imageMetafields === undefined ? null : _ref3$imageMetafields,
         _ref3$pollInterval = _ref3.pollInterval,
@@ -116,15 +118,17 @@ exports.sourceNodes = function () {
 
             if (verbose) {
               console.time(format("finished"));
+            }
 
+            if (verbose) {
               console.log(format("- starting collections query"));
               console.time(format("collections query"));
             }
 
-            _context.next = 11;
+            _context.next = 12;
             return (0, _collectionsQuery2.default)(helpers);
 
-          case 11:
+          case 12:
             collections = _context.sent;
 
 
@@ -135,10 +139,10 @@ exports.sourceNodes = function () {
               console.time(format("products query"));
             }
 
-            _context.next = 15;
+            _context.next = 16;
             return (0, _productsQuery2.default)(helpers);
 
-          case 15:
+          case 16:
             products = _context.sent;
 
 
@@ -161,7 +165,9 @@ exports.sourceNodes = function () {
                 console.time(format("products nodes"));
               }
 
-              (0, _products2.default)(products, helpers);
+              (0, _products2.default)(onlyPublished ? products.filter(function (p) {
+                return p.publishedOnCurrentPublication;
+              }) : products, helpers);
 
               if (verbose) console.timeEnd(format("products nodes"));
             }
@@ -195,7 +201,7 @@ exports.sourceNodes = function () {
               console.timeEnd(format("finished"));
             }
 
-          case 25:
+          case 26:
           case "end":
             return _context.stop();
         }

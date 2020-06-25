@@ -20,6 +20,7 @@ Configuration is relatively limited at the moment, if you come across a good use
         storeName: ‘YOUR_STORE_NAME',
         apiKey: ‘YOUR_ADMIN_API_KEY',
         verbose: true,
+        onlyPublished: false, // only show products that are currently published on the 'publication' aka the private app
         pollInterval: 1000 * 10,
         imagesMetafields: {
           product: null,

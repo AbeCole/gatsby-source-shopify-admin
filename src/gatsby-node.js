@@ -18,17 +18,18 @@ exports.sourceNodes = async (
     store,
     cache,
     createNodeId,
-    actions
+    actions,
   },
   {
     storeName,
     apiKey,
     verbose = false,
+    onlyPublished = false,
     imageMetafields = null,
-    pollInterval = 1000 * 10
+    pollInterval = 1000 * 10,
   }
 ) => {
-  const format = msg =>
+  const format = (msg) =>
     chalk`{blue gatsby-source-shopify-admin/${storeName}} ${msg}`;
 
   if (verbose) console.log(format("starting: shopify queries > node creation"));
@@ -37,21 +38,21 @@ exports.sourceNodes = async (
     `https://${storeName}.myshopify.com/admin/api/2020-04/graphql.json`,
     {
       headers: {
-        "X-Shopify-Access-Token": apiKey
-      }
+        "X-Shopify-Access-Token": apiKey,
+      },
     }
   );
 
   let createNodeFactory, generateNodeId;
   let nodeHelpers = ({ createNodeFactory, generateNodeId } = createNodeHelpers({
-    typePrefix: TYPE_PREFIX
+    typePrefix: TYPE_PREFIX,
   }));
   nodeHelpers = {
     createNode,
     createNodeId,
     touchNode,
     TYPE_PREFIX,
-    ...nodeHelpers
+    ...nodeHelpers,
   };
   let imageHelpers = { ...nodeHelpers, store, cache, imageMetafields };
 
@@ -68,12 +69,14 @@ exports.sourceNodes = async (
     imageMetafields,
     verbose,
     pollInterval,
-    format
+    format,
   };
 
   if (verbose) {
     console.time(format("finished"));
+  }
 
+  if (verbose) {
     console.log(format("- starting collections query"));
     console.time(format("collections query"));
   }
@@ -108,7 +111,12 @@ exports.sourceNodes = async (
       console.time(format("products nodes"));
     }
 
-    createProductNodes(products, helpers);
+    createProductNodes(
+      onlyPublished
+        ? products.filter((p) => p.publishedOnCurrentPublication)
+        : products,
+      helpers
+    );
 
     if (verbose) console.timeEnd(format("products nodes"));
   }
@@ -137,7 +145,7 @@ exports.sourceNodes = async (
     if (imageMetafields.product) {
       typeDefs += `
         type ShopifyProduct implements Node {
-          ${imageMetafields.product.map(m => `${m}: ShopifyImage`).join("\n")}
+          ${imageMetafields.product.map((m) => `${m}: ShopifyImage`).join("\n")}
         }
       `;
     }
@@ -145,7 +153,7 @@ exports.sourceNodes = async (
       typeDefs += `
         type ShopifyCollection implements Node {
           ${imageMetafields.collection
-            .map(m => `${m}: ShopifyImage`)
+            .map((m) => `${m}: ShopifyImage`)
             .join("\n")}
         }
       `;

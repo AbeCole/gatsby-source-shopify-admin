@@ -18,6 +18,7 @@ const productsQuery = props =>
             productType
             vendor
             createdAt
+            publishedOnCurrentPublication
             images {
               edges {
                 node {

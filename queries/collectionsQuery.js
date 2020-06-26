@@ -1,18 +1,18 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _regenerator = require('babel-runtime/regenerator');
+var _regenerator = require("babel-runtime/regenerator");
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
+var _asyncToGenerator2 = require("babel-runtime/helpers/asyncToGenerator");
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-var _fetchShopifyData = require('../helpers/fetchShopifyData');
+var _fetchShopifyData = require("../helpers/fetchShopifyData");
 
 var _fetchShopifyData2 = _interopRequireDefault(_fetchShopifyData);
 
@@ -26,20 +26,17 @@ var collectionsQuery = function () {
         switch (_context.prev = _context.next) {
           case 0:
             _context.next = 2;
-            return props.cache.get('lastRun');
+            return props.cache.get("lastRun");
 
           case 2:
             lastRun = _context.sent;
-
-            console.log('collections fetching', lastRun, Date.parse(lastRun), lastRun ? '(query: "updated_at:>' + lastRun + '")' : '');
-
-            return _context.abrupt('return', (0, _fetchShopifyData2.default)("collections", props, '{\n      collections' + (lastRun && Date.parse(lastRun) ? '(query: "updated_at:>' + lastRun + '")' : '') + ' {\n        edges {\n          node {\n            id\n            handle\n            title\n            description\n            descriptionHtml\n            image {\n              id\n              altText\n              src\n            }\n            products {\n              edges {\n                node {\n                  id\n                }\n              }\n            }\n            metafields {\n              edges {\n                node {\n                  id\n                  namespace\n                  key\n                  value\n                  valueType\n                  description\n                }\n              }\n            }\n          }\n        }\n      }\n    }', {
+            return _context.abrupt("return", (0, _fetchShopifyData2.default)("collections", props, "{\n      collections(query: \"updated_at:>'2020-04-04 00:00:00'\") {\n        edges {\n          node {\n            id\n            handle\n            title\n            description\n            descriptionHtml\n            image {\n              id\n              altText\n              src\n            }\n            products {\n              edges {\n                node {\n                  id\n                }\n              }\n            }\n            metafields {\n              edges {\n                node {\n                  id\n                  namespace\n                  key\n                  value\n                  valueType\n                  description\n                }\n              }\n            }\n          }\n        }\n      }\n    }", {
               Product: "products",
               Metafield: "metafields"
             }));
 
-          case 5:
-          case 'end':
+          case 4:
+          case "end":
             return _context.stop();
         }
       }

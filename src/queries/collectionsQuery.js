@@ -2,13 +2,13 @@ import fetchShopifyData from "../helpers/fetchShopifyData";
 
 const collectionsQuery = async props => {
   const lastRun = await props.cache.get(`lastRun`);
-  console.log('collections fetching', lastRun, Date.parse(lastRun), lastRun ? `(query: "updated_at:>${lastRun}")` : '')
+  // console.log('collections fetching', lastRun, Date.parse(lastRun), lastRun ? `(query: "updated_at:>${lastRun}")` : '')
 
   return fetchShopifyData(
     "collections",
     props,
     `{
-      collections${lastRun && Date.parse(lastRun) ? `(query: "updated_at:>${lastRun}")` : ''} {
+      collections(query: "updated_at:>'2020-04-04 00:00:00'") {
         edges {
           node {
             id

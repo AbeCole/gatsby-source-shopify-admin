@@ -91,9 +91,19 @@ var products = function () {
                         return _promise2.default.all((0, _parseImageMetafields2.default)(node, helpers.imageMetafields.product, helpers));
 
                       case 6:
+
+                        // Storefront & Admin APIs return differnet price formats
+                        // For some reason the Admin API outputs prices as 'cents' (i.e. multipled by 100)
+                        // so we need to correc this to match what we expect in the Storefront API
+                        // as that will be more commonly used on the client side
+                        if (node.priceRange) {
+                          node.priceRange.minVariantPrice.amount = node.priceRange.minVariantPrice.amount / 100;
+                          node.priceRange.maxVariantPrice.amount = node.priceRange.maxVariantPrice.amount / 100;
+                        }
+
                         return _context2.abrupt("return", node);
 
-                      case 7:
+                      case 8:
                       case "end":
                         return _context2.stop();
                     }

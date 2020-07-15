@@ -92,6 +92,9 @@ var collections = function () {
                     switch (_context2.prev = _context2.next) {
                       case 0:
                         if (d.products) {
+                          console.log('asdasd', d.products.map(function (p) {
+                            return p.id;
+                          }));
                           d.products___NODE = d.products.map(function (p) {
                             return helpers.generateNodeId("PRODUCT", p.id);
                           });

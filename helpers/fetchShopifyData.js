@@ -75,11 +75,8 @@ var fetchShopifyData = function () {
           case 15:
             pollStatus = _context.sent;
 
-
-            if (verbose) console.log(format("-- " + objectType + " poll response status \"" + pollStatus.status + "\""));
-
             if (!(!pollStatus || pollStatus.status !== "COMPLETED")) {
-              _context.next = 20;
+              _context.next = 19;
               break;
             }
 
@@ -87,7 +84,9 @@ var fetchShopifyData = function () {
             console.error(objectType + " poll failed", pollStatus);
             return _context.abrupt("return", null);
 
-          case 20:
+          case 19:
+
+            if (verbose) console.log(format("-- " + objectType + " poll response status \"" + pollStatus.status + "\""));
 
             if (verbose) console.log(format("-- starting to fetch bulk file \"" + pollStatus.url + "\""));
 

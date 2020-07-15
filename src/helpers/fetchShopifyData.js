@@ -27,13 +27,13 @@ const fetchShopifyData = async (objectType, helpers, query, parseAttrs) => {
 
   const pollStatus = await bulkPollQuery(helpers);
 
-  if (verbose) console.log(format(`-- ${objectType} poll response status "${pollStatus.status}"`));
-
   if (!pollStatus || pollStatus.status !== "COMPLETED") {
     // todo: better error handling (needs to be based on context)
     console.error(`${objectType} poll failed`, pollStatus);
     return null;
   }
+
+  if (verbose) console.log(format(`-- ${objectType} poll response status "${pollStatus.status}"`));
 
   if (verbose)
     console.log(format(`-- starting to fetch bulk file "${pollStatus.url}"`));

@@ -101,9 +101,11 @@ var products = function () {
                           node.priceRange.maxVariantPrice.amount = node.priceRange.maxVariantPrice.amount / 100;
                         }
 
+                        console.log('product', node);
+
                         return _context2.abrupt("return", node);
 
-                      case 8:
+                      case 9:
                       case "end":
                         return _context2.stop();
                     }

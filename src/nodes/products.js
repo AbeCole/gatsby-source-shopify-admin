@@ -45,6 +45,8 @@ const products = async (data, helpers) => {
       node.priceRange.maxVariantPrice.amount = node.priceRange.maxVariantPrice.amount / 100;
     }
 
+    console.log('product', node)
+
     return node;
   });
 

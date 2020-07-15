@@ -54,6 +54,10 @@ var _products = require("./nodes/products");
 
 var _products2 = _interopRequireDefault(_products);
 
+var _shippingRates = require("./nodes/shippingRates");
+
+var _shippingRates2 = _interopRequireDefault(_shippingRates);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var TYPE_PREFIX = "shopify";
@@ -66,6 +70,7 @@ exports.sourceNodes = function () {
         actions = _ref2.actions;
     var storeName = _ref3.storeName,
         apiKey = _ref3.apiKey,
+        storefrontApiKey = _ref3.storefrontApiKey,
         _ref3$verbose = _ref3.verbose,
         verbose = _ref3$verbose === undefined ? false : _ref3$verbose,
         _ref3$onlyPublished = _ref3.onlyPublished,
@@ -84,7 +89,7 @@ exports.sourceNodes = function () {
               var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(resolve, reject) {
                 var _createNodeHelpers;
 
-                var format, client, createNodeFactory, generateNodeId, nodeHelpers, imageHelpers, helpers, collections, products, createTypes, typeDefs;
+                var format, client, createNodeFactory, generateNodeId, nodeHelpers, imageHelpers, helpers, shippingRates, collections, products, createTypes, typeDefs;
                 return _regenerator2.default.wrap(function _callee$(_context) {
                   while (1) {
                     switch (_context.prev = _context.next) {
@@ -128,47 +133,37 @@ exports.sourceNodes = function () {
                           format: format
                         };
 
-                        //
-                        // await axios
-                        //     .post(`https://slvrlake.myshopify.com/api/2020-07/graphql`, `{ shop { name } }`, {
-                        //       headers: {
-                        //         'X-Shopify-Storefront-Access-Token': '84fdaf485a2cfc4d32b772b1947503fa',
-                        //         'Content-Type': 'application/graphql',
-                        //         Accept: 'application/json',
-                        //       },
-                        //     })
-                        //     // draftOrderCreate(input: {lineItems: [{variantId: "Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8zMTQ1MjE3MzAwODkzOA==", quantity: 1}], allowPartialAddresses: true, shippingAddress: {address1: "1 Test Street", city: "London", country: "United Kingdom"}}) {
-                        //     // .then(resp => resp.json())
-                        // //     .then(resp => resp.data)
-                        // // // gid://shopify/ProductVariant/31452047278122
-                        // // await storefrontClient
-                        // //   .request(
-                        // //     `shop { name }`
-                        // //   )
-                        //   .then((resp) => {
-                        //     if (resp.data) {
-                        //       console.log("shopify query", resp.data.errors);
-                        //       console.log("shopify query", resp.data);
-                        //     }
-                        //     // if (resp.errors) {
-                        //     //   setError(resp.errors.map(e => e.message).join(', '));
-                        //     //   return;
-                        //     // }
-                        //     //
-                        //     // if (window.ga) {
-                        //     //   window.ga(tracker => {
-                        //     //     const linkerParam = tracker.get('linkerParam')
-                        //     //     window.location = `${resp.data.checkoutCreate.checkout.webUrl}&${linkerParam}`
-                        //     //   })
-                        //     // } else {
-                        //     //   console.log('CHECKOUT URL: https://slvrlake.myshopify.com/');
-                        //     //   console.log('CHECKOUT URL CURRENT: ' + resp.data.checkoutCreate.checkout.webUrl);
-                        //     //   // window.location = resp.data.checkoutCreate.checkout.webUrl
-                        //     // }
-                        //   })
-                        //   .catch((err) => {
-                        //     console.error("checkout error", err);
-                        //   });
+                        // todo: try use the same GraphQLClient as above so we dont need axios
+                        // todo: add storefont access token to config
+                        // todo: add address to the config, this could be the main option to enable feature and allows user to override default address
+                        // todo: move this to after the other queries then use the id of any product variant we have
+                        // todo: possibly move this all to a separate helper
+
+                        _context.next = 10;
+                        return _axios2.default.post("https://" + storeName + ".myshopify.com/api/2020-07/graphql", "mutation {\n          checkoutCreate(input: {\n            lineItems: [{ variantId: \"Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8zMTQ1MjE3MzAwODkzOA==\", quantity: 1 }],\n            allowPartialAddresses: true,\n            shippingAddress: {address1: \"1337 Pawnee Street\", city: \"Jeffersonville\", province: \"IN\", country: \"United States\"}\n          }) {\n            checkout {\n              availableShippingRates {\n                ready\n                shippingRates {\n                  handle\n                  title\n                  priceV2 {\n                    amount\n                    currencyCode\n                  }\n                }\n              }\n            }\n            checkoutUserErrors {\n              code\n              field\n              message\n            }\n          }\n        }", {
+                          headers: {
+                            "X-Shopify-Storefront-Access-Token": storefrontApiKey,
+                            "Content-Type": "application/graphql",
+                            Accept: "application/json"
+                          }
+                        }).then(function (resp) {
+                          if (resp.data) {
+                            // todo: maybe add operational chaining here
+                            if (resp.data.data && resp.data.data.checkoutCreate && resp.data.data.checkoutCreate.checkout && resp.data.data.checkoutCreate.checkout.availableShippingRates.ready) {
+                              return resp.data.data.checkoutCreate.checkout.availableShippingRates.shippingRates;
+                            }
+                            // todo: better error handling when response doesn't match this structure
+                            console.log("error in response of checkout for shipping rates", resp.data, resp.data.data.checkoutCreate.checkoutUserErrors);
+                          }
+                        }).catch(function (err) {
+                          console.error("error requesting checkout for shipping rates", err);
+                        });
+
+                      case 10:
+                        shippingRates = _context.sent;
+
+
+                        (0, _shippingRates2.default)(shippingRates, helpers);
 
                         if (verbose) {
                           console.time(format("finished"));
@@ -179,10 +174,10 @@ exports.sourceNodes = function () {
                           console.time(format("collections query"));
                         }
 
-                        _context.next = 12;
+                        _context.next = 16;
                         return (0, _collectionsQuery2.default)(helpers);
 
-                      case 12:
+                      case 16:
                         collections = _context.sent;
 
 
@@ -193,10 +188,10 @@ exports.sourceNodes = function () {
                           console.time(format("products query"));
                         }
 
-                        _context.next = 16;
+                        _context.next = 20;
                         return (0, _productsQuery2.default)(helpers);
 
-                      case 16:
+                      case 20:
                         products = _context.sent;
 
 
@@ -256,7 +251,7 @@ exports.sourceNodes = function () {
 
                         resolve(true);
 
-                      case 28:
+                      case 32:
                       case "end":
                         return _context.stop();
                     }

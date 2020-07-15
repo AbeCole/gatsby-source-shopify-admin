@@ -29,7 +29,6 @@ const collections = async (data, helpers) => {
 
   data.forEach(async d => {
     if (d.products) {
-      console.log('asdasd', d.products.map(p => p.id));
       d.products___NODE = d.products.map(p =>
         helpers.generateNodeId("PRODUCT", p.id)
       );

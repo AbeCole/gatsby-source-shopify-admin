@@ -15,8 +15,9 @@ const fetchShopifyData = async (objectType, helpers, query, parseAttrs) => {
     // for example below is an error we get when trying to start the app twice at same timeout
     // (i.e. production & Preview both deploying at same time)
     // bulk collections query failed [ { field: null, message: 'A bulk operation for this app and shop is already in progress: gid://shopify/BulkOperation/25094455338.' } ]
+    console.log('outputing more details of queryStatus for debug: ', queryStatus);
     console.log('outputing more details of bulkOperation for debug: ', bulkOperation);
-    console.log('bulkOperation.status:', bulkOperation.status);
+    if (bulkOperation) console.log('bulkOperation.status:', bulkOperation.status);
     console.error(format(`bulk ${objectType} query failed`), queryStatus.userErrors);
     return null;
   }

@@ -3,6 +3,7 @@
 ======================================================== */
 
 import { GraphQLClient } from "graphql-request";
+import axios from "axios";
 import chalk from "chalk";
 import createNodeHelpers from "gatsby-node-helpers";
 import collectionsQuery from "./queries/collectionsQuery";
@@ -14,7 +15,7 @@ const TYPE_PREFIX = "shopify";
 
 exports.sourceNodes = async (
   {
-    boundActionCreators: { createNode, touchNode },
+    // boundActionCreators: { createNode, touchNode },
     store,
     cache,
     createNodeId,
@@ -29,11 +30,14 @@ exports.sourceNodes = async (
     pollInterval = 1000 * 10,
   }
 ) => {
+  const { createNode, touchNode } = actions;
+
   return new Promise(async (resolve, reject) => {
     const format = (msg) =>
       chalk`{blue gatsby-source-shopify-admin/${storeName}} ${msg}`;
 
-    if (verbose) console.log(format("starting: shopify queries > node creation"));
+    if (verbose)
+      console.log(format("starting: shopify queries > node creation"));
 
     const client = new GraphQLClient(
       `https://${storeName}.myshopify.com/admin/api/2020-04/graphql.json`,
@@ -45,7 +49,10 @@ exports.sourceNodes = async (
     );
 
     let createNodeFactory, generateNodeId;
-    let nodeHelpers = ({ createNodeFactory, generateNodeId } = createNodeHelpers({
+    let nodeHelpers = ({
+      createNodeFactory,
+      generateNodeId,
+    } = createNodeHelpers({
       typePrefix: TYPE_PREFIX,
     }));
     nodeHelpers = {
@@ -72,6 +79,49 @@ exports.sourceNodes = async (
       pollInterval,
       format,
     };
+
+
+    //
+    // await axios
+    //     .post(`https://slvrlake.myshopify.com/api/2020-07/graphql`, `{ shop { name } }`, {
+    //       headers: {
+    //         'X-Shopify-Storefront-Access-Token': '84fdaf485a2cfc4d32b772b1947503fa',
+    //         'Content-Type': 'application/graphql',
+    //         Accept: 'application/json',
+    //       },
+    //     })
+    //     // draftOrderCreate(input: {lineItems: [{variantId: "Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8zMTQ1MjE3MzAwODkzOA==", quantity: 1}], allowPartialAddresses: true, shippingAddress: {address1: "1 Test Street", city: "London", country: "United Kingdom"}}) {
+    //     // .then(resp => resp.json())
+    // //     .then(resp => resp.data)
+    // // // gid://shopify/ProductVariant/31452047278122
+    // // await storefrontClient
+    // //   .request(
+    // //     `shop { name }`
+    // //   )
+    //   .then((resp) => {
+    //     if (resp.data) {
+    //       console.log("shopify query", resp.data.errors);
+    //       console.log("shopify query", resp.data);
+    //     }
+    //     // if (resp.errors) {
+    //     //   setError(resp.errors.map(e => e.message).join(', '));
+    //     //   return;
+    //     // }
+    //     //
+    //     // if (window.ga) {
+    //     //   window.ga(tracker => {
+    //     //     const linkerParam = tracker.get('linkerParam')
+    //     //     window.location = `${resp.data.checkoutCreate.checkout.webUrl}&${linkerParam}`
+    //     //   })
+    //     // } else {
+    //     //   console.log('CHECKOUT URL: https://slvrlake.myshopify.com/');
+    //     //   console.log('CHECKOUT URL CURRENT: ' + resp.data.checkoutCreate.checkout.webUrl);
+    //     //   // window.location = resp.data.checkoutCreate.checkout.webUrl
+    //     // }
+    //   })
+    //   .catch((err) => {
+    //     console.error("checkout error", err);
+    //   });
 
     if (verbose) {
       console.time(format("finished"));
@@ -123,6 +173,7 @@ exports.sourceNodes = async (
     }
 
     if (verbose) console.time(format("finished type definitions"));
+
     // Gatsby tries to infer all the type definitions
     // However this doesn't work if fields are set for some products
     // i.e. if compareAtPrice is only set on 1 out of 100 products, it is
@@ -162,7 +213,13 @@ exports.sourceNodes = async (
         metafields: [ShopifyProductMetafield]
       }
       type ShopifyProduct implements Node {
-        ${imageMetafields.product ? imageMetafields.product.map((m) => `${m}: ShopifyImage`).join("\n") : ''}
+        ${
+          imageMetafields.product
+            ? imageMetafields.product
+                .map((m) => `${m}: ShopifyImage`)
+                .join("\n")
+            : ""
+        }
         handle: String
       }
     `;

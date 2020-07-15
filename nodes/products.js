@@ -101,11 +101,9 @@ var products = function () {
                           node.priceRange.maxVariantPrice.amount = node.priceRange.maxVariantPrice.amount / 100;
                         }
 
-                        console.log('product', node);
-
                         return _context2.abrupt("return", node);
 
-                      case 9:
+                      case 8:
                       case "end":
                         return _context2.stop();
                     }
@@ -131,6 +129,9 @@ var products = function () {
 
                       case 2:
                         node = _context3.sent;
+
+
+                        // console.log('product createNode', node.id)
 
                         helpers.createNode(node);
 

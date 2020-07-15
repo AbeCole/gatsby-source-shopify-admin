@@ -30,6 +30,7 @@
         "prettier": "^1.13.0"
     },
     "dependencies": {
+        "axios": "^0.19.2",
         "chalk": "^2.4.1",
         "gatsby": "^2.0.19",
         "gatsby-node-helpers": "^0.3.0",

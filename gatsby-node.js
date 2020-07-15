@@ -26,6 +26,10 @@ var _templateObject = (0, _taggedTemplateLiteral3.default)(["{blue gatsby-source
 
 var _graphqlRequest = require("graphql-request");
 
+var _axios = require("axios");
+
+var _axios2 = _interopRequireDefault(_axios);
+
 var _chalk = require("chalk");
 
 var _chalk2 = _interopRequireDefault(_chalk);
@@ -56,10 +60,7 @@ var TYPE_PREFIX = "shopify";
 
 exports.sourceNodes = function () {
   var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(_ref2, _ref3) {
-    var _ref2$boundActionCrea = _ref2.boundActionCreators,
-        createNode = _ref2$boundActionCrea.createNode,
-        touchNode = _ref2$boundActionCrea.touchNode,
-        store = _ref2.store,
+    var store = _ref2.store,
         cache = _ref2.cache,
         createNodeId = _ref2.createNodeId,
         actions = _ref2.actions;
@@ -73,10 +74,12 @@ exports.sourceNodes = function () {
         imageMetafields = _ref3$imageMetafields === undefined ? null : _ref3$imageMetafields,
         _ref3$pollInterval = _ref3.pollInterval,
         pollInterval = _ref3$pollInterval === undefined ? 1000 * 10 : _ref3$pollInterval;
+    var createNode, touchNode;
     return _regenerator2.default.wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
+            createNode = actions.createNode, touchNode = actions.touchNode;
             return _context2.abrupt("return", new _promise2.default(function () {
               var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(resolve, reject) {
                 var _createNodeHelpers;
@@ -125,6 +128,47 @@ exports.sourceNodes = function () {
                           format: format
                         };
 
+                        //
+                        // await axios
+                        //     .post(`https://slvrlake.myshopify.com/api/2020-07/graphql`, `{ shop { name } }`, {
+                        //       headers: {
+                        //         'X-Shopify-Storefront-Access-Token': '84fdaf485a2cfc4d32b772b1947503fa',
+                        //         'Content-Type': 'application/graphql',
+                        //         Accept: 'application/json',
+                        //       },
+                        //     })
+                        //     // draftOrderCreate(input: {lineItems: [{variantId: "Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8zMTQ1MjE3MzAwODkzOA==", quantity: 1}], allowPartialAddresses: true, shippingAddress: {address1: "1 Test Street", city: "London", country: "United Kingdom"}}) {
+                        //     // .then(resp => resp.json())
+                        // //     .then(resp => resp.data)
+                        // // // gid://shopify/ProductVariant/31452047278122
+                        // // await storefrontClient
+                        // //   .request(
+                        // //     `shop { name }`
+                        // //   )
+                        //   .then((resp) => {
+                        //     if (resp.data) {
+                        //       console.log("shopify query", resp.data.errors);
+                        //       console.log("shopify query", resp.data);
+                        //     }
+                        //     // if (resp.errors) {
+                        //     //   setError(resp.errors.map(e => e.message).join(', '));
+                        //     //   return;
+                        //     // }
+                        //     //
+                        //     // if (window.ga) {
+                        //     //   window.ga(tracker => {
+                        //     //     const linkerParam = tracker.get('linkerParam')
+                        //     //     window.location = `${resp.data.checkoutCreate.checkout.webUrl}&${linkerParam}`
+                        //     //   })
+                        //     // } else {
+                        //     //   console.log('CHECKOUT URL: https://slvrlake.myshopify.com/');
+                        //     //   console.log('CHECKOUT URL CURRENT: ' + resp.data.checkoutCreate.checkout.webUrl);
+                        //     //   // window.location = resp.data.checkoutCreate.checkout.webUrl
+                        //     // }
+                        //   })
+                        //   .catch((err) => {
+                        //     console.error("checkout error", err);
+                        //   });
 
                         if (verbose) {
                           console.time(format("finished"));
@@ -183,6 +227,7 @@ exports.sourceNodes = function () {
                         }
 
                         if (verbose) console.time(format("finished type definitions"));
+
                         // Gatsby tries to infer all the type definitions
                         // However this doesn't work if fields are set for some products
                         // i.e. if compareAtPrice is only set on 1 out of 100 products, it is
@@ -200,7 +245,7 @@ exports.sourceNodes = function () {
                         }
                         typeDefs += "\n      type ShopifyProductMetafield implements Node {\n        key: String\n        value: String\n      }\n      type ShopifyCollectionProducts implements Node {\n        metafields: [ShopifyProductMetafield]\n      }\n      type ShopifyProduct implements Node {\n        " + (imageMetafields.product ? imageMetafields.product.map(function (m) {
                           return m + ": ShopifyImage";
-                        }).join("\n") : '') + "\n        handle: String\n      }\n    ";
+                        }).join("\n") : "") + "\n        handle: String\n      }\n    ";
                         createTypes(typeDefs);
 
                         if (verbose) {
@@ -224,7 +269,7 @@ exports.sourceNodes = function () {
               };
             }()));
 
-          case 1:
+          case 2:
           case "end":
             return _context2.stop();
         }

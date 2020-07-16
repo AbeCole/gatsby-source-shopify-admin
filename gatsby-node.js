@@ -197,29 +197,44 @@ exports.sourceNodes = function () {
 
                         if (verbose) console.timeEnd(format("products query"));
 
-                        if (products) {
-                          if (verbose) {
-                            console.log(format("- creating products nodes"));
-                            console.time(format("products nodes"));
-                          }
-
-                          (0, _products2.default)(onlyPublished ? products.filter(function (p) {
-                            return p.publishedOnCurrentPublication;
-                          }) : products, helpers);
-
-                          if (verbose) console.timeEnd(format("products nodes"));
+                        if (!products) {
+                          _context.next = 27;
+                          break;
                         }
 
-                        if (collections) {
-                          if (verbose) {
-                            console.log(format("- creating collections nodes"));
-                            console.time(format("collections nodes"));
-                          }
-
-                          (0, _collections2.default)(collections, helpers);
-
-                          if (verbose) console.timeEnd(format("collections nodes"));
+                        if (verbose) {
+                          console.log(format("- creating products nodes"));
+                          console.time(format("products nodes"));
                         }
+
+                        _context.next = 26;
+                        return (0, _products2.default)(onlyPublished ? products.filter(function (p) {
+                          return p.publishedOnCurrentPublication;
+                        }) : products, helpers);
+
+                      case 26:
+
+                        if (verbose) console.timeEnd(format("products nodes"));
+
+                      case 27:
+                        if (!collections) {
+                          _context.next = 32;
+                          break;
+                        }
+
+                        if (verbose) {
+                          console.log(format("- creating collections nodes"));
+                          console.time(format("collections nodes"));
+                        }
+
+                        _context.next = 31;
+                        return (0, _collections2.default)(collections, helpers);
+
+                      case 31:
+
+                        if (verbose) console.timeEnd(format("collections nodes"));
+
+                      case 32:
 
                         if (verbose) console.time(format("finished type definitions"));
 
@@ -251,7 +266,7 @@ exports.sourceNodes = function () {
 
                         resolve(true);
 
-                      case 32:
+                      case 40:
                       case "end":
                         return _context.stop();
                     }

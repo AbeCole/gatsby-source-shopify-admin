@@ -115,9 +115,7 @@ var products = function () {
                 return _ref2.apply(this, arguments);
               };
             }());
-
-
-            data.forEach(function () {
+            return _context4.abrupt("return", _promise2.default.all(data.map(function () {
               var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3(d) {
                 var node;
                 return _regenerator2.default.wrap(function _callee3$(_context3) {
@@ -129,11 +127,7 @@ var products = function () {
 
                       case 2:
                         node = _context3.sent;
-
-
-                        // console.log('product createNode', node.id)
-
-                        helpers.createNode(node);
+                        return _context3.abrupt("return", helpers.createNode(node));
 
                       case 4:
                       case "end":
@@ -146,11 +140,9 @@ var products = function () {
               return function (_x5) {
                 return _ref4.apply(this, arguments);
               };
-            }());
+            }())));
 
-            return _context4.abrupt("return", true);
-
-          case 3:
+          case 2:
           case "end":
             return _context4.stop();
         }

@@ -56,7 +56,7 @@ var parseBulkData = function parseBulkData(data) {
       // todo: probably needs error handling here, we only get here if a
       // matching parent is found, but the Shopify object type isn't matched
       // essentially at the moment this node is ignored without any notification
-      console.error("Matched a parent but no matching childAttributes assignment for type " + type + ", consider adding this to the childAttributes mapping");
+      console.error("Matched a parent but no matching childAttributes assignment for type " + type + ", consider adding this to the childAttributes mapping", childAttributes, parent);
       return;
     }
 

@@ -118,8 +118,7 @@ exports.sourceNodes = async (
         }`,
         {
           headers: {
-            "X-Shopify-Storefront-Access-Token":
-              storefrontApiKey,
+            "X-Shopify-Storefront-Access-Token": storefrontApiKey,
             "Content-Type": "application/graphql",
             Accept: "application/json",
           },
@@ -149,10 +148,7 @@ exports.sourceNodes = async (
         console.error("error requesting checkout for shipping rates", err);
       });
 
-    createShippingRateNodes(
-      shippingRates,
-      helpers
-    );
+    createShippingRateNodes(shippingRates, helpers);
 
     if (verbose) {
       console.time(format("finished"));
@@ -182,7 +178,7 @@ exports.sourceNodes = async (
         console.time(format("products nodes"));
       }
 
-      createProductNodes(
+      await createProductNodes(
         onlyPublished
           ? products.filter((p) => p.publishedOnCurrentPublication)
           : products,
@@ -198,7 +194,7 @@ exports.sourceNodes = async (
         console.time(format("collections nodes"));
       }
 
-      createCollectionNodes(collections, helpers);
+      await createCollectionNodes(collections, helpers);
 
       if (verbose) console.timeEnd(format("collections nodes"));
     }

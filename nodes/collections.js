@@ -82,9 +82,7 @@ var collections = function () {
                 return _ref2.apply(this, arguments);
               };
             }());
-
-
-            data.forEach(function () {
+            return _context3.abrupt("return", _promise2.default.all(data.map(function () {
               var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(d) {
                 var node;
                 return _regenerator2.default.wrap(function _callee2$(_context2) {
@@ -103,8 +101,7 @@ var collections = function () {
 
                       case 3:
                         node = _context2.sent;
-
-                        helpers.createNode(node);
+                        return _context2.abrupt("return", helpers.createNode(node));
 
                       case 5:
                       case "end":
@@ -117,11 +114,9 @@ var collections = function () {
               return function (_x4) {
                 return _ref3.apply(this, arguments);
               };
-            }());
+            }())));
 
-            return _context3.abrupt("return", true);
-
-          case 3:
+          case 2:
           case "end":
             return _context3.stop();
         }

@@ -4,13 +4,13 @@ import parseImageMetafields from "../helpers/parseImageMetafields";
 const collections = async (data, helpers) => {
   const CollectionNode = helpers.createNodeFactory(
     "COLLECTION",
-    async node => {
+    async (node) => {
       if (node.image)
         node.image.localFile___NODE = await downloadImageNode({
           id: node.image.id,
           url: node.image.src,
           prefix: helpers.TYPE_PREFIX,
-          ...helpers
+          ...helpers,
         });
 
       if (
@@ -19,7 +19,11 @@ const collections = async (data, helpers) => {
         helpers.imageMetafields.collection
       ) {
         await Promise.all(
-          parseImageMetafields(node, helpers.imageMetafields.collection, helpers)
+          parseImageMetafields(
+            node,
+            helpers.imageMetafields.collection,
+            helpers
+          )
         );
       }
 
@@ -27,19 +31,19 @@ const collections = async (data, helpers) => {
     }
   );
 
-  data.forEach(async d => {
-    if (d.products) {
-      d.products___NODE = d.products.map(p =>
-        helpers.generateNodeId("PRODUCT", p.id)
-      );
-      d.products = null;
-    }
+  return Promise.all(
+    data.map(async (d) => {
+      if (d.products) {
+        d.products___NODE = d.products.map((p) =>
+          helpers.generateNodeId("PRODUCT", p.id)
+        );
+        d.products = null;
+      }
 
-    const node = await CollectionNode(d);
-    helpers.createNode(node);
-  });
-
-  return true;
+      const node = await CollectionNode(d);
+      return helpers.createNode(node);
+    })
+  );
 };
 
 export default collections;

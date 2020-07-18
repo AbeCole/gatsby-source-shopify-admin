@@ -28,6 +28,7 @@ var parseShopifyType = function parseShopifyType(id) {
 
 var parseBulkData = function parseBulkData(data) {
   var childAttributes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  var url = arguments[2];
 
   var ret = [];
   data.split("\n").filter(function (l) {
@@ -56,7 +57,7 @@ var parseBulkData = function parseBulkData(data) {
       // todo: probably needs error handling here, we only get here if a
       // matching parent is found, but the Shopify object type isn't matched
       // essentially at the moment this node is ignored without any notification
-      console.error("Matched a parent but no matching childAttributes assignment for type " + type + ", consider adding this to the childAttributes mapping", childAttributes, parent);
+      console.error("Matched a parent but no matching childAttributes assignment for type " + type + ", consider adding this to the childAttributes mapping", childAttributes, parent, l);
       return;
     }
 
@@ -91,9 +92,11 @@ var fetchBulkData = function () {
 
           case 2:
             bulkData = _context.sent;
+
+            console.log('fetchBulkData fetching url: ', url);
             return _context.abrupt("return", parseBulkData(bulkData, childAttributes));
 
-          case 4:
+          case 5:
           case "end":
             return _context.stop();
         }

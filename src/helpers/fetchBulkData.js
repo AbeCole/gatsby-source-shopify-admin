@@ -1,6 +1,6 @@
 const parseShopifyType = id => id.split("/")[3];
 
-const parseBulkData = (data, childAttributes = {}) => {
+const parseBulkData = (data, childAttributes = {}, url) => {
   const ret = [];
   data
     .split("\n")
@@ -31,7 +31,8 @@ const parseBulkData = (data, childAttributes = {}) => {
         console.error(
           `Matched a parent but no matching childAttributes assignment for type ${type}, consider adding this to the childAttributes mapping`,
           childAttributes,
-          parent
+          parent,
+          l
         );
         return;
       }
@@ -59,7 +60,7 @@ const parseBulkData = (data, childAttributes = {}) => {
 
 const fetchBulkData = async (url, childAttributes) => {
   const bulkData = await fetch(url).then(r => r.text());
-
+  console.log('fetchBulkData fetching url: ', url);
   return parseBulkData(bulkData, childAttributes);
 };
 

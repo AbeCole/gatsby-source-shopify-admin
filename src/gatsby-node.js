@@ -3,7 +3,6 @@
 ======================================================== */
 
 import { GraphQLClient } from "graphql-request";
-import axios from "axios";
 import chalk from "chalk";
 import createNodeHelpers from "gatsby-node-helpers";
 import collectionsQuery from "./queries/collectionsQuery";

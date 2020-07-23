@@ -3,10 +3,17 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-// todo: try use the same GraphQLClient as above so we dont need axios
+
+var _axios = require("axios");
+
+var _axios2 = _interopRequireDefault(_axios);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// todo: try use the same GraphQLClient as main thread so we dont need axios
 // todo: move this to after the other queries then use the id of any product variant we have
 var shippingRatesQuery = function shippingRatesQuery(storeName, shippingRatesAddress, storefrontApiKey) {
-  return axios.post("https://" + storeName + ".myshopify.com/api/2020-07/graphql", "mutation {\n        checkoutCreate(input: {\n          lineItems: [{ variantId: \"Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8zMTQ1MjE3MzAwODkzOA==\", quantity: 1 }],\n          allowPartialAddresses: true,\n          shippingAddress: " + shippingRatesAddress + "\n        }) {\n          checkout {\n            availableShippingRates {\n              ready\n              shippingRates {\n                handle\n                title\n                priceV2 {\n                  amount\n                  currencyCode\n                }\n              }\n            }\n          }\n          checkoutUserErrors {\n            code\n            field\n            message\n          }\n        }\n      }", {
+  return _axios2.default.post("https://" + storeName + ".myshopify.com/api/2020-07/graphql", "mutation {\n        checkoutCreate(input: {\n          lineItems: [{ variantId: \"Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8zMTQ1MjE3MzAwODkzOA==\", quantity: 1 }],\n          allowPartialAddresses: true,\n          shippingAddress: " + shippingRatesAddress + "\n        }) {\n          checkout {\n            availableShippingRates {\n              ready\n              shippingRates {\n                handle\n                title\n                priceV2 {\n                  amount\n                  currencyCode\n                }\n              }\n            }\n          }\n          checkoutUserErrors {\n            code\n            field\n            message\n          }\n        }\n      }", {
     headers: {
       "X-Shopify-Storefront-Access-Token": storefrontApiKey,
       "Content-Type": "application/graphql",

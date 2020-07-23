@@ -26,10 +26,6 @@ var _templateObject = (0, _taggedTemplateLiteral3.default)(["{blue gatsby-source
 
 var _graphqlRequest = require("graphql-request");
 
-var _axios = require("axios");
-
-var _axios2 = _interopRequireDefault(_axios);
-
 var _chalk = require("chalk");
 
 var _chalk2 = _interopRequireDefault(_chalk);

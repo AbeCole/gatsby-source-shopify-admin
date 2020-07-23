@@ -1,4 +1,6 @@
-// todo: try use the same GraphQLClient as above so we dont need axios
+import axios from "axios";
+
+// todo: try use the same GraphQLClient as main thread so we dont need axios
 // todo: move this to after the other queries then use the id of any product variant we have
 const shippingRatesQuery = (
   storeName,

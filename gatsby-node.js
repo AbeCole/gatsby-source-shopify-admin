@@ -46,6 +46,10 @@ var _productsQuery = require("./queries/productsQuery");
 
 var _productsQuery2 = _interopRequireDefault(_productsQuery);
 
+var _shippingRatesQuery = require("./queries/shippingRatesQuery");
+
+var _shippingRatesQuery2 = _interopRequireDefault(_shippingRatesQuery);
+
 var _collections = require("./nodes/collections");
 
 var _collections2 = _interopRequireDefault(_collections);
@@ -79,6 +83,8 @@ exports.sourceNodes = function () {
         imageMetafields = _ref3$imageMetafields === undefined ? null : _ref3$imageMetafields,
         _ref3$relatedCollecti = _ref3.relatedCollectionMetafields,
         relatedCollectionMetafields = _ref3$relatedCollecti === undefined ? null : _ref3$relatedCollecti,
+        _ref3$shippingRatesAd = _ref3.shippingRatesAddress,
+        shippingRatesAddress = _ref3$shippingRatesAd === undefined ? null : _ref3$shippingRatesAd,
         _ref3$pollInterval = _ref3.pollInterval,
         pollInterval = _ref3$pollInterval === undefined ? 1000 * 10 : _ref3$pollInterval;
     var createNode, touchNode;
@@ -136,51 +142,50 @@ exports.sourceNodes = function () {
                           format: format
                         };
 
-                        // todo: try use the same GraphQLClient as above so we dont need axios
-                        // todo: add storefont access token to config
-                        // todo: add address to the config, this could be the main option to enable feature and allows user to override default address
-                        // todo: move this to after the other queries then use the id of any product variant we have
-                        // todo: possibly move this all to a separate helper
-
-                        _context.next = 10;
-                        return _axios2.default.post("https://" + storeName + ".myshopify.com/api/2020-07/graphql", "mutation {\n          checkoutCreate(input: {\n            lineItems: [{ variantId: \"Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8zMTQ1MjE3MzAwODkzOA==\", quantity: 1 }],\n            allowPartialAddresses: true,\n            shippingAddress: {address1: \"1337 Pawnee Street\", city: \"Jeffersonville\", province: \"IN\", country: \"United States\"}\n          }) {\n            checkout {\n              availableShippingRates {\n                ready\n                shippingRates {\n                  handle\n                  title\n                  priceV2 {\n                    amount\n                    currencyCode\n                  }\n                }\n              }\n            }\n            checkoutUserErrors {\n              code\n              field\n              message\n            }\n          }\n        }", {
-                          headers: {
-                            "X-Shopify-Storefront-Access-Token": storefrontApiKey,
-                            "Content-Type": "application/graphql",
-                            Accept: "application/json"
-                          }
-                        }).then(function (resp) {
-                          if (resp.data) {
-                            // todo: maybe add operational chaining here
-                            if (resp.data.data && resp.data.data.checkoutCreate && resp.data.data.checkoutCreate.checkout && resp.data.data.checkoutCreate.checkout.availableShippingRates.ready) {
-                              return resp.data.data.checkoutCreate.checkout.availableShippingRates.shippingRates;
-                            }
-                            // todo: better error handling when response doesn't match this structure
-                            console.log("error in response of checkout for shipping rates", resp.data, resp.data.data.checkoutCreate.checkoutUserErrors);
-                          }
-                        }).catch(function (err) {
-                          console.error("error requesting checkout for shipping rates", err);
-                        });
-
-                      case 10:
-                        shippingRates = _context.sent;
-
-
-                        (0, _shippingRates2.default)(shippingRates, helpers);
 
                         if (verbose) {
                           console.time(format("finished"));
                         }
+
+                        if (!shippingRatesAddress) {
+                          _context.next = 17;
+                          break;
+                        }
+
+                        if (verbose) {
+                          console.log(format("- starting shipping rates query"));
+                          console.time(format("shipping rates query"));
+                        }
+
+                        _context.next = 13;
+                        return (0, _shippingRatesQuery2.default)(storeName, shippingRatesAddress, storefrontApiKey);
+
+                      case 13:
+                        shippingRates = _context.sent;
+
+
+                        if (verbose) {
+                          console.timeEnd(format("shipping rates query"));
+
+                          console.log(format("- creating shipping rates nodes"));
+                          console.time(format("shipping rates nodes"));
+                        }
+
+                        (0, _shippingRates2.default)(shippingRates, helpers);
+
+                        if (verbose) console.timeEnd(format("shipping rates nodes"));
+
+                      case 17:
 
                         if (verbose) {
                           console.log(format("- starting collections query"));
                           console.time(format("collections query"));
                         }
 
-                        _context.next = 16;
+                        _context.next = 20;
                         return (0, _collectionsQuery2.default)(helpers);
 
-                      case 16:
+                      case 20:
                         collections = _context.sent;
 
 
@@ -191,17 +196,17 @@ exports.sourceNodes = function () {
                           console.time(format("products query"));
                         }
 
-                        _context.next = 20;
+                        _context.next = 24;
                         return (0, _productsQuery2.default)(helpers);
 
-                      case 20:
+                      case 24:
                         products = _context.sent;
 
 
                         if (verbose) console.timeEnd(format("products query"));
 
                         if (!products) {
-                          _context.next = 27;
+                          _context.next = 31;
                           break;
                         }
 
@@ -210,18 +215,18 @@ exports.sourceNodes = function () {
                           console.time(format("products nodes"));
                         }
 
-                        _context.next = 26;
+                        _context.next = 30;
                         return (0, _products2.default)(onlyPublished ? products.filter(function (p) {
                           return p.publishedOnCurrentPublication;
                         }) : products, helpers, collections);
 
-                      case 26:
+                      case 30:
 
                         if (verbose) console.timeEnd(format("products nodes"));
 
-                      case 27:
+                      case 31:
                         if (!collections) {
-                          _context.next = 32;
+                          _context.next = 36;
                           break;
                         }
 
@@ -230,14 +235,14 @@ exports.sourceNodes = function () {
                           console.time(format("collections nodes"));
                         }
 
-                        _context.next = 31;
+                        _context.next = 35;
                         return (0, _collections2.default)(collections, helpers);
 
-                      case 31:
+                      case 35:
 
                         if (verbose) console.timeEnd(format("collections nodes"));
 
-                      case 32:
+                      case 36:
 
                         if (verbose) console.time(format("finished type definitions"));
 
@@ -269,7 +274,7 @@ exports.sourceNodes = function () {
 
                         resolve(true);
 
-                      case 40:
+                      case 44:
                       case "end":
                         return _context.stop();
                     }

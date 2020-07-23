@@ -36,9 +36,7 @@
         "gatsby-node-helpers": "^0.3.0",
         "gatsby-source-filesystem": "^2.3.5",
         "graphql-request": "^1.6.0",
-        "lodash": "^4.17.4",
         "node-fetch": "^2.6.0",
-        "p-iteration": "^1.1.7",
         "prettyjson": "^1.2.1",
         "react": "^16.4.2",
         "react-dom": "^16.4.2"

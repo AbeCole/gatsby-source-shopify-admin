@@ -31,23 +31,60 @@ Configuration is relatively limited at the moment, if you come across a good use
 
 ## Image metafields
 
-Experimental (not tested on other Shopify Plugins): If you use a custom fields plugin to store additional data on products/collections, such as [AirFields](https://www.airfields.io/), then we can parse the image URLs to return a `ShopifyImage` object with a `localFile` field, that can then be manipluated by `gatsby-image`. The plugin expects the Shopify metafield `key` to match the provided value (i.e. with the config below the `key` would be `'preview'`), it then takes the metafield's `value` attribute as the `originalSrc`.
+Experimental (not tested on other Shopify Plugins): If you use a custom fields plugin to store additional data on products/collections, such as [AirFields](https://www.airfields.io/), then we can parse the image URLs to return a `ShopifyImage` object with a `localFile` field, that can then be manipluated by `gatsby-image`. The plugin expects the Shopify metafield `key` to match the provided value (i.e. with the config below the `key` would be `'preview'`), it then takes the metafield's `value` attribute as the `originalSrc`. The field name will be camelCased when assigned to the object `hover_img` becomes `hoverImg` when in use.
 
     {
       ...yourDefaultConfigOptions,
       imageMetafields: {
         product: ['preview'],
+        collection: ['hover_img'],
       },
     }
 
 Usage:
 
-    preview {
-      localFile {
-        childImageSharp {
-          fluid(maxWidth: 1800) {
-            ...GatsbyImageSharpFluid_withWebp_noBase64
+    shopifyProduct {
+      preview {
+        localFile {
+          childImageSharp {
+            fluid(maxWidth: 1800) {
+              ...GatsbyImageSharpFluid_withWebp_noBase64
+            }
           }
+        }
+      }
+    }
+
+    shopifyCollection {
+      hoverImg {
+        localFile {
+          childImageSharp {
+            fluid(maxWidth: 1800) {
+              ...GatsbyImageSharpFluid_withWebp_noBase64
+            }
+          }
+        }
+      }
+    }
+
+## Related collections metafields
+
+Similar to Image metafield, you can pass an array of metafield keys that will be look up against a Product's metafields. If a match is found we will use the return 'collection handle' to connected to the Collection object. This is currently built with Airfield's Relationship field as the standard output.
+
+    {
+      ...yourDefaultConfigOptions,
+      relatedCollectionMetafields: ['similar', 'might_like'],
+    }
+
+Usage:
+
+    shopifyProduct {
+      similar {
+        title
+        handle
+        products {
+          id
+          handle
         }
       }
     }

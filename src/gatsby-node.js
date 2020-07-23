@@ -29,6 +29,7 @@ exports.sourceNodes = async (
     verbose = false,
     onlyPublished = false,
     imageMetafields = null,
+    relatedCollectionMetafields = null,
     pollInterval = 1000 * 10,
   }
 ) => {
@@ -76,6 +77,7 @@ exports.sourceNodes = async (
       generateNodeId,
       TYPE_PREFIX,
       client,
+      relatedCollectionMetafields,
       imageMetafields,
       verbose,
       pollInterval,
@@ -182,7 +184,8 @@ exports.sourceNodes = async (
         onlyPublished
           ? products.filter((p) => p.publishedOnCurrentPublication)
           : products,
-        helpers
+        helpers,
+        collections
       );
 
       if (verbose) console.timeEnd(format("products nodes"));

@@ -1,22 +1,26 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _regenerator = require("babel-runtime/regenerator");
+var _regenerator = require('babel-runtime/regenerator');
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _extends2 = require("babel-runtime/helpers/extends");
+var _extends2 = require('babel-runtime/helpers/extends');
 
 var _extends3 = _interopRequireDefault(_extends2);
 
-var _asyncToGenerator2 = require("babel-runtime/helpers/asyncToGenerator");
+var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-var _downloadImageNode = require("./downloadImageNode");
+var _camelcase = require('./camelcase');
+
+var _camelcase2 = _interopRequireDefault(_camelcase);
+
+var _downloadImageNode = require('./downloadImageNode');
 
 var _downloadImageNode2 = _interopRequireDefault(_downloadImageNode);
 
@@ -42,7 +46,7 @@ var parseImageMetafields = function parseImageMetafields(node, fields, helpers) 
                 break;
               }
 
-              return _context.abrupt("return", null);
+              return _context.abrupt('return', null);
 
             case 3:
               _context.next = 5;
@@ -56,17 +60,17 @@ var parseImageMetafields = function parseImageMetafields(node, fields, helpers) 
               fileNodeId = _context.sent;
 
               if (fileNodeId) {
-                node[metafieldKey] = {
+                node[(0, _camelcase2.default)(metafieldKey)] = {
                   id: metafield.id,
                   originalSrc: metafield.value,
                   localFile___NODE: fileNodeId
                 };
               }
 
-              return _context.abrupt("return", null);
+              return _context.abrupt('return', null);
 
             case 8:
-            case "end":
+            case 'end':
               return _context.stop();
           }
         }

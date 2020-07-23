@@ -77,6 +77,8 @@ exports.sourceNodes = function () {
         onlyPublished = _ref3$onlyPublished === undefined ? false : _ref3$onlyPublished,
         _ref3$imageMetafields = _ref3.imageMetafields,
         imageMetafields = _ref3$imageMetafields === undefined ? null : _ref3$imageMetafields,
+        _ref3$relatedCollecti = _ref3.relatedCollectionMetafields,
+        relatedCollectionMetafields = _ref3$relatedCollecti === undefined ? null : _ref3$relatedCollecti,
         _ref3$pollInterval = _ref3.pollInterval,
         pollInterval = _ref3$pollInterval === undefined ? 1000 * 10 : _ref3$pollInterval;
     var createNode, touchNode;
@@ -127,6 +129,7 @@ exports.sourceNodes = function () {
                           generateNodeId: generateNodeId,
                           TYPE_PREFIX: TYPE_PREFIX,
                           client: client,
+                          relatedCollectionMetafields: relatedCollectionMetafields,
                           imageMetafields: imageMetafields,
                           verbose: verbose,
                           pollInterval: pollInterval,
@@ -210,7 +213,7 @@ exports.sourceNodes = function () {
                         _context.next = 26;
                         return (0, _products2.default)(onlyPublished ? products.filter(function (p) {
                           return p.publishedOnCurrentPublication;
-                        }) : products, helpers);
+                        }) : products, helpers, collections);
 
                       case 26:
 

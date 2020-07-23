@@ -1,7 +1,8 @@
 import downloadImageNode from "../helpers/downloadImageNode";
 import parseImageMetafields from "../helpers/parseImageMetafields";
+import parseRelatedCollectionMetafields from "../helpers/parseRelatedCollectionMetafields";
 
-const products = async (data, helpers) => {
+const products = async (data, helpers, collections) => {
   const ProductNode = helpers.createNodeFactory("PRODUCT", async (node) => {
     if (node.images) {
       await Promise.all(
@@ -15,25 +16,23 @@ const products = async (data, helpers) => {
           i.localFile___NODE = file;
         })
       );
-      // node.images = node.images.map(async i => {
-      //   i.localFile___NODE = await downloadImageNode({
-      //     id: i.id,
-      //     url: i.originalSrc,
-      //     prefix: helpers.TYPE_PREFIX,
-      //     ...imageHelpers
-      //   });
-      //   return i;
-      // });
     }
 
-    if (
-      node.metafields &&
-      helpers.imageMetafields &&
-      helpers.imageMetafields.product
-    ) {
-      await Promise.all(
-        parseImageMetafields(node, helpers.imageMetafields.product, helpers)
-      );
+    if (node.metafields) {
+      if (helpers.imageMetafields && helpers.imageMetafields.product) {
+        await Promise.all(
+          parseImageMetafields(node, helpers.imageMetafields.product, helpers)
+        );
+      }
+
+      if (helpers.relatedCollectionMetafields) {
+        parseRelatedCollectionMetafields(
+          node,
+          helpers.relatedCollectionMetafields,
+          helpers,
+          collections
+        );
+      }
     }
 
     // Storefront & Admin APIs return differnet price formats

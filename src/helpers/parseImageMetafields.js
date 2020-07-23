@@ -1,3 +1,4 @@
+import camelcase from './camelcase'
 import downloadImageNode from './downloadImageNode';
 
 const parseImageMetafields = (node, fields, helpers) =>
@@ -16,7 +17,7 @@ const parseImageMetafields = (node, fields, helpers) =>
         ...helpers
       });
       if (fileNodeId) {
-        node[metafieldKey] = {
+        node[camelcase(metafieldKey)] = {
           id: metafield.id,
           originalSrc: metafield.value,
           localFile___NODE: fileNodeId

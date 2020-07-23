@@ -28,10 +28,14 @@ var _parseImageMetafields = require("../helpers/parseImageMetafields");
 
 var _parseImageMetafields2 = _interopRequireDefault(_parseImageMetafields);
 
+var _parseRelatedCollectionMetafields = require("../helpers/parseRelatedCollectionMetafields");
+
+var _parseRelatedCollectionMetafields2 = _interopRequireDefault(_parseRelatedCollectionMetafields);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var products = function () {
-  var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4(data, helpers) {
+  var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4(data, helpers, collections) {
     var ProductNode;
     return _regenerator2.default.wrap(function _callee4$(_context4) {
       while (1) {
@@ -76,21 +80,32 @@ var products = function () {
                             }, _callee, undefined);
                           }));
 
-                          return function (_x4) {
+                          return function (_x5) {
                             return _ref3.apply(this, arguments);
                           };
                         }()));
 
                       case 3:
-                        if (!(node.metafields && helpers.imageMetafields && helpers.imageMetafields.product)) {
-                          _context2.next = 6;
+                        if (!node.metafields) {
+                          _context2.next = 8;
                           break;
                         }
 
-                        _context2.next = 6;
+                        if (!(helpers.imageMetafields && helpers.imageMetafields.product)) {
+                          _context2.next = 7;
+                          break;
+                        }
+
+                        _context2.next = 7;
                         return _promise2.default.all((0, _parseImageMetafields2.default)(node, helpers.imageMetafields.product, helpers));
 
-                      case 6:
+                      case 7:
+
+                        if (helpers.relatedCollectionMetafields) {
+                          (0, _parseRelatedCollectionMetafields2.default)(node, helpers.relatedCollectionMetafields, helpers, collections);
+                        }
+
+                      case 8:
 
                         // Storefront & Admin APIs return differnet price formats
                         // For some reason the Admin API outputs prices as 'cents' (i.e. multipled by 100)
@@ -103,7 +118,7 @@ var products = function () {
 
                         return _context2.abrupt("return", node);
 
-                      case 8:
+                      case 10:
                       case "end":
                         return _context2.stop();
                     }
@@ -111,7 +126,7 @@ var products = function () {
                 }, _callee2, undefined);
               }));
 
-              return function (_x3) {
+              return function (_x4) {
                 return _ref2.apply(this, arguments);
               };
             }());
@@ -137,7 +152,7 @@ var products = function () {
                 }, _callee3, undefined);
               }));
 
-              return function (_x5) {
+              return function (_x6) {
                 return _ref4.apply(this, arguments);
               };
             }())));
@@ -150,7 +165,7 @@ var products = function () {
     }, _callee4, undefined);
   }));
 
-  return function products(_x, _x2) {
+  return function products(_x, _x2, _x3) {
     return _ref.apply(this, arguments);
   };
 }();

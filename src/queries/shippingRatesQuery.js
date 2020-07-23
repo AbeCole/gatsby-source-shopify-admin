@@ -2,7 +2,7 @@ import axios from "axios";
 
 // todo: try use the same GraphQLClient as main thread so we dont need axios
 // todo: move this to after the other queries then use the id of any product variant we have
-const shippingRatesQuery = (
+const shippingRatesQuery = async (
   storeName,
   shippingRatesAddress,
   storefrontApiKey
@@ -14,7 +14,12 @@ const shippingRatesQuery = (
         checkoutCreate(input: {
           lineItems: [{ variantId: "Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8zMTQ1MjE3MzAwODkzOA==", quantity: 1 }],
           allowPartialAddresses: true,
-          shippingAddress: ${shippingRatesAddress}
+          shippingAddress: {
+            address1: "${shippingRatesAddress.address1}",
+            city: "${shippingRatesAddress.city}",
+            province: "${shippingRatesAddress.province}",
+            country: "${shippingRatesAddress.country}"
+          }
         }) {
           checkout {
             availableShippingRates {
@@ -58,8 +63,11 @@ const shippingRatesQuery = (
         }
         // todo: better error handling when response doesn't match this structure
         console.log(
-          "error in response of checkout for shipping rates",
+          "error in response of checkout for shipping rates: ",
           resp.data,
+        );
+        console.log(
+          "error in response of checkout for shipping rates (checkoutCreate):",
           resp.data.data.checkoutCreate.checkoutUserErrors
         );
       }

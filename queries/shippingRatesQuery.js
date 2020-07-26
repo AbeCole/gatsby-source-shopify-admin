@@ -16,17 +16,21 @@ var _axios = require("axios");
 
 var _axios2 = _interopRequireDefault(_axios);
 
+var _btoa = require("btoa");
+
+var _btoa2 = _interopRequireDefault(_btoa);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // todo: try use the same GraphQLClient as main thread so we dont need axios
 // todo: move this to after the other queries then use the id of any product variant we have
 var shippingRatesQuery = function () {
-  var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(storeName, shippingRatesAddress, storefrontApiKey) {
+  var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(storeName, shippingRatesAddress, storefrontApiKey, variantId) {
     return _regenerator2.default.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            return _context.abrupt("return", _axios2.default.post("https://" + storeName + ".myshopify.com/api/2020-07/graphql", "mutation {\n        checkoutCreate(input: {\n          lineItems: [{ variantId: \"Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8zMTQ1MjE3MzAwODkzOA==\", quantity: 1 }],\n          allowPartialAddresses: true,\n          shippingAddress: {\n            address1: \"" + shippingRatesAddress.address1 + "\",\n            city: \"" + shippingRatesAddress.city + "\",\n            province: \"" + shippingRatesAddress.province + "\",\n            country: \"" + shippingRatesAddress.country + "\"\n          }\n        }) {\n          checkout {\n            availableShippingRates {\n              ready\n              shippingRates {\n                handle\n                title\n                priceV2 {\n                  amount\n                  currencyCode\n                }\n              }\n            }\n          }\n          checkoutUserErrors {\n            code\n            field\n            message\n          }\n        }\n      }", {
+            return _context.abrupt("return", _axios2.default.post("https://" + storeName + ".myshopify.com/api/2020-07/graphql", "mutation {\n        checkoutCreate(input: {\n          lineItems: [{ variantId: \"" + (0, _btoa2.default)(variantId) + "\", quantity: 1 }],\n          allowPartialAddresses: true,\n          shippingAddress: {\n            address1: \"" + shippingRatesAddress.address1 + "\",\n            city: \"" + shippingRatesAddress.city + "\",\n            province: \"" + shippingRatesAddress.province + "\",\n            country: \"" + shippingRatesAddress.country + "\"\n          }\n        }) {\n          checkout {\n            availableShippingRates {\n              ready\n              shippingRates {\n                handle\n                title\n                priceV2 {\n                  amount\n                  currencyCode\n                }\n              }\n            }\n          }\n          checkoutUserErrors {\n            code\n            field\n            message\n          }\n        }\n      }", {
               headers: {
                 "X-Shopify-Storefront-Access-Token": storefrontApiKey,
                 "Content-Type": "application/graphql",
@@ -54,7 +58,7 @@ var shippingRatesQuery = function () {
     }, _callee, undefined);
   }));
 
-  return function shippingRatesQuery(_x, _x2, _x3) {
+  return function shippingRatesQuery(_x, _x2, _x3, _x4) {
     return _ref.apply(this, arguments);
   };
 }();

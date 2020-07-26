@@ -11,6 +11,7 @@ import shippingRatesQuery from "./queries/shippingRatesQuery";
 import createCollectionNodes from "./nodes/collections";
 import createProductNodes from "./nodes/products";
 import createShippingRateNodes from "./nodes/shippingRates";
+import camelcase from './helpers/camelcase'
 
 const TYPE_PREFIX = "shopify";
 
@@ -32,6 +33,7 @@ exports.sourceNodes = async (
     relatedCollectionMetafields = null,
     shippingRatesAddress = null,
     pollInterval = 1000 * 10,
+    restrictQueries = false,
   }
 ) => {
   const { createNode, touchNode } = actions;
@@ -89,13 +91,52 @@ exports.sourceNodes = async (
       console.time(format("finished"));
     }
 
-    if (shippingRatesAddress) {
+    if (verbose) {
+      console.log(format("- starting collections query"));
+      console.time(format("collections query"));
+    }
+
+    const collections = await collectionsQuery(helpers, restrictQueries);
+
+    if (verbose) {
+      console.timeEnd(format("collections query"));
+
+      console.log(format("- starting products query"));
+      console.time(format("products query"));
+    }
+
+    const products = await productsQuery(helpers, restrictQueries);
+
+    if (verbose) console.timeEnd(format("products query"));
+
+    if (shippingRatesAddress && storefrontApiKey) {
+      if (
+        !products ||
+        products.length < 1 ||
+        products[0].variants.length === 0
+      ) {
+        throw new Error(
+          "No products available cannot run shipping rates query"
+        );
+      }
+
+      if (products[0].variants.length === 0) {
+        throw new Error(
+          "No product variants available cannot run shipping rates query"
+        );
+      }
+
       if (verbose) {
         console.log(format("- starting shipping rates query"));
         console.time(format("shipping rates query"));
       }
 
-      const shippingRates = await shippingRatesQuery(storeName, shippingRatesAddress, storefrontApiKey);
+      const shippingRates = await shippingRatesQuery(
+        storeName,
+        shippingRatesAddress,
+        storefrontApiKey,
+        products[0].variants[0].id
+      );
 
       if (verbose) {
         console.timeEnd(format("shipping rates query"));
@@ -108,24 +149,6 @@ exports.sourceNodes = async (
 
       if (verbose) console.timeEnd(format("shipping rates nodes"));
     }
-
-    if (verbose) {
-      console.log(format("- starting collections query"));
-      console.time(format("collections query"));
-    }
-
-    const collections = await collectionsQuery(helpers);
-
-    if (verbose) {
-      console.timeEnd(format("collections query"));
-
-      console.log(format("- starting products query"));
-      console.time(format("products query"));
-    }
-
-    const products = await productsQuery(helpers);
-
-    if (verbose) console.timeEnd(format("products query"));
 
     if (products) {
       if (verbose) {
@@ -168,6 +191,7 @@ exports.sourceNodes = async (
         storefrontId: String
       }
     `;
+
     if (imageMetafields) {
       typeDefs += `
         type ShopifyImage implements Node @infer {
@@ -181,12 +205,13 @@ exports.sourceNodes = async (
         typeDefs += `
           type ShopifyCollection implements Node {
             ${imageMetafields.collection
-              .map((m) => `${m}: ShopifyImage`)
+              .map((m) => `${camelcase(m)}: ShopifyImage`)
               .join("\n")}
           }
         `;
       }
     }
+
     typeDefs += `
       type ShopifyProductMetafield implements Node {
         key: String
@@ -199,10 +224,17 @@ exports.sourceNodes = async (
         ${
           imageMetafields.product
             ? imageMetafields.product
-                .map((m) => `${m}: ShopifyImage`)
+                .map((m) => `${camelcase(m)}: ShopifyImage`)
                 .join("\n")
             : ""
         }
+          ${
+            relatedCollectionMetafields
+              ? relatedCollectionMetafields
+                  .map((m) => `${camelcase(m)}: ShopifyCollection`)
+                  .join("\n")
+              : ""
+          }
         handle: String
       }
     `;

@@ -19,13 +19,16 @@ Configuration is relatively limited at the moment, if you come across a good use
       options: {
         storeName: ‘YOUR_STORE_NAME',
         apiKey: ‘YOUR_ADMIN_API_KEY',
-        verbose: true,
+        storefrontApiKey: null,
         onlyPublished: false, // only show products that are currently published on the 'publication' aka the private app
         pollInterval: 1000 * 10,
         imagesMetafields: {
           product: null,
           collection: null
-        }
+        },
+        relatedCollectionMetafields: null,
+        verbose: false,
+        restrictQueries: false, // restrict collection & products queries to 1 item, if you have issues with development taking ages to start because you have to download alot of images this may help, be warned this may create issues with data parity to Shopify (i.e. relatedCollectionMetafields would not have data if the selected collection isn't the 1 collection already returned)
       },
     },
 
@@ -87,6 +90,21 @@ Usage:
           handle
         }
       }
+    }
+
+## Shipping rates
+
+We have added the ability to fetch shipping rates, this works using the Storefront API to create a checkout using the given address and the first product returned from the other queries. It will then fetch shipping rates available to that address
+
+    {
+      ...yourDefaultConfigOptions,
+      storefrontApiKey: 'XXXXXXXXXXXXXXXXXXXXXXX',
+      shippingRatesAddress: {
+        address1: '1337 Pawnee Street',
+        city: 'Jeffersonville',
+        province: 'IN',
+        country: 'United States',
+      },
     }
 
 # Timeout issues

@@ -222,7 +222,7 @@ exports.sourceNodes = async (
       }
       type ShopifyProduct implements Node {
         ${
-          imageMetafields.product
+          imageMetafields && imageMetafields.product
             ? imageMetafields.product
                 .map((m) => `${camelcase(m)}: ShopifyImage`)
                 .join("\n")

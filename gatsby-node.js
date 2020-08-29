@@ -281,7 +281,7 @@ exports.sourceNodes = function () {
                           }
                         }
 
-                        typeDefs += "\n      type ShopifyProductMetafield implements Node {\n        key: String\n        value: String\n      }\n      type ShopifyCollectionProducts implements Node {\n        metafields: [ShopifyProductMetafield]\n      }\n      type ShopifyProduct implements Node {\n        " + (imageMetafields.product ? imageMetafields.product.map(function (m) {
+                        typeDefs += "\n      type ShopifyProductMetafield implements Node {\n        key: String\n        value: String\n      }\n      type ShopifyCollectionProducts implements Node {\n        metafields: [ShopifyProductMetafield]\n      }\n      type ShopifyProduct implements Node {\n        " + (imageMetafields && imageMetafields.product ? imageMetafields.product.map(function (m) {
                           return (0, _camelcase2.default)(m) + ": ShopifyImage";
                         }).join("\n") : "") + "\n          " + (relatedCollectionMetafields ? relatedCollectionMetafields.map(function (m) {
                           return (0, _camelcase2.default)(m) + ": ShopifyCollection";

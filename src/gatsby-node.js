@@ -103,7 +103,8 @@ exports.sourceNodes = async (
     // todo: this is normally because another build proces is running an improvement
     // might be to retry again after 60 seconds (could be conifg option)
     // and for maximum of 3 attempts (could be config option)
-    if (!collections) throw new Error("There was an issue fetching collections");
+    if (!collections)
+      throw new Error("There was an issue fetching collections");
 
     if (verbose) {
       console.timeEnd(format("collections query"));
@@ -184,7 +185,12 @@ exports.sourceNodes = async (
         console.time(format("collections nodes"));
       }
 
-      await createCollectionNodes(collections, helpers);
+      await createCollectionNodes(
+        onlyPublished
+          ? collections.filter((p) => p.publishedOnCurrentPublication)
+          : collections,
+        helpers
+      );
 
       if (verbose) console.timeEnd(format("collections nodes"));
     }

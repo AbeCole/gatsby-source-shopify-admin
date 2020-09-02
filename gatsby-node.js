@@ -270,7 +270,9 @@ exports.sourceNodes = function () {
                         }
 
                         _context.next = 43;
-                        return (0, _collections2.default)(collections, helpers);
+                        return (0, _collections2.default)(onlyPublished ? collections.filter(function (p) {
+                          return p.publishedOnCurrentPublication;
+                        }) : collections, helpers);
 
                       case 43:
 

@@ -15,6 +15,7 @@ const collectionsQuery = async (props, restrictedQuery = false) => {
           title
           description
           descriptionHtml
+          publishedOnCurrentPublication
           image {
             id
             altText

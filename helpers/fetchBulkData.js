@@ -12,6 +12,10 @@ var _asyncToGenerator2 = require("babel-runtime/helpers/asyncToGenerator");
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
+var _typeof2 = require("babel-runtime/helpers/typeof");
+
+var _typeof3 = _interopRequireDefault(_typeof2);
+
 var _extends2 = require("babel-runtime/helpers/extends");
 
 var _extends3 = _interopRequireDefault(_extends2);
@@ -28,7 +32,6 @@ var parseShopifyType = function parseShopifyType(id) {
 
 var parseBulkData = function parseBulkData(data) {
   var childAttributes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  var url = arguments[2];
 
   var ret = [];
   data.split("\n").filter(function (l) {
@@ -44,13 +47,24 @@ var parseBulkData = function parseBulkData(data) {
       return;
     }
 
-    var parent = ret.find(function (o) {
+    var type = parseShopifyType(obj.id);
+    var parentType = parseShopifyType(obj.__parentId);
+
+    var parent = parentType === "ProductVariant" ? ret.find(function (o) {
+      return o.variants.find(function (v) {
+        return v.id === obj.__parentId;
+      });
+    }) : ret.find(function (o) {
       return o.id === obj.__parentId;
     });
+
     if (parent) {
-      var type = parseShopifyType(obj.id);
       if (childAttributes[type]) {
-        parent[childAttributes[type]].push(obj);
+        if ((0, _typeof3.default)(parent[childAttributes[type]]) === undefined) {
+          parent[childAttributes[type]] = [obj];
+        } else {
+          parent[childAttributes[type]].push(obj);
+        }
         return;
       }
 
@@ -61,7 +75,7 @@ var parseBulkData = function parseBulkData(data) {
       return;
     }
 
-    console.error("Parent/child match not found in parseBulkData, we should be handling this error better, id, __parentId", obj.id, obj.__parentId);
+    console.error("Parent/child match not found in fetchBulkData, we should be handling this error better: type, id, __parentId", type, obj.id, obj.__parentId);
   });
 
   return ret;

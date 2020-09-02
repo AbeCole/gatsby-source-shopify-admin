@@ -76,6 +76,7 @@ const productsQuery = async (props, restrictedQuery = false) => {
                 metafields${restrictedQuery ? "(first: 20)" : ""} {
                   edges {
                     node {
+                      id
                       namespace
                       key
                       value

@@ -1,27 +1,37 @@
-const parseShopifyType = id => id.split("/")[3];
+const parseShopifyType = (id) => id.split("/")[3];
 
-const parseBulkData = (data, childAttributes = {}, url) => {
+const parseBulkData = (data, childAttributes = {}) => {
   const ret = [];
   data
     .split("\n")
-    .filter(l => l)
-    .forEach(l => {
+    .filter((l) => l)
+    .forEach((l) => {
       const obj = JSON.parse(l);
       if (!obj.__parentId) {
         const children = {};
-        Object.values(childAttributes).forEach(k => (children[k] = []));
+        Object.values(childAttributes).forEach((k) => (children[k] = []));
         ret.push({
           ...obj,
-          ...children
+          ...children,
         });
         return;
       }
 
-      const parent = ret.find(o => o.id === obj.__parentId);
+      const type = parseShopifyType(obj.id);
+      const parentType = parseShopifyType(obj.__parentId);
+
+      const parent =
+        parentType === "ProductVariant"
+          ? ret.find((o) => o.variants.find((v) => v.id === obj.__parentId))
+          : ret.find((o) => o.id === obj.__parentId);
+
       if (parent) {
-        const type = parseShopifyType(obj.id);
         if (childAttributes[type]) {
-          parent[childAttributes[type]].push(obj);
+          if (typeof parent[childAttributes[type]] === undefined) {
+            parent[childAttributes[type]] = [obj];
+          } else {
+            parent[childAttributes[type]].push(obj);
+          }
           return;
         }
 
@@ -38,7 +48,8 @@ const parseBulkData = (data, childAttributes = {}, url) => {
       }
 
       console.error(
-        "Parent/child match not found in parseBulkData, we should be handling this error better, id, __parentId",
+        "Parent/child match not found in fetchBulkData, we should be handling this error better: type, id, __parentId",
+        type,
         obj.id,
         obj.__parentId
       );
@@ -59,7 +70,7 @@ const parseBulkData = (data, childAttributes = {}, url) => {
 // use 'fetchBulkData("http://...", { 'Product': 'products' })'
 
 const fetchBulkData = async (url, childAttributes) => {
-  const bulkData = await fetch(url).then(r => r.text());
+  const bulkData = await fetch(url).then((r) => r.text());
   // console.log('fetchBulkData fetching url: ', url);
   return parseBulkData(bulkData, childAttributes);
 };

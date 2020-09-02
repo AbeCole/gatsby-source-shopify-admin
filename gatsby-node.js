@@ -160,6 +160,14 @@ exports.sourceNodes = function () {
                       case 12:
                         collections = _context.sent;
 
+                        if (collections) {
+                          _context.next = 15;
+                          break;
+                        }
+
+                        throw new Error("There was an issue fetching collections");
+
+                      case 15:
 
                         if (verbose) {
                           console.timeEnd(format("collections query"));
@@ -168,46 +176,54 @@ exports.sourceNodes = function () {
                           console.time(format("products query"));
                         }
 
-                        _context.next = 16;
+                        _context.next = 18;
                         return (0, _productsQuery2.default)(helpers, restrictQueries);
 
-                      case 16:
+                      case 18:
                         products = _context.sent;
 
+                        if (products) {
+                          _context.next = 21;
+                          break;
+                        }
+
+                        throw new Error("There was an issue fetching products");
+
+                      case 21:
 
                         if (verbose) console.timeEnd(format("products query"));
 
                         if (!(shippingRatesAddress && storefrontApiKey)) {
-                          _context.next = 30;
+                          _context.next = 34;
                           break;
                         }
 
                         if (!(!products || products.length < 1 || products[0].variants.length === 0)) {
-                          _context.next = 21;
+                          _context.next = 25;
                           break;
                         }
 
                         throw new Error("No products available cannot run shipping rates query");
 
-                      case 21:
+                      case 25:
                         if (!(products[0].variants.length === 0)) {
-                          _context.next = 23;
+                          _context.next = 27;
                           break;
                         }
 
                         throw new Error("No product variants available cannot run shipping rates query");
 
-                      case 23:
+                      case 27:
 
                         if (verbose) {
                           console.log(format("- starting shipping rates query"));
                           console.time(format("shipping rates query"));
                         }
 
-                        _context.next = 26;
+                        _context.next = 30;
                         return (0, _shippingRatesQuery2.default)(storeName, shippingRatesAddress, storefrontApiKey, products[0].variants[0].id);
 
-                      case 26:
+                      case 30:
                         shippingRates = _context.sent;
 
 
@@ -222,9 +238,9 @@ exports.sourceNodes = function () {
 
                         if (verbose) console.timeEnd(format("shipping rates nodes"));
 
-                      case 30:
+                      case 34:
                         if (!products) {
-                          _context.next = 35;
+                          _context.next = 39;
                           break;
                         }
 
@@ -233,18 +249,18 @@ exports.sourceNodes = function () {
                           console.time(format("products nodes"));
                         }
 
-                        _context.next = 34;
+                        _context.next = 38;
                         return (0, _products2.default)(onlyPublished ? products.filter(function (p) {
                           return p.publishedOnCurrentPublication;
                         }) : products, helpers, collections);
 
-                      case 34:
+                      case 38:
 
                         if (verbose) console.timeEnd(format("products nodes"));
 
-                      case 35:
+                      case 39:
                         if (!collections) {
-                          _context.next = 40;
+                          _context.next = 44;
                           break;
                         }
 
@@ -253,14 +269,14 @@ exports.sourceNodes = function () {
                           console.time(format("collections nodes"));
                         }
 
-                        _context.next = 39;
+                        _context.next = 43;
                         return (0, _collections2.default)(collections, helpers);
 
-                      case 39:
+                      case 43:
 
                         if (verbose) console.timeEnd(format("collections nodes"));
 
-                      case 40:
+                      case 44:
 
                         if (verbose) console.time(format("finished type definitions"));
 
@@ -296,7 +312,7 @@ exports.sourceNodes = function () {
 
                         resolve(true);
 
-                      case 48:
+                      case 52:
                       case "end":
                         return _context.stop();
                     }

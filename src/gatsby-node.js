@@ -11,7 +11,7 @@ import shippingRatesQuery from "./queries/shippingRatesQuery";
 import createCollectionNodes from "./nodes/collections";
 import createProductNodes from "./nodes/products";
 import createShippingRateNodes from "./nodes/shippingRates";
-import camelcase from './helpers/camelcase'
+import camelcase from "./helpers/camelcase";
 
 const TYPE_PREFIX = "shopify";
 
@@ -98,6 +98,10 @@ exports.sourceNodes = async (
 
     const collections = await collectionsQuery(helpers, restrictQueries);
 
+    // note: if we can't get any collections we throw an Error to stop other stop happening
+    // this may not be the desired behaviour, as you may want to develop without this data?
+    if (!collections) throw new Error("There was an issue fetching collections");
+
     if (verbose) {
       console.timeEnd(format("collections query"));
 
@@ -106,6 +110,10 @@ exports.sourceNodes = async (
     }
 
     const products = await productsQuery(helpers, restrictQueries);
+
+    // note: if we can't get any products we throw an Error to stop other stop happening
+    // this may not be the desired behaviour, as you may want to develop without this data?
+    if (!products) throw new Error("There was an issue fetching products");
 
     if (verbose) console.timeEnd(format("products query"));
 

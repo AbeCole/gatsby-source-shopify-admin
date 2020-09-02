@@ -50,7 +50,7 @@ var fetchShopifyData = function () {
             bulkOperation = queryStatus.bulkOperation;
 
             if (!(!bulkOperation || bulkOperation.status !== "CREATED")) {
-              _context.next = 12;
+              _context.next = 10;
               break;
             }
 
@@ -58,26 +58,28 @@ var fetchShopifyData = function () {
             // for example below is an error we get when trying to start the app twice at same timeout
             // (i.e. production & Preview both deploying at same time)
             // bulk collections query failed [ { field: null, message: 'A bulk operation for this app and shop is already in progress: gid://shopify/BulkOperation/25094455338.' } ]
-            console.log('outputing more details of queryStatus for debug: ', queryStatus);
-            console.log('outputing more details of bulkOperation for debug: ', bulkOperation);
+            // console.log('outputing more details of queryStatus for debug: ', queryStatus);
+            // console.log('outputing more details of bulkOperation for debug: ', bulkOperation);
             if (bulkOperation) console.log('bulkOperation.status:', bulkOperation.status);
-            console.error(format("bulk " + objectType + " query failed"), queryStatus.userErrors);
+            console.error(format("bulk " + objectType + " query failed"), queryStatus.userErrors.map(function (e) {
+              return e.message;
+            }).join('\n'));
             return _context.abrupt("return", null);
 
-          case 12:
+          case 10:
 
             if (verbose) console.log(format("-- bulk " + objectType + " query response status \"" + bulkOperation.status + "\""));
 
             if (verbose) console.log(format("-- starting " + objectType + " poll"));
 
-            _context.next = 16;
+            _context.next = 14;
             return (0, _bulkPollQuery2.default)(helpers);
 
-          case 16:
+          case 14:
             pollStatus = _context.sent;
 
             if (!(!pollStatus || pollStatus.status !== "COMPLETED")) {
-              _context.next = 20;
+              _context.next = 18;
               break;
             }
 
@@ -85,16 +87,16 @@ var fetchShopifyData = function () {
             console.error(objectType + " poll failed", pollStatus);
             return _context.abrupt("return", null);
 
-          case 20:
+          case 18:
 
             if (verbose) console.log(format("-- " + objectType + " poll response status \"" + pollStatus.status + "\""));
 
             if (verbose) console.log(format("-- starting to fetch bulk file \"" + pollStatus.url + "\""));
 
-            _context.next = 24;
+            _context.next = 22;
             return (0, _fetchBulkData2.default)(pollStatus.url, parseAttrs);
 
-          case 24:
+          case 22:
             data = _context.sent;
 
 
@@ -102,7 +104,7 @@ var fetchShopifyData = function () {
 
             return _context.abrupt("return", data);
 
-          case 27:
+          case 25:
           case "end":
             return _context.stop();
         }

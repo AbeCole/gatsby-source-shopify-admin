@@ -61,7 +61,7 @@ var parseBulkData = function parseBulkData(data) {
       return;
     }
 
-    console.error("Parent/child match not found in parseBulkData, we should be handling this error better, id, __parentId", obj.id, __parentId);
+    console.error("Parent/child match not found in parseBulkData, we should be handling this error better, id, __parentId", obj.id, obj.__parentId);
   });
 
   return ret;

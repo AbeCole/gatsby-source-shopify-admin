@@ -40,7 +40,7 @@ const parseBulkData = (data, childAttributes = {}, url) => {
       console.error(
         "Parent/child match not found in parseBulkData, we should be handling this error better, id, __parentId",
         obj.id,
-        __parentId
+        obj.__parentId
       );
     });
 

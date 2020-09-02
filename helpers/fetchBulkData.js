@@ -61,7 +61,7 @@ var parseBulkData = function parseBulkData(data) {
       return;
     }
 
-    console.error("Parent/child match not found in parseBulkData, we should be handling this error better, id, __parentId", id, __parentId);
+    console.error("Parent/child match not found in parseBulkData, we should be handling this error better, id, __parentId", obj.id, __parentId);
   });
 
   return ret;
@@ -92,11 +92,9 @@ var fetchBulkData = function () {
 
           case 2:
             bulkData = _context.sent;
-
-            console.log('fetchBulkData fetching url: ', url);
             return _context.abrupt("return", parseBulkData(bulkData, childAttributes));
 
-          case 5:
+          case 4:
           case "end":
             return _context.stop();
         }

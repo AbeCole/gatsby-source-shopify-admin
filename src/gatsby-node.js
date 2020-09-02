@@ -100,6 +100,9 @@ exports.sourceNodes = async (
 
     // note: if we can't get any collections we throw an Error to stop other stop happening
     // this may not be the desired behaviour, as you may want to develop without this data?
+    // todo: this is normally because another build proces is running an improvement
+    // might be to retry again after 60 seconds (could be conifg option)
+    // and for maximum of 3 attempts (could be config option)
     if (!collections) throw new Error("There was an issue fetching collections");
 
     if (verbose) {

@@ -39,7 +39,7 @@ const parseBulkData = (data, childAttributes = {}, url) => {
 
       console.error(
         "Parent/child match not found in parseBulkData, we should be handling this error better, id, __parentId",
-        id,
+        obj.id,
         __parentId
       );
     });
@@ -60,7 +60,7 @@ const parseBulkData = (data, childAttributes = {}, url) => {
 
 const fetchBulkData = async (url, childAttributes) => {
   const bulkData = await fetch(url).then(r => r.text());
-  console.log('fetchBulkData fetching url: ', url);
+  // console.log('fetchBulkData fetching url: ', url);
   return parseBulkData(bulkData, childAttributes);
 };
 

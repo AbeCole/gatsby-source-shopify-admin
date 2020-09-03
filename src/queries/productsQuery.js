@@ -1,9 +1,9 @@
 import fetchShopifyData from "../helpers/fetchShopifyData";
 import shopifyQuery from "../helpers/shopifyQuery";
 
-const productsQuery = async (props, restrictedQuery = false) => {
+const productsQuery = async (props) => {
   const query = `{
-    products${restrictedQuery ? "(first: 1)" : ""} {
+    products {
       edges {
         node {
           id
@@ -17,7 +17,7 @@ const productsQuery = async (props, restrictedQuery = false) => {
           vendor
           createdAt
           publishedOnCurrentPublication
-          images${restrictedQuery ? "(first: 20)" : ""} {
+          images {
             edges {
               node {
                 id
@@ -41,7 +41,7 @@ const productsQuery = async (props, restrictedQuery = false) => {
               currencyCode
             }
           }
-          metafields${restrictedQuery ? "(first: 40)" : ""} {
+          metafields {
             edges {
               node {
                 id
@@ -53,7 +53,7 @@ const productsQuery = async (props, restrictedQuery = false) => {
               }
             }
           }
-          variants${restrictedQuery ? "(first: 30)" : ""} {
+          variants {
             edges {
               node {
                 id
@@ -73,7 +73,7 @@ const productsQuery = async (props, restrictedQuery = false) => {
                   id
                   originalSrc
                 }
-                metafields${restrictedQuery ? "(first: 20)" : ""} {
+                metafields {
                   edges {
                     node {
                       id
@@ -92,26 +92,6 @@ const productsQuery = async (props, restrictedQuery = false) => {
       }
     }
   }`;
-
-  if (restrictedQuery) {
-    return shopifyQuery(props.client, query).then((resp) =>
-      resp.data.products.edges.map((c) => ({
-        ...c.node,
-        images: c.node.images ? c.node.images.edges.map((v) => v.node) : null,
-        metafields: c.node.metafields
-          ? c.node.metafields.edges.map((m) => m.node)
-          : null,
-        variants: c.node.variants
-          ? c.node.variants.edges.map((v) => ({
-              ...v.node,
-              metafields: v.node.metafields
-                ? v.node.metafields.edges.map((m) => m.node)
-                : null,
-            }))
-          : null,
-      }))
-    );
-  }
 
   return fetchShopifyData("products", props, query, {
     ProductVariant: "variants",

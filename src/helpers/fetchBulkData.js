@@ -18,20 +18,26 @@ const parseBulkData = (data, childAttributes = {}) => {
       }
 
       const type = parseShopifyType(obj.id);
+
+      if (type === "ProductVariant")
+        Object.values(childAttributes).forEach((k) => (obj[k] = obj[k] || []));
+
       const parentType = parseShopifyType(obj.__parentId);
 
-      const parent =
-        parentType === "ProductVariant"
-          ? ret.find((o) => o.variants.find((v) => v.id === obj.__parentId))
-          : ret.find((o) => o.id === obj.__parentId);
+      const parent = (() => {
+        if (parentType !== "ProductVariant")
+          return ret.find((o) => o.id === obj.__parentId);
+        const matchingProduct = ret.find((o) =>
+          o.variants.find((v) => v.id === obj.__parentId)
+        );
+        return matchingProduct
+          ? matchingProduct.variants.find((v) => v.id === obj.__parentId)
+          : null;
+      })();
 
       if (parent) {
         if (childAttributes[type]) {
-          if (typeof parent[childAttributes[type]] === undefined) {
-            parent[childAttributes[type]] = [obj];
-          } else {
-            parent[childAttributes[type]].push(obj);
-          }
+          parent[childAttributes[type]].push(obj);
           return;
         }
 

@@ -113,11 +113,18 @@ exports.sourceNodes = async (
       console.time(format("products query"));
     }
 
-    const products = await productsQuery(helpers, restrictQueries);
+    let products = await productsQuery(helpers);
 
     // note: if we can't get any products we throw an Error to stop other stop happening
     // this may not be the desired behaviour, as you may want to develop without this data?
     if (!products) throw new Error("There was an issue fetching products");
+
+    if (restrictQueries) {
+      // we retrieve all products then we filter to ones in the single collection retrieved above
+      const restrictedProductIds = collections[0].products.map(p => p.id);
+      products = products.filter(p => restrictedProductIds.includes(p.id));
+      console.log('col', products[0]);
+    }
 
     if (verbose) console.timeEnd(format("products query"));
 

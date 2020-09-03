@@ -12,10 +12,6 @@ var _asyncToGenerator2 = require("babel-runtime/helpers/asyncToGenerator");
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-var _typeof2 = require("babel-runtime/helpers/typeof");
-
-var _typeof3 = _interopRequireDefault(_typeof2);
-
 var _extends2 = require("babel-runtime/helpers/extends");
 
 var _extends3 = _interopRequireDefault(_extends2);
@@ -48,23 +44,30 @@ var parseBulkData = function parseBulkData(data) {
     }
 
     var type = parseShopifyType(obj.id);
+
+    if (type === "ProductVariant") (0, _values2.default)(childAttributes).forEach(function (k) {
+      return obj[k] = obj[k] || [];
+    });
+
     var parentType = parseShopifyType(obj.__parentId);
 
-    var parent = parentType === "ProductVariant" ? ret.find(function (o) {
-      return o.variants.find(function (v) {
-        return v.id === obj.__parentId;
+    var parent = function () {
+      if (parentType !== "ProductVariant") return ret.find(function (o) {
+        return o.id === obj.__parentId;
       });
-    }) : ret.find(function (o) {
-      return o.id === obj.__parentId;
-    });
+      var matchingProduct = ret.find(function (o) {
+        return o.variants.find(function (v) {
+          return v.id === obj.__parentId;
+        });
+      });
+      return matchingProduct ? matchingProduct.variants.find(function (v) {
+        return v.id === obj.__parentId;
+      }) : null;
+    }();
 
     if (parent) {
       if (childAttributes[type]) {
-        if ((0, _typeof3.default)(parent[childAttributes[type]]) === undefined) {
-          parent[childAttributes[type]] = [obj];
-        } else {
-          parent[childAttributes[type]].push(obj);
-        }
+        parent[childAttributes[type]].push(obj);
         return;
       }
 

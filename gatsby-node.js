@@ -99,7 +99,7 @@ exports.sourceNodes = function () {
               var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(resolve, reject) {
                 var _createNodeHelpers;
 
-                var format, client, createNodeFactory, generateNodeId, nodeHelpers, imageHelpers, helpers, collections, products, shippingRates, createTypes, typeDefs;
+                var format, client, createNodeFactory, generateNodeId, nodeHelpers, imageHelpers, helpers, collections, products, restrictedProductIds, shippingRates, createTypes, typeDefs;
                 return _regenerator2.default.wrap(function _callee$(_context) {
                   while (1) {
                     switch (_context.prev = _context.next) {
@@ -177,7 +177,7 @@ exports.sourceNodes = function () {
                         }
 
                         _context.next = 18;
-                        return (0, _productsQuery2.default)(helpers, restrictQueries);
+                        return (0, _productsQuery2.default)(helpers);
 
                       case 18:
                         products = _context.sent;
@@ -191,39 +191,51 @@ exports.sourceNodes = function () {
 
                       case 21:
 
+                        if (restrictQueries) {
+                          // we retrieve all products then we filter to ones in the single collection retrieved above
+                          restrictedProductIds = collections[0].products.map(function (p) {
+                            return p.id;
+                          });
+
+                          products = products.filter(function (p) {
+                            return restrictedProductIds.includes(p.id);
+                          });
+                          console.log('col', products[0]);
+                        }
+
                         if (verbose) console.timeEnd(format("products query"));
 
                         if (!(shippingRatesAddress && storefrontApiKey)) {
-                          _context.next = 34;
+                          _context.next = 35;
                           break;
                         }
 
                         if (!(!products || products.length < 1 || products[0].variants.length === 0)) {
-                          _context.next = 25;
+                          _context.next = 26;
                           break;
                         }
 
                         throw new Error("No products available cannot run shipping rates query");
 
-                      case 25:
+                      case 26:
                         if (!(products[0].variants.length === 0)) {
-                          _context.next = 27;
+                          _context.next = 28;
                           break;
                         }
 
                         throw new Error("No product variants available cannot run shipping rates query");
 
-                      case 27:
+                      case 28:
 
                         if (verbose) {
                           console.log(format("- starting shipping rates query"));
                           console.time(format("shipping rates query"));
                         }
 
-                        _context.next = 30;
+                        _context.next = 31;
                         return (0, _shippingRatesQuery2.default)(storeName, shippingRatesAddress, storefrontApiKey, products[0].variants[0].id);
 
-                      case 30:
+                      case 31:
                         shippingRates = _context.sent;
 
 
@@ -238,9 +250,9 @@ exports.sourceNodes = function () {
 
                         if (verbose) console.timeEnd(format("shipping rates nodes"));
 
-                      case 34:
+                      case 35:
                         if (!products) {
-                          _context.next = 39;
+                          _context.next = 40;
                           break;
                         }
 
@@ -249,18 +261,18 @@ exports.sourceNodes = function () {
                           console.time(format("products nodes"));
                         }
 
-                        _context.next = 38;
+                        _context.next = 39;
                         return (0, _products2.default)(onlyPublished ? products.filter(function (p) {
                           return p.publishedOnCurrentPublication;
                         }) : products, helpers, collections);
 
-                      case 38:
+                      case 39:
 
                         if (verbose) console.timeEnd(format("products nodes"));
 
-                      case 39:
+                      case 40:
                         if (!collections) {
-                          _context.next = 44;
+                          _context.next = 45;
                           break;
                         }
 
@@ -269,16 +281,16 @@ exports.sourceNodes = function () {
                           console.time(format("collections nodes"));
                         }
 
-                        _context.next = 43;
+                        _context.next = 44;
                         return (0, _collections2.default)(onlyPublished ? collections.filter(function (p) {
                           return p.publishedOnCurrentPublication;
                         }) : collections, helpers);
 
-                      case 43:
+                      case 44:
 
                         if (verbose) console.timeEnd(format("collections nodes"));
 
-                      case 44:
+                      case 45:
 
                         if (verbose) console.time(format("finished type definitions"));
 
@@ -314,7 +326,7 @@ exports.sourceNodes = function () {
 
                         resolve(true);
 
-                      case 52:
+                      case 53:
                       case "end":
                         return _context.stop();
                     }

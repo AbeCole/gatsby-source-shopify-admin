@@ -1,6 +1,6 @@
 {
     "name": "gatsby-source-shopify-admin",
-    "version": "0.1.21",
+    "version": "0.1.22",
     "description": "Gatsby source plugin for building websites using Shopify's Storefront and Admin Graphql APIs.",
     "scripts": {
         "build": "babel src --out-dir .",

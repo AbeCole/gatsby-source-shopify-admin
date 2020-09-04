@@ -97,10 +97,6 @@ exports.sourceNodes = async (
     }
 
     let collections = await collectionsQuery(helpers, restrictQueries);
-
-    if (onlyPublished)
-      collections = collections.filter((p) => p.publishedOnCurrentPublication);
-
     // note: if we can't get any collections we throw an Error to stop other stop happening
     // this may not be the desired behaviour, as you may want to develop without this data?
     // todo: this is normally because another build proces is running an improvement
@@ -108,6 +104,9 @@ exports.sourceNodes = async (
     // and for maximum of 3 attempts (could be config option)
     if (!collections)
       throw new Error("There was an issue fetching collections");
+
+    if (onlyPublished)
+      collections = collections.filter((p) => p.publishedOnCurrentPublication);
 
     if (collections.length === 0)
       throw new Error(

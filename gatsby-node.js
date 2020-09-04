@@ -160,25 +160,19 @@ exports.sourceNodes = function () {
                       case 12:
                         collections = _context.sent;
 
-
-                        if (onlyPublished) collections = collections.filter(function (p) {
-                          return p.publishedOnCurrentPublication;
-                        });
-
-                        // note: if we can't get any collections we throw an Error to stop other stop happening
-                        // this may not be the desired behaviour, as you may want to develop without this data?
-                        // todo: this is normally because another build proces is running an improvement
-                        // might be to retry again after 60 seconds (could be conifg option)
-                        // and for maximum of 3 attempts (could be config option)
-
                         if (collections) {
-                          _context.next = 16;
+                          _context.next = 15;
                           break;
                         }
 
                         throw new Error("There was an issue fetching collections");
 
-                      case 16:
+                      case 15:
+
+                        if (onlyPublished) collections = collections.filter(function (p) {
+                          return p.publishedOnCurrentPublication;
+                        });
+
                         if (!(collections.length === 0)) {
                           _context.next = 18;
                           break;

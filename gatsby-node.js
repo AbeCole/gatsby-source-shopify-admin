@@ -160,14 +160,33 @@ exports.sourceNodes = function () {
                       case 12:
                         collections = _context.sent;
 
+
+                        if (onlyPublished) collections = collections.filter(function (p) {
+                          return p.publishedOnCurrentPublication;
+                        });
+
+                        // note: if we can't get any collections we throw an Error to stop other stop happening
+                        // this may not be the desired behaviour, as you may want to develop without this data?
+                        // todo: this is normally because another build proces is running an improvement
+                        // might be to retry again after 60 seconds (could be conifg option)
+                        // and for maximum of 3 attempts (could be config option)
+
                         if (collections) {
-                          _context.next = 15;
+                          _context.next = 16;
                           break;
                         }
 
                         throw new Error("There was an issue fetching collections");
 
-                      case 15:
+                      case 16:
+                        if (!(collections.length === 0)) {
+                          _context.next = 18;
+                          break;
+                        }
+
+                        throw new Error("No collections were returned, check your config " + (onlyPublished && restrictQueries ? "(onlyPublished && restrictQueries don't work well together)" : ""));
+
+                      case 18:
 
                         if (verbose) {
                           console.timeEnd(format("collections query"));
@@ -176,20 +195,20 @@ exports.sourceNodes = function () {
                           console.time(format("products query"));
                         }
 
-                        _context.next = 18;
+                        _context.next = 21;
                         return (0, _productsQuery2.default)(helpers);
 
-                      case 18:
+                      case 21:
                         products = _context.sent;
 
                         if (products) {
-                          _context.next = 21;
+                          _context.next = 24;
                           break;
                         }
 
                         throw new Error("There was an issue fetching products");
 
-                      case 21:
+                      case 24:
 
                         if (restrictQueries) {
                           // we retrieve all products then we filter to ones in the single collection retrieved above
@@ -200,42 +219,41 @@ exports.sourceNodes = function () {
                           products = products.filter(function (p) {
                             return restrictedProductIds.includes(p.id);
                           });
-                          console.log('col', products[0]);
                         }
 
                         if (verbose) console.timeEnd(format("products query"));
 
                         if (!(shippingRatesAddress && storefrontApiKey)) {
-                          _context.next = 35;
+                          _context.next = 38;
                           break;
                         }
 
                         if (!(!products || products.length < 1 || products[0].variants.length === 0)) {
-                          _context.next = 26;
+                          _context.next = 29;
                           break;
                         }
 
                         throw new Error("No products available cannot run shipping rates query");
 
-                      case 26:
+                      case 29:
                         if (!(products[0].variants.length === 0)) {
-                          _context.next = 28;
+                          _context.next = 31;
                           break;
                         }
 
                         throw new Error("No product variants available cannot run shipping rates query");
 
-                      case 28:
+                      case 31:
 
                         if (verbose) {
                           console.log(format("- starting shipping rates query"));
                           console.time(format("shipping rates query"));
                         }
 
-                        _context.next = 31;
+                        _context.next = 34;
                         return (0, _shippingRatesQuery2.default)(storeName, shippingRatesAddress, storefrontApiKey, products[0].variants[0].id);
 
-                      case 31:
+                      case 34:
                         shippingRates = _context.sent;
 
 
@@ -250,9 +268,9 @@ exports.sourceNodes = function () {
 
                         if (verbose) console.timeEnd(format("shipping rates nodes"));
 
-                      case 35:
+                      case 38:
                         if (!products) {
-                          _context.next = 40;
+                          _context.next = 43;
                           break;
                         }
 
@@ -261,18 +279,18 @@ exports.sourceNodes = function () {
                           console.time(format("products nodes"));
                         }
 
-                        _context.next = 39;
+                        _context.next = 42;
                         return (0, _products2.default)(onlyPublished ? products.filter(function (p) {
                           return p.publishedOnCurrentPublication;
                         }) : products, helpers, collections);
 
-                      case 39:
+                      case 42:
 
                         if (verbose) console.timeEnd(format("products nodes"));
 
-                      case 40:
+                      case 43:
                         if (!collections) {
-                          _context.next = 45;
+                          _context.next = 48;
                           break;
                         }
 
@@ -281,16 +299,14 @@ exports.sourceNodes = function () {
                           console.time(format("collections nodes"));
                         }
 
-                        _context.next = 44;
-                        return (0, _collections2.default)(onlyPublished ? collections.filter(function (p) {
-                          return p.publishedOnCurrentPublication;
-                        }) : collections, helpers);
+                        _context.next = 47;
+                        return (0, _collections2.default)(collections, helpers);
 
-                      case 44:
+                      case 47:
 
                         if (verbose) console.timeEnd(format("collections nodes"));
 
-                      case 45:
+                      case 48:
 
                         if (verbose) console.time(format("finished type definitions"));
 
@@ -326,7 +342,7 @@ exports.sourceNodes = function () {
 
                         resolve(true);
 
-                      case 53:
+                      case 56:
                       case "end":
                         return _context.stop();
                     }

@@ -96,7 +96,10 @@ exports.sourceNodes = async (
       console.time(format("collections query"));
     }
 
-    const collections = await collectionsQuery(helpers, restrictQueries);
+    let collections = await collectionsQuery(helpers, restrictQueries);
+
+    if (onlyPublished)
+      collections = collections.filter((p) => p.publishedOnCurrentPublication);
 
     // note: if we can't get any collections we throw an Error to stop other stop happening
     // this may not be the desired behaviour, as you may want to develop without this data?
@@ -105,6 +108,14 @@ exports.sourceNodes = async (
     // and for maximum of 3 attempts (could be config option)
     if (!collections)
       throw new Error("There was an issue fetching collections");
+
+    if (collections.length === 0)
+      throw new Error(
+        "No collections were returned, check your config " +
+          (onlyPublished && restrictQueries
+            ? "(onlyPublished && restrictQueries don't work well together)"
+            : "")
+      );
 
     if (verbose) {
       console.timeEnd(format("collections query"));
@@ -121,9 +132,8 @@ exports.sourceNodes = async (
 
     if (restrictQueries) {
       // we retrieve all products then we filter to ones in the single collection retrieved above
-      const restrictedProductIds = collections[0].products.map(p => p.id);
-      products = products.filter(p => restrictedProductIds.includes(p.id));
-      console.log('col', products[0]);
+      const restrictedProductIds = collections[0].products.map((p) => p.id);
+      products = products.filter((p) => restrictedProductIds.includes(p.id));
     }
 
     if (verbose) console.timeEnd(format("products query"));
@@ -192,12 +202,7 @@ exports.sourceNodes = async (
         console.time(format("collections nodes"));
       }
 
-      await createCollectionNodes(
-        onlyPublished
-          ? collections.filter((p) => p.publishedOnCurrentPublication)
-          : collections,
-        helpers
-      );
+      await createCollectionNodes(collections, helpers);
 
       if (verbose) console.timeEnd(format("collections nodes"));
     }

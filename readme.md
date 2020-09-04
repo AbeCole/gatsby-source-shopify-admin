@@ -28,7 +28,7 @@ Configuration is relatively limited at the moment, if you come across a good use
         },
         relatedCollectionMetafields: null,
         verbose: false,
-        restrictQueries: false, // restrict collection & products queries to 1 item, if you have issues with development taking ages to start because you have to download alot of images this may help, be warned this may create issues with data parity to Shopify (i.e. relatedCollectionMetafields would not have data if the selected collection isn't the 1 collection already returned)
+        restrictQueries: false, // Adds "(first: 1)" to collections query (then ONLY creates nodes for that collections product). Probably avoid using 'onlyPublished' at the same time, incase the 'first' collection returned isn't published on your sales channel (private app). This setting aims to help when builds are slow due to lots of images but you are happy to development with limited data; be warned this may create issues with data parity to Shopify (i.e. relatedCollectionMetafields would not have data if the selected collection isn't the 1 collection we have queried)
       },
     },
 

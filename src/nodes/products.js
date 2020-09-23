@@ -7,14 +7,28 @@ const products = async (data, helpers, collections) => {
     if (node.images) {
       await Promise.all(
         node.images.map(async (i) => {
-          const file = await downloadImageNode({
+          i.localFile___NODE = await downloadImageNode({
             id: i.id,
             url: i.originalSrc,
             prefix: helpers.TYPE_PREFIX,
             ...helpers,
           });
-          i.localFile___NODE = file;
         })
+      );
+    }
+
+    if (node.variants) {
+      await Promise.all(
+        node.variants
+          .filter((v) => v.image && v.image.originalSrc)
+          .map(async (v) => {
+            v.image.localFile___NODE = await downloadImageNode({
+              id: v.image.id,
+              url: v.image.originalSrc,
+              prefix: helpers.TYPE_PREFIX,
+              ...helpers,
+            });
+          })
       );
     }
 

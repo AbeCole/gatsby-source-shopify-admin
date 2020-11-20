@@ -172,14 +172,26 @@ var products = function () {
                   while (1) {
                     switch (_context4.prev = _context4.next) {
                       case 0:
-                        _context4.next = 2;
+                        d.collections = collections.filter(function (c) {
+                          return c.products.find(function (p) {
+                            return p.id === d.id;
+                          });
+                        }).map(function (c) {
+                          return {
+                            id: c.id,
+                            handle: c.handle,
+                            title: c.title
+                          };
+                        });
+
+                        _context4.next = 3;
                         return ProductNode(d);
 
-                      case 2:
+                      case 3:
                         node = _context4.sent;
                         return _context4.abrupt("return", helpers.createNode(node));
 
-                      case 4:
+                      case 5:
                       case "end":
                         return _context4.stop();
                     }

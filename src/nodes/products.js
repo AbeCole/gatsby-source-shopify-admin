@@ -3,15 +3,15 @@ import parseImageMetafields from "../helpers/parseImageMetafields";
 import parseRelatedCollectionMetafields from "../helpers/parseRelatedCollectionMetafields";
 
 const products = async (data, helpers, collections) => {
-  const ProductNode = helpers.createNodeFactory("PRODUCT", async (node) => {
+  const ProductNode = helpers.createNodeFactory("PRODUCT", async node => {
     if (node.images) {
       await Promise.all(
-        node.images.map(async (i) => {
+        node.images.map(async i => {
           i.localFile___NODE = await downloadImageNode({
             id: i.id,
             url: i.originalSrc,
             prefix: helpers.TYPE_PREFIX,
-            ...helpers,
+            ...helpers
           });
         })
       );
@@ -20,13 +20,13 @@ const products = async (data, helpers, collections) => {
     if (node.variants) {
       await Promise.all(
         node.variants
-          .filter((v) => v.image && v.image.originalSrc)
-          .map(async (v) => {
+          .filter(v => v.image && v.image.originalSrc)
+          .map(async v => {
             v.image.localFile___NODE = await downloadImageNode({
               id: v.image.id,
               url: v.image.originalSrc,
               prefix: helpers.TYPE_PREFIX,
-              ...helpers,
+              ...helpers
             });
           })
       );
@@ -64,7 +64,15 @@ const products = async (data, helpers, collections) => {
   });
 
   return Promise.all(
-    data.map(async (d) => {
+    data.map(async d => {
+      d.collections = collections
+        .filter(c => c.products.find(p => p.id === d.id))
+        .map(c => ({
+          id: c.id,
+          handle: c.handle,
+          title: c.title
+        }));
+
       const node = await ProductNode(d);
       return helpers.createNode(node);
     })

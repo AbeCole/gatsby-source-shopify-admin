@@ -17,15 +17,6 @@ const productsQuery = async (props) => {
           vendor
           createdAt
           publishedOnCurrentPublication
-          collections {
-            edges {
-              node {
-                id
-                title
-                handle
-              }
-            }
-          }
           images {
             edges {
               node {

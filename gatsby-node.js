@@ -240,7 +240,7 @@ exports.sourceNodes = function () {
                       case 31:
 
                         if (verbose) {
-                          console.log(format("- starting shipping rates query"));
+                          console.log(format("- starting shipping rates query, using Product Variant ID '" + products[0].variants[0].id + "'"));
                           console.time(format("shipping rates query"));
                         }
 

@@ -43,34 +43,36 @@ var shippingRates = function () {
             }());
 
 
-            data.forEach(function () {
-              var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(d) {
-                var node;
-                return _regenerator2.default.wrap(function _callee2$(_context2) {
-                  while (1) {
-                    switch (_context2.prev = _context2.next) {
-                      case 0:
-                        d.id = d.handle;
-                        _context2.next = 3;
-                        return ShippingRateNode(d);
+            if (data.length && Array.isArray(data)) {
+              data.forEach(function () {
+                var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(d) {
+                  var node;
+                  return _regenerator2.default.wrap(function _callee2$(_context2) {
+                    while (1) {
+                      switch (_context2.prev = _context2.next) {
+                        case 0:
+                          d.id = d.handle;
+                          _context2.next = 3;
+                          return ShippingRateNode(d);
 
-                      case 3:
-                        node = _context2.sent;
+                        case 3:
+                          node = _context2.sent;
 
-                        helpers.createNode(node);
+                          helpers.createNode(node);
 
-                      case 5:
-                      case "end":
-                        return _context2.stop();
+                        case 5:
+                        case "end":
+                          return _context2.stop();
+                      }
                     }
-                  }
-                }, _callee2, undefined);
-              }));
+                  }, _callee2, undefined);
+                }));
 
-              return function (_x4) {
-                return _ref3.apply(this, arguments);
-              };
-            }());
+                return function (_x4) {
+                  return _ref3.apply(this, arguments);
+                };
+              }());
+            }
 
             return _context3.abrupt("return", true);
 

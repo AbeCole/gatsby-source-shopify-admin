@@ -16,10 +16,6 @@ var _fetchShopifyData = require("../helpers/fetchShopifyData");
 
 var _fetchShopifyData2 = _interopRequireDefault(_fetchShopifyData);
 
-var _shopifyQuery = require("../helpers/shopifyQuery");
-
-var _shopifyQuery2 = _interopRequireDefault(_shopifyQuery);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var productsQuery = function () {

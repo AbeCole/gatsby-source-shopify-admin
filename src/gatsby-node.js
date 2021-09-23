@@ -138,24 +138,26 @@ exports.sourceNodes = async (
     if (verbose) console.timeEnd(format("products query"));
 
     if (shippingRatesAddress && storefrontApiKey) {
-      if (
-        !products ||
-        products.length < 1 ||
-        products[0].variants.length === 0
-      ) {
+      const firstAvailableProduct =
+        products && products.length
+          ? products.find(
+              (p) => p.publishedOnCurrentPublication && p.variants.length
+            )
+          : null;
+      if (!firstAvailableProduct) {
         throw new Error(
-          "No products available cannot run shipping rates query"
-        );
-      }
-
-      if (products[0].variants.length === 0) {
-        throw new Error(
-          "No product variants available cannot run shipping rates query"
+          "No applicable products available, cannot run shipping rates query"
         );
       }
 
       if (verbose) {
-        console.log(format("- starting shipping rates query, using Product Variant ID '" + products[0].variants[0].id + "'"));
+        console.log(
+          format(
+            "- starting shipping rates query, using Product Variant ID '" +
+              firstAvailableProduct.variants[0].id +
+              "'"
+          )
+        );
         console.time(format("shipping rates query"));
       }
 
@@ -163,7 +165,7 @@ exports.sourceNodes = async (
         storeName,
         shippingRatesAddress,
         storefrontApiKey,
-        products[0].variants[0].id
+        firstAvailableProduct.variants[0].id
       );
 
       if (verbose) {

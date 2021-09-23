@@ -12,10 +12,6 @@ var _asyncToGenerator2 = require("babel-runtime/helpers/asyncToGenerator");
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-var _nodeFetch = require("node-fetch");
-
-var _nodeFetch2 = _interopRequireDefault(_nodeFetch);
-
 var _bulkCreationQuery = require("../queries/bulkCreationQuery");
 
 var _bulkCreationQuery2 = _interopRequireDefault(_bulkCreationQuery);

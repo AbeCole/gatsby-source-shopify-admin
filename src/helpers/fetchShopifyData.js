@@ -1,4 +1,3 @@
-import fetch from "node-fetch";
 import bulkCreationQuery from "../queries/bulkCreationQuery";
 import bulkPollQuery from "../queries/bulkPollQuery";
 import fetchBulkData from "./fetchBulkData";

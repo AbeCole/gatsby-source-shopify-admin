@@ -1,5 +1,4 @@
 import fetchShopifyData from "../helpers/fetchShopifyData";
-import shopifyQuery from "../helpers/shopifyQuery";
 
 const productsQuery = async (props) => {
   const query = `{

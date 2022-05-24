@@ -4,7 +4,7 @@ This is a Gatsby source plugin to pull data from Shopify using the Admin APIs.
 
 This plugin was recently (Q1 2020) re-written to utilize the [Shopify Bulk API](https://shopify.dev/tutorials/perform-bulk-operations-with-admin-api#operation-restrictions).
 
-It is highly likely to run into bugs or un-handled errors. This plugin was written to fill a void while trying to complete a client's project, since then I've tried to improve it to be project-agnostic and work better for others to use. If you find any error/issue please let me know so we can try to improve this plugin to a point where it can be used by anyone.
+Updated in 2022 for Gatsby v4.
 
 # Installation
 

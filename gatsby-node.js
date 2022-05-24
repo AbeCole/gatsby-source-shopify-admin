@@ -88,7 +88,7 @@ exports.sourceNodes = function () {
             createNode = actions.createNode, touchNode = actions.touchNode;
             return _context2.abrupt('return', new _promise2.default(function () {
               var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(resolve, reject) {
-                var format, client, nodeHelpers, createNodeFactory, imageHelpers, helpers, collections, products, restrictedProductIds, firstAvailableProduct, shippingRates, productNodes;
+                var format, client, nodeHelpers, createNodeFactory, imageHelpers, helpers, collections, products, restrictedProductIds, firstAvailableProduct, shippingRates;
                 return _regenerator2.default.wrap(function _callee$(_context) {
                   while (1) {
                     switch (_context.prev = _context.next) {
@@ -253,7 +253,7 @@ exports.sourceNodes = function () {
 
                       case 37:
                         if (!products) {
-                          _context.next = 43;
+                          _context.next = 42;
                           break;
                         }
 
@@ -268,16 +268,12 @@ exports.sourceNodes = function () {
                         }) : products, helpers, collections);
 
                       case 41:
-                        productNodes = _context.sent;
-
-
-                        // console.log('productNodes', productNodes)
 
                         if (verbose) console.timeEnd(format('products nodes'));
 
-                      case 43:
+                      case 42:
                         if (!collections) {
-                          _context.next = 48;
+                          _context.next = 47;
                           break;
                         }
 
@@ -286,18 +282,18 @@ exports.sourceNodes = function () {
                           console.time(format('collections nodes'));
                         }
 
-                        _context.next = 47;
+                        _context.next = 46;
                         return (0, _collections2.default)(collections, helpers);
 
-                      case 47:
+                      case 46:
 
                         if (verbose) console.timeEnd(format('collections nodes'));
 
-                      case 48:
+                      case 47:
 
                         resolve(true);
 
-                      case 49:
+                      case 48:
                       case 'end':
                         return _context.stop();
                     }
@@ -351,20 +347,6 @@ exports.onPostBootstrap = function () {
 exports.createSchemaCustomization = function (_ref7) {
   var actions = _ref7.actions;
   var createTypes = actions.createTypes;
-
-  // createFieldExtension({
-  //   name: 'shopifyProduct',
-  //   extend(options, prevFieldConfig) {
-  //     return {
-  //       resolve(source, args, context, info) {
-  //         return context.nodeModel.getNodesByIds({
-  //           ids: source.products, // This matches the name of the field we're currently inside
-  //           type: 'ShopifyProduct' // This matches the type of the wrappers field
-  //         })
-  //       }
-  //     }
-  //   }
-  // })
 
   // Gatsby tries to infer all the type definitions
   // However this doesn't work if fields are set for some products

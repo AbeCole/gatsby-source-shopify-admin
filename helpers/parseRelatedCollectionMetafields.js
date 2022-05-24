@@ -1,10 +1,10 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _camelcase = require("./camelcase");
+var _camelcase = require('./camelcase');
 
 var _camelcase2 = _interopRequireDefault(_camelcase);
 
@@ -21,7 +21,7 @@ var parseRelatedCollectionMetafields = function parseRelatedCollectionMetafields
       return c.handle === metafield.value;
     });
     if (matchingCollection) {
-      node[(0, _camelcase2.default)(fieldName) + "___NODE"] = helpers.generateNodeId("COLLECTION", matchingCollection.id);
+      node[(0, _camelcase2.default)(fieldName) + '___NODE'] = helpers.createNodeId('COLLECTION__' + matchingCollection.id);
     }
   });
 };

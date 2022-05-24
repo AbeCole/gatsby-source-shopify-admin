@@ -1,36 +1,40 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _regenerator = require("babel-runtime/regenerator");
+var _regenerator = require('babel-runtime/regenerator');
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _asyncToGenerator2 = require("babel-runtime/helpers/asyncToGenerator");
+var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-var _extends2 = require("babel-runtime/helpers/extends");
+var _extends2 = require('babel-runtime/helpers/extends');
 
 var _extends3 = _interopRequireDefault(_extends2);
 
-var _values = require("babel-runtime/core-js/object/values");
+var _values = require('babel-runtime/core-js/object/values');
 
 var _values2 = _interopRequireDefault(_values);
+
+var _isomorphicUnfetch = require('isomorphic-unfetch');
+
+var _isomorphicUnfetch2 = _interopRequireDefault(_isomorphicUnfetch);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var parseShopifyType = function parseShopifyType(id) {
-  return id.split("/")[3];
+  return id.split('/')[3];
 };
 
 var parseBulkData = function parseBulkData(data) {
   var childAttributes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
   var ret = [];
-  data.split("\n").filter(function (l) {
+  data.split('\n').filter(function (l) {
     return l;
   }).forEach(function (l) {
     var obj = JSON.parse(l);
@@ -45,14 +49,14 @@ var parseBulkData = function parseBulkData(data) {
 
     var type = parseShopifyType(obj.id);
 
-    if (type === "ProductVariant") (0, _values2.default)(childAttributes).forEach(function (k) {
+    if (type === 'ProductVariant') (0, _values2.default)(childAttributes).forEach(function (k) {
       return obj[k] = obj[k] || [];
     });
 
     var parentType = parseShopifyType(obj.__parentId);
 
     var parent = function () {
-      if (parentType !== "ProductVariant") return ret.find(function (o) {
+      if (parentType !== 'ProductVariant') return ret.find(function (o) {
         return o.id === obj.__parentId;
       });
       var matchingProduct = ret.find(function (o) {
@@ -74,11 +78,11 @@ var parseBulkData = function parseBulkData(data) {
       // todo: probably needs error handling here, we only get here if a
       // matching parent is found, but the Shopify object type isn't matched
       // essentially at the moment this node is ignored without any notification
-      console.error("Matched a parent but no matching childAttributes assignment for type " + type + ", consider adding this to the childAttributes mapping", childAttributes, parent, l);
+      console.error('Matched a parent but no matching childAttributes assignment for type ' + type + ', consider adding this to the childAttributes mapping', childAttributes, parent, l);
       return;
     }
 
-    console.error("Parent/child match not found in fetchBulkData, we should be handling this error better: type, id, __parentId", type, obj.id, obj.__parentId);
+    console.error('Parent/child match not found in fetchBulkData, we should be handling this error better: type, id, __parentId', type, obj.id, obj.__parentId);
   });
 
   return ret;
@@ -103,16 +107,16 @@ var fetchBulkData = function () {
         switch (_context.prev = _context.next) {
           case 0:
             _context.next = 2;
-            return fetch(url).then(function (r) {
+            return (0, _isomorphicUnfetch2.default)(url).then(function (r) {
               return r.text();
             });
 
           case 2:
             bulkData = _context.sent;
-            return _context.abrupt("return", parseBulkData(bulkData, childAttributes));
+            return _context.abrupt('return', parseBulkData(bulkData, childAttributes));
 
           case 4:
-          case "end":
+          case 'end':
             return _context.stop();
         }
       }

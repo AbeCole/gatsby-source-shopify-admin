@@ -1,25 +1,27 @@
-import { createRemoteFileNode } from "gatsby-source-filesystem";
+import { createRemoteFileNode } from 'gatsby-source-filesystem'
 
 const downloadImageNode = async ({
   id,
   url,
   createNode,
   createNodeId,
+  getNode,
   touchNode,
   store,
   cache,
-  prefix = ""
+  prefix = ''
 }) => {
-  let fileNodeID;
+  let fileNodeID
 
-  const mediaDataCacheKey = `${prefix}__Media__${url}`;
-  const cacheMediaData = await cache.get(mediaDataCacheKey);
+  const mediaDataCacheKey = `${prefix}__Media__${url}`
+  const cacheMediaData = await cache.get(mediaDataCacheKey)
 
   if (cacheMediaData) {
-    fileNodeID = cacheMediaData.fileNodeID;
-    touchNode({ nodeId: fileNodeID });
+    fileNodeID = cacheMediaData.fileNodeID
+    const node = getNode(fileNodeID)
+    touchNode(node)
 
-    return fileNodeID;
+    return node
   }
 
   // try {
@@ -29,19 +31,19 @@ const downloadImageNode = async ({
     cache,
     createNode,
     createNodeId
-  });
+  })
 
   if (fileNode) {
-    fileNodeID = fileNode.id;
-    await cache.set(mediaDataCacheKey, { fileNodeID });
+    fileNodeID = fileNode.id
+    await cache.set(mediaDataCacheKey, { fileNodeID })
 
-    return fileNodeID;
+    return fileNode
   }
   // } catch(e) {
   //     console.error('Logging error', e);
   // }
 
-  return undefined;
-};
+  return undefined
+}
 
-export default downloadImageNode;
+export default downloadImageNode

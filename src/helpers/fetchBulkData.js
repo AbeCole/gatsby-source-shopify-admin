@@ -1,44 +1,46 @@
-const parseShopifyType = (id) => id.split("/")[3];
+import fetch from 'isomorphic-unfetch'
+
+const parseShopifyType = (id) => id.split('/')[3]
 
 const parseBulkData = (data, childAttributes = {}) => {
-  const ret = [];
+  const ret = []
   data
-    .split("\n")
+    .split('\n')
     .filter((l) => l)
     .forEach((l) => {
-      const obj = JSON.parse(l);
+      const obj = JSON.parse(l)
       if (!obj.__parentId) {
-        const children = {};
-        Object.values(childAttributes).forEach((k) => (children[k] = []));
+        const children = {}
+        Object.values(childAttributes).forEach((k) => (children[k] = []))
         ret.push({
           ...obj,
-          ...children,
-        });
-        return;
+          ...children
+        })
+        return
       }
 
-      const type = parseShopifyType(obj.id);
+      const type = parseShopifyType(obj.id)
 
-      if (type === "ProductVariant")
-        Object.values(childAttributes).forEach((k) => (obj[k] = obj[k] || []));
+      if (type === 'ProductVariant')
+        Object.values(childAttributes).forEach((k) => (obj[k] = obj[k] || []))
 
-      const parentType = parseShopifyType(obj.__parentId);
+      const parentType = parseShopifyType(obj.__parentId)
 
       const parent = (() => {
-        if (parentType !== "ProductVariant")
-          return ret.find((o) => o.id === obj.__parentId);
+        if (parentType !== 'ProductVariant')
+          return ret.find((o) => o.id === obj.__parentId)
         const matchingProduct = ret.find((o) =>
           o.variants.find((v) => v.id === obj.__parentId)
-        );
+        )
         return matchingProduct
           ? matchingProduct.variants.find((v) => v.id === obj.__parentId)
-          : null;
-      })();
+          : null
+      })()
 
       if (parent) {
         if (childAttributes[type]) {
-          parent[childAttributes[type]].push(obj);
-          return;
+          parent[childAttributes[type]].push(obj)
+          return
         }
 
         // todo: probably needs error handling here, we only get here if a
@@ -49,20 +51,20 @@ const parseBulkData = (data, childAttributes = {}) => {
           childAttributes,
           parent,
           l
-        );
-        return;
+        )
+        return
       }
 
       console.error(
-        "Parent/child match not found in fetchBulkData, we should be handling this error better: type, id, __parentId",
+        'Parent/child match not found in fetchBulkData, we should be handling this error better: type, id, __parentId',
         type,
         obj.id,
         obj.__parentId
-      );
-    });
+      )
+    })
 
-  return ret;
-};
+  return ret
+}
 
 // childAttributes should be passed in as an object with key/value pairs, where
 // the key represents the matching Shopify object type, and the value represents
@@ -76,9 +78,9 @@ const parseBulkData = (data, childAttributes = {}) => {
 // use 'fetchBulkData("http://...", { 'Product': 'products' })'
 
 const fetchBulkData = async (url, childAttributes) => {
-  const bulkData = await fetch(url).then((r) => r.text());
+  const bulkData = await fetch(url).then((r) => r.text())
   // console.log('fetchBulkData fetching url: ', url);
-  return parseBulkData(bulkData, childAttributes);
-};
+  return parseBulkData(bulkData, childAttributes)
+}
 
-export default fetchBulkData;
+export default fetchBulkData

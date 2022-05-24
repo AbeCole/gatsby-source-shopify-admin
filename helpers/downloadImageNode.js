@@ -1,18 +1,18 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _regenerator = require("babel-runtime/regenerator");
+var _regenerator = require('babel-runtime/regenerator');
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _asyncToGenerator2 = require("babel-runtime/helpers/asyncToGenerator");
+var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-var _gatsbySourceFilesystem = require("gatsby-source-filesystem");
+var _gatsbySourceFilesystem = require('gatsby-source-filesystem');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -22,18 +22,19 @@ var downloadImageNode = function () {
         url = _ref2.url,
         createNode = _ref2.createNode,
         createNodeId = _ref2.createNodeId,
+        getNode = _ref2.getNode,
         touchNode = _ref2.touchNode,
         store = _ref2.store,
         cache = _ref2.cache,
         _ref2$prefix = _ref2.prefix,
-        prefix = _ref2$prefix === undefined ? "" : _ref2$prefix;
-    var fileNodeID, mediaDataCacheKey, cacheMediaData, fileNode;
+        prefix = _ref2$prefix === undefined ? '' : _ref2$prefix;
+    var fileNodeID, mediaDataCacheKey, cacheMediaData, node, fileNode;
     return _regenerator2.default.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
             fileNodeID = void 0;
-            mediaDataCacheKey = prefix + "__Media__" + url;
+            mediaDataCacheKey = prefix + '__Media__' + url;
             _context.next = 4;
             return cache.get(mediaDataCacheKey);
 
@@ -41,17 +42,19 @@ var downloadImageNode = function () {
             cacheMediaData = _context.sent;
 
             if (!cacheMediaData) {
-              _context.next = 9;
+              _context.next = 10;
               break;
             }
 
             fileNodeID = cacheMediaData.fileNodeID;
-            touchNode({ nodeId: fileNodeID });
+            node = getNode(fileNodeID);
 
-            return _context.abrupt("return", fileNodeID);
+            touchNode(node);
 
-          case 9:
-            _context.next = 11;
+            return _context.abrupt('return', node);
+
+          case 10:
+            _context.next = 12;
             return (0, _gatsbySourceFilesystem.createRemoteFileNode)({
               url: url,
               store: store,
@@ -60,26 +63,26 @@ var downloadImageNode = function () {
               createNodeId: createNodeId
             });
 
-          case 11:
+          case 12:
             fileNode = _context.sent;
 
             if (!fileNode) {
-              _context.next = 17;
+              _context.next = 18;
               break;
             }
 
             fileNodeID = fileNode.id;
-            _context.next = 16;
+            _context.next = 17;
             return cache.set(mediaDataCacheKey, { fileNodeID: fileNodeID });
 
-          case 16:
-            return _context.abrupt("return", fileNodeID);
-
           case 17:
-            return _context.abrupt("return", undefined);
+            return _context.abrupt('return', fileNode);
 
           case 18:
-          case "end":
+            return _context.abrupt('return', undefined);
+
+          case 19:
+          case 'end':
             return _context.stop();
         }
       }

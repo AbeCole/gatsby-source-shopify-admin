@@ -1,77 +1,68 @@
-"use strict";
+'use strict';
 
-var _regenerator = require("babel-runtime/regenerator");
+var _regenerator = require('babel-runtime/regenerator');
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _extends2 = require("babel-runtime/helpers/extends");
+var _extends2 = require('babel-runtime/helpers/extends');
 
 var _extends3 = _interopRequireDefault(_extends2);
 
-var _taggedTemplateLiteral2 = require("babel-runtime/helpers/taggedTemplateLiteral");
-
-var _taggedTemplateLiteral3 = _interopRequireDefault(_taggedTemplateLiteral2);
-
-var _promise = require("babel-runtime/core-js/promise");
+var _promise = require('babel-runtime/core-js/promise');
 
 var _promise2 = _interopRequireDefault(_promise);
 
-var _asyncToGenerator2 = require("babel-runtime/helpers/asyncToGenerator");
+var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-var _templateObject = (0, _taggedTemplateLiteral3.default)(["{blue gatsby-source-shopify-admin/", "} ", ""], ["{blue gatsby-source-shopify-admin/", "} ", ""]); /* ========================================================
-                                                                                                                                                                    sourceNodes
-                                                                                                                                                                ======================================================== */
+var _graphqlRequest = require('graphql-request');
 
-var _graphqlRequest = require("graphql-request");
+var _gatsbyNodeHelpers = require('gatsby-node-helpers');
 
-var _chalk = require("chalk");
-
-var _chalk2 = _interopRequireDefault(_chalk);
-
-var _gatsbyNodeHelpers = require("gatsby-node-helpers");
-
-var _gatsbyNodeHelpers2 = _interopRequireDefault(_gatsbyNodeHelpers);
-
-var _collectionsQuery = require("./queries/collectionsQuery");
+var _collectionsQuery = require('./queries/collectionsQuery');
 
 var _collectionsQuery2 = _interopRequireDefault(_collectionsQuery);
 
-var _productsQuery = require("./queries/productsQuery");
+var _productsQuery = require('./queries/productsQuery');
 
 var _productsQuery2 = _interopRequireDefault(_productsQuery);
 
-var _shippingRatesQuery = require("./queries/shippingRatesQuery");
+var _shippingRatesQuery = require('./queries/shippingRatesQuery');
 
 var _shippingRatesQuery2 = _interopRequireDefault(_shippingRatesQuery);
 
-var _collections = require("./nodes/collections");
+var _collections = require('./nodes/collections');
 
 var _collections2 = _interopRequireDefault(_collections);
 
-var _products = require("./nodes/products");
+var _products = require('./nodes/products');
 
 var _products2 = _interopRequireDefault(_products);
 
-var _shippingRates = require("./nodes/shippingRates");
+var _shippingRates = require('./nodes/shippingRates');
 
 var _shippingRates2 = _interopRequireDefault(_shippingRates);
 
-var _camelcase = require("./helpers/camelcase");
+var _camelcase = require('./helpers/camelcase');
 
 var _camelcase2 = _interopRequireDefault(_camelcase);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var TYPE_PREFIX = "shopify";
+// import chalk from 'chalk'
+var TYPE_PREFIX = 'shopify'; /* ========================================================
+                                 sourceNodes
+                             ======================================================== */
 
 exports.sourceNodes = function () {
   var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(_ref2, _ref3) {
     var store = _ref2.store,
         cache = _ref2.cache,
         createNodeId = _ref2.createNodeId,
-        actions = _ref2.actions;
+        createContentDigest = _ref2.createContentDigest,
+        actions = _ref2.actions,
+        getNode = _ref2.getNode;
     var storeName = _ref3.storeName,
         apiKey = _ref3.apiKey,
         storefrontApiKey = _ref3.storefrontApiKey,
@@ -95,30 +86,32 @@ exports.sourceNodes = function () {
         switch (_context2.prev = _context2.next) {
           case 0:
             createNode = actions.createNode, touchNode = actions.touchNode;
-            return _context2.abrupt("return", new _promise2.default(function () {
+            return _context2.abrupt('return', new _promise2.default(function () {
               var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(resolve, reject) {
-                var _createNodeHelpers;
-
-                var format, client, createNodeFactory, generateNodeId, nodeHelpers, imageHelpers, helpers, collections, products, restrictedProductIds, firstAvailableProduct, shippingRates, createTypes, typeDefs;
+                var format, client, nodeHelpers, createNodeFactory, imageHelpers, helpers, collections, products, restrictedProductIds, firstAvailableProduct, shippingRates, productNodes;
                 return _regenerator2.default.wrap(function _callee$(_context) {
                   while (1) {
                     switch (_context.prev = _context.next) {
                       case 0:
+                        // const format = (msg) =>
+                        //   chalk.blue(`{blue gatsby-source-shopify-admin/${storeName}} ${msg}`)
                         format = function format(msg) {
-                          return (0, _chalk2.default)(_templateObject, storeName, msg);
+                          return '-- gatsby-source-shopify-admin/' + storeName + ' -- ' + msg;
                         };
 
-                        if (verbose) console.log(format("starting: shopify queries > node creation"));
+                        if (verbose) console.log(format('starting: shopify queries > node creation'));
 
-                        client = new _graphqlRequest.GraphQLClient("https://" + storeName + ".myshopify.com/admin/api/2020-04/graphql.json", {
+                        client = new _graphqlRequest.GraphQLClient('https://' + storeName + '.myshopify.com/admin/api/2020-04/graphql.json', {
                           headers: {
-                            "X-Shopify-Access-Token": apiKey
+                            'X-Shopify-Access-Token': apiKey
                           }
                         });
-                        createNodeFactory = void 0, generateNodeId = void 0;
-                        nodeHelpers = (_createNodeHelpers = (0, _gatsbyNodeHelpers2.default)({
-                          typePrefix: TYPE_PREFIX
-                        }), createNodeFactory = _createNodeHelpers.createNodeFactory, generateNodeId = _createNodeHelpers.generateNodeId, _createNodeHelpers);
+                        nodeHelpers = (0, _gatsbyNodeHelpers.createNodeHelpers)({
+                          typePrefix: TYPE_PREFIX,
+                          createNodeId: createNodeId,
+                          createContentDigest: createContentDigest
+                        });
+                        createNodeFactory = nodeHelpers.createNodeFactory;
 
                         nodeHelpers = (0, _extends3.default)({
                           createNode: createNode,
@@ -133,8 +126,8 @@ exports.sourceNodes = function () {
                           createNodeFactory: createNodeFactory,
                           createNode: createNode,
                           createNodeId: createNodeId,
+                          getNode: getNode,
                           touchNode: touchNode,
-                          generateNodeId: generateNodeId,
                           TYPE_PREFIX: TYPE_PREFIX,
                           client: client,
                           relatedCollectionMetafields: relatedCollectionMetafields,
@@ -146,12 +139,12 @@ exports.sourceNodes = function () {
 
 
                         if (verbose) {
-                          console.time(format("finished"));
+                          console.time(format('finished'));
                         }
 
                         if (verbose) {
-                          console.log(format("- starting collections query"));
-                          console.time(format("collections query"));
+                          console.log(format('- starting collections query'));
+                          console.time(format('collections query'));
                         }
 
                         _context.next = 12;
@@ -165,7 +158,7 @@ exports.sourceNodes = function () {
                           break;
                         }
 
-                        throw new Error("There was an issue fetching collections");
+                        throw new Error('There was an issue fetching collections');
 
                       case 15:
 
@@ -178,15 +171,15 @@ exports.sourceNodes = function () {
                           break;
                         }
 
-                        throw new Error("No collections were returned, check your config " + (onlyPublished && restrictQueries ? "(onlyPublished && restrictQueries don't work well together)" : ""));
+                        throw new Error('No collections were returned, check your config ' + (onlyPublished && restrictQueries ? "(onlyPublished && restrictQueries don't work well together)" : ''));
 
                       case 18:
 
                         if (verbose) {
-                          console.timeEnd(format("collections query"));
+                          console.timeEnd(format('collections query'));
 
-                          console.log(format("- starting products query"));
-                          console.time(format("products query"));
+                          console.log(format('- starting products query'));
+                          console.time(format('products query'));
                         }
 
                         _context.next = 21;
@@ -200,7 +193,7 @@ exports.sourceNodes = function () {
                           break;
                         }
 
-                        throw new Error("There was an issue fetching products");
+                        throw new Error('There was an issue fetching products');
 
                       case 24:
 
@@ -215,7 +208,7 @@ exports.sourceNodes = function () {
                           });
                         }
 
-                        if (verbose) console.timeEnd(format("products query"));
+                        if (verbose) console.timeEnd(format('products query'));
 
                         if (!(shippingRatesAddress && storefrontApiKey)) {
                           _context.next = 37;
@@ -231,13 +224,13 @@ exports.sourceNodes = function () {
                           break;
                         }
 
-                        throw new Error("No applicable products available, cannot run shipping rates query");
+                        throw new Error('No applicable products available, cannot run shipping rates query');
 
                       case 30:
 
                         if (verbose) {
                           console.log(format("- starting shipping rates query, using Product Variant ID '" + firstAvailableProduct.variants[0].id + "'"));
-                          console.time(format("shipping rates query"));
+                          console.time(format('shipping rates query'));
                         }
 
                         _context.next = 33;
@@ -248,25 +241,25 @@ exports.sourceNodes = function () {
 
 
                         if (verbose) {
-                          console.timeEnd(format("shipping rates query"));
+                          console.timeEnd(format('shipping rates query'));
 
-                          console.log(format("- creating shipping rates nodes"));
-                          console.time(format("shipping rates nodes"));
+                          console.log(format('- creating shipping rates nodes'));
+                          console.time(format('shipping rates nodes'));
                         }
 
                         (0, _shippingRates2.default)(shippingRates, helpers);
 
-                        if (verbose) console.timeEnd(format("shipping rates nodes"));
+                        if (verbose) console.timeEnd(format('shipping rates nodes'));
 
                       case 37:
                         if (!products) {
-                          _context.next = 42;
+                          _context.next = 43;
                           break;
                         }
 
                         if (verbose) {
-                          console.log(format("- creating products nodes"));
-                          console.time(format("products nodes"));
+                          console.log(format('- creating products nodes'));
+                          console.time(format('products nodes'));
                         }
 
                         _context.next = 41;
@@ -275,65 +268,37 @@ exports.sourceNodes = function () {
                         }) : products, helpers, collections);
 
                       case 41:
+                        productNodes = _context.sent;
 
-                        if (verbose) console.timeEnd(format("products nodes"));
 
-                      case 42:
+                        // console.log('productNodes', productNodes)
+
+                        if (verbose) console.timeEnd(format('products nodes'));
+
+                      case 43:
                         if (!collections) {
-                          _context.next = 47;
+                          _context.next = 48;
                           break;
                         }
 
                         if (verbose) {
-                          console.log(format("- creating collections nodes"));
-                          console.time(format("collections nodes"));
+                          console.log(format('- creating collections nodes'));
+                          console.time(format('collections nodes'));
                         }
 
-                        _context.next = 46;
+                        _context.next = 47;
                         return (0, _collections2.default)(collections, helpers);
-
-                      case 46:
-
-                        if (verbose) console.timeEnd(format("collections nodes"));
 
                       case 47:
 
-                        if (verbose) console.time(format("finished type definitions"));
+                        if (verbose) console.timeEnd(format('collections nodes'));
 
-                        // Gatsby tries to infer all the type definitions
-                        // However this doesn't work if fields are set for some products
-                        // i.e. if compareAtPrice is only set on 1 out of 100 products, it is
-                        // unlikely that Gatsby will pick it up as a field
-                        createTypes = actions.createTypes;
-                        typeDefs = "\n      type ShopifyProductVariants implements Node {\n        compareAtPrice: String\n        storefrontId: String\n      }\n    ";
-
-
-                        if (imageMetafields) {
-                          typeDefs += "\n        type ShopifyImage implements Node @infer {\n          id: String\n          altText: String\n          originalSrc: String\n          localFile: File\n        }\n      ";
-                          if (imageMetafields.collection) {
-                            typeDefs += "\n          type ShopifyCollection implements Node {\n            " + imageMetafields.collection.map(function (m) {
-                              return (0, _camelcase2.default)(m) + ": ShopifyImage";
-                            }).join("\n") + "\n          }\n        ";
-                          }
-                        }
-
-                        typeDefs += "\n      type ShopifyProductMetafield implements Node {\n        key: String\n        value: String\n      }\n      type ShopifyCollectionProducts implements Node {\n        metafields: [ShopifyProductMetafield]\n      }\n      type ShopifyProduct implements Node {\n        " + (imageMetafields && imageMetafields.product ? imageMetafields.product.map(function (m) {
-                          return (0, _camelcase2.default)(m) + ": ShopifyImage";
-                        }).join("\n") : "") + "\n          " + (relatedCollectionMetafields ? relatedCollectionMetafields.map(function (m) {
-                          return (0, _camelcase2.default)(m) + ": ShopifyCollection";
-                        }).join("\n") : "") + "\n        handle: String\n      }\n    ";
-                        createTypes(typeDefs);
-
-                        if (verbose) {
-                          console.timeEnd(format("finished type definitions"));
-
-                          console.timeEnd(format("finished"));
-                        }
+                      case 48:
 
                         resolve(true);
 
-                      case 55:
-                      case "end":
+                      case 49:
+                      case 'end':
                         return _context.stop();
                     }
                   }
@@ -346,7 +311,7 @@ exports.sourceNodes = function () {
             }()));
 
           case 2:
-          case "end":
+          case 'end':
             return _context2.stop();
         }
       }
@@ -368,10 +333,10 @@ exports.onPostBootstrap = function () {
           case 0:
             date = new Date();
             _context3.next = 3;
-            return cache.set("lastRun", date.toISOString());
+            return cache.set('lastRun', date.toISOString());
 
           case 3:
-          case "end":
+          case 'end':
             return _context3.stop();
         }
       }
@@ -382,3 +347,78 @@ exports.onPostBootstrap = function () {
     return _ref5.apply(this, arguments);
   };
 }();
+
+exports.createSchemaCustomization = function (_ref7) {
+  var actions = _ref7.actions;
+  var createTypes = actions.createTypes;
+
+  // createFieldExtension({
+  //   name: 'shopifyProduct',
+  //   extend(options, prevFieldConfig) {
+  //     return {
+  //       resolve(source, args, context, info) {
+  //         return context.nodeModel.getNodesByIds({
+  //           ids: source.products, // This matches the name of the field we're currently inside
+  //           type: 'ShopifyProduct' // This matches the type of the wrappers field
+  //         })
+  //       }
+  //     }
+  //   }
+  // })
+
+  // Gatsby tries to infer all the type definitions
+  // However this doesn't work if fields are set for some products
+  // i.e. if compareAtPrice is only set on 1 out of 100 products, it is
+  // unlikely that Gatsby will pick it up as a field
+
+  var typeDefs = '\n    type ShopifyProductVariants implements Node {\n      compareAtPrice: String\n      storefrontId: String\n    }\n    type ShopifyProduct implements Node {\n      relatedPr: ShopifyCollection\n    }\n    type ShopifyProductImages implements Node {\n      localFile: File\n    }\n    type ShopifyProductVariantsImage implements Node {\n      localFile: File\n    }\n    type ShopifyCollection implements Node {\n      products: [ShopifyProduct] @link(by: "id")\n    }\n  ';
+
+  // if (imageMetafields) {
+  // typeDefs += `
+  //   type ShopifyImage implements Node @infer {
+  //     id: String
+  //     altText: String
+  //     originalSrc: String
+  //     localFile: File
+  //   }
+  // `
+  // if (imageMetafields.collection) {
+  //   typeDefs += `
+  //     type ShopifyCollection implements Node {
+  //       ${imageMetafields.collection
+  //         .map((m) => `${camelcase(m)}: ShopifyImage`)
+  //         .join('\n')}
+  //     }
+  //   `
+  // }
+  // }
+
+  // typeDefs += `
+  //   type ShopifyProductMetafield implements Node {
+  //     key: String
+  //     value: String
+  //   }
+  //   type ShopifyCollectionProducts implements Node {
+  //     metafields: [ShopifyProductMetafield]
+  //   }
+  //   type ShopifyProduct implements Node {
+  //     ${
+  //       imageMetafields && imageMetafields.product
+  //         ? imageMetafields.product
+  //             .map((m) => `${camelcase(m)}: ShopifyImage`)
+  //             .join('\n')
+  //         : ''
+  //     }
+  //       ${
+  //         relatedCollectionMetafields
+  //           ? relatedCollectionMetafields
+  //               .map((m) => `${camelcase(m)}: ShopifyCollection`)
+  //               .join('\n')
+  //           : ''
+  //       }
+  //     handle: String
+  //   }
+  // `
+
+  createTypes(typeDefs);
+};

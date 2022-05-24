@@ -1,34 +1,34 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _regenerator = require("babel-runtime/regenerator");
+var _regenerator = require('babel-runtime/regenerator');
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _extends2 = require("babel-runtime/helpers/extends");
+var _extends2 = require('babel-runtime/helpers/extends');
 
 var _extends3 = _interopRequireDefault(_extends2);
 
-var _promise = require("babel-runtime/core-js/promise");
+var _promise = require('babel-runtime/core-js/promise');
 
 var _promise2 = _interopRequireDefault(_promise);
 
-var _asyncToGenerator2 = require("babel-runtime/helpers/asyncToGenerator");
+var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-var _downloadImageNode = require("../helpers/downloadImageNode");
+var _downloadImageNode = require('../helpers/downloadImageNode');
 
 var _downloadImageNode2 = _interopRequireDefault(_downloadImageNode);
 
-var _parseImageMetafields = require("../helpers/parseImageMetafields");
+var _parseImageMetafields = require('../helpers/parseImageMetafields');
 
 var _parseImageMetafields2 = _interopRequireDefault(_parseImageMetafields);
 
-var _parseRelatedCollectionMetafields = require("../helpers/parseRelatedCollectionMetafields");
+var _parseRelatedCollectionMetafields = require('../helpers/parseRelatedCollectionMetafields');
 
 var _parseRelatedCollectionMetafields2 = _interopRequireDefault(_parseRelatedCollectionMetafields);
 
@@ -41,7 +41,7 @@ var products = function () {
       while (1) {
         switch (_context5.prev = _context5.next) {
           case 0:
-            ProductNode = helpers.createNodeFactory("PRODUCT", function () {
+            ProductNode = helpers.createNodeFactory('PRODUCT', function () {
               var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3(node) {
                 return _regenerator2.default.wrap(function _callee3$(_context3) {
                   while (1) {
@@ -70,7 +70,7 @@ var products = function () {
                                     i.localFile___NODE = _context.sent;
 
                                   case 3:
-                                  case "end":
+                                  case 'end':
                                     return _context.stop();
                                 }
                               }
@@ -108,7 +108,7 @@ var products = function () {
                                     v.image.localFile___NODE = _context2.sent;
 
                                   case 3:
-                                  case "end":
+                                  case 'end':
                                     return _context2.stop();
                                 }
                               }
@@ -151,10 +151,10 @@ var products = function () {
                           node.priceRange.maxVariantPrice.amount = node.priceRange.maxVariantPrice.amount / 100;
                         }
 
-                        return _context3.abrupt("return", node);
+                        return _context3.abrupt('return', node);
 
                       case 13:
-                      case "end":
+                      case 'end':
                         return _context3.stop();
                     }
                   }
@@ -165,9 +165,9 @@ var products = function () {
                 return _ref2.apply(this, arguments);
               };
             }());
-            return _context5.abrupt("return", _promise2.default.all(data.map(function () {
+            return _context5.abrupt('return', _promise2.default.all(data.map(function () {
               var _ref5 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4(d) {
-                var node;
+                var node, id;
                 return _regenerator2.default.wrap(function _callee4$(_context4) {
                   while (1) {
                     switch (_context4.prev = _context4.next) {
@@ -189,10 +189,13 @@ var products = function () {
 
                       case 3:
                         node = _context4.sent;
-                        return _context4.abrupt("return", helpers.createNode(node));
+                        id = helpers.createNodeId('PRODUCT' + d.id);
+                        return _context4.abrupt('return', helpers.createNode((0, _extends3.default)({}, node, {
+                          id: id
+                        })));
 
-                      case 5:
-                      case "end":
+                      case 6:
+                      case 'end':
                         return _context4.stop();
                     }
                   }
@@ -205,7 +208,7 @@ var products = function () {
             }())));
 
           case 2:
-          case "end":
+          case 'end':
             return _context5.stop();
         }
       }

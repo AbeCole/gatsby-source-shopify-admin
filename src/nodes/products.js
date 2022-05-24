@@ -1,42 +1,42 @@
-import downloadImageNode from "../helpers/downloadImageNode";
-import parseImageMetafields from "../helpers/parseImageMetafields";
-import parseRelatedCollectionMetafields from "../helpers/parseRelatedCollectionMetafields";
+import downloadImageNode from '../helpers/downloadImageNode'
+import parseImageMetafields from '../helpers/parseImageMetafields'
+import parseRelatedCollectionMetafields from '../helpers/parseRelatedCollectionMetafields'
 
 const products = async (data, helpers, collections) => {
-  const ProductNode = helpers.createNodeFactory("PRODUCT", async node => {
+  const ProductNode = helpers.createNodeFactory('PRODUCT', async (node) => {
     if (node.images) {
       await Promise.all(
-        node.images.map(async i => {
+        node.images.map(async (i) => {
           i.localFile___NODE = await downloadImageNode({
             id: i.id,
             url: i.originalSrc,
             prefix: helpers.TYPE_PREFIX,
             ...helpers
-          });
+          })
         })
-      );
+      )
     }
 
     if (node.variants) {
       await Promise.all(
         node.variants
-          .filter(v => v.image && v.image.originalSrc)
-          .map(async v => {
+          .filter((v) => v.image && v.image.originalSrc)
+          .map(async (v) => {
             v.image.localFile___NODE = await downloadImageNode({
               id: v.image.id,
               url: v.image.originalSrc,
               prefix: helpers.TYPE_PREFIX,
               ...helpers
-            });
+            })
           })
-      );
+      )
     }
 
     if (node.metafields) {
       if (helpers.imageMetafields && helpers.imageMetafields.product) {
         await Promise.all(
           parseImageMetafields(node, helpers.imageMetafields.product, helpers)
-        );
+        )
       }
 
       if (helpers.relatedCollectionMetafields) {
@@ -45,7 +45,7 @@ const products = async (data, helpers, collections) => {
           helpers.relatedCollectionMetafields,
           helpers,
           collections
-        );
+        )
       }
     }
 
@@ -55,28 +55,33 @@ const products = async (data, helpers, collections) => {
     // as that will be more commonly used on the client side
     if (node.priceRange) {
       node.priceRange.minVariantPrice.amount =
-        node.priceRange.minVariantPrice.amount / 100;
+        node.priceRange.minVariantPrice.amount / 100
       node.priceRange.maxVariantPrice.amount =
-        node.priceRange.maxVariantPrice.amount / 100;
+        node.priceRange.maxVariantPrice.amount / 100
     }
 
-    return node;
-  });
+    return node
+  })
 
   return Promise.all(
-    data.map(async d => {
+    data.map(async (d) => {
       d.collections = collections
-        .filter(c => c.products.find(p => p.id === d.id))
-        .map(c => ({
+        .filter((c) => c.products.find((p) => p.id === d.id))
+        .map((c) => ({
           id: c.id,
           handle: c.handle,
           title: c.title
-        }));
+        }))
 
-      const node = await ProductNode(d);
-      return helpers.createNode(node);
+      const node = await ProductNode(d)
+      const id = helpers.createNodeId(`PRODUCT${d.id}`)
+
+      return helpers.createNode({
+        ...node,
+        id
+      })
     })
-  );
-};
+  )
+}
 
-export default products;
+export default products

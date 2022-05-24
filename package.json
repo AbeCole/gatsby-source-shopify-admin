@@ -1,45 +1,45 @@
 {
-    "name": "gatsby-source-shopify-admin",
-    "version": "0.1.28",
-    "description": "Gatsby source plugin for building websites using Shopify's Storefront and Admin Graphql APIs.",
-    "scripts": {
-        "build": "babel src --out-dir .",
-        "format": "prettier --write 'src/**/*.js' README.md",
-        "prepublish": "npm run build",
-        "watch": "npm run build -- --watch"
-    },
-    "homepage": "https://github.com/AbeCole/gatsby-source-shopify-admin",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/AbeCole/gatsby-source-shopify-admin.git"
-    },
-    "keywords": [
-        "gatsby",
-        "gatsby-plugin",
-        "gatsby-source-plugin",
-        "shopify"
-    ],
-    "author": "Abe Cole",
-    "license": "MIT",
-    "devDependencies": {
-        "babel-cli": "^6.26.0",
-        "babel-plugin-transform-async-to-generator": "^6.24.1",
-        "babel-plugin-transform-object-rest-spread": "^6.26.0",
-        "babel-plugin-transform-runtime": "^6.23.0",
-        "babel-preset-env": "^1.7.0",
-        "prettier": "^1.13.0"
-    },
-    "dependencies": {
-        "axios": "^0.21.1",
-        "btoa": "^1.2.1",
-        "chalk": "^2.4.1",
-        "gatsby": "^2.0.19",
-        "gatsby-node-helpers": "^0.3.0",
-        "gatsby-source-filesystem": "^2.3.5",
-        "graphql-request": "^1.6.0",
-        "node-fetch": "^2.6.0",
-        "prettyjson": "^1.2.1",
-        "react": "^16.4.2",
-        "react-dom": "^16.4.2"
-    }
+  "name": "gatsby-source-shopify-admin",
+  "version": "0.1.28",
+  "description": "Gatsby source plugin for building websites using Shopify's Storefront and Admin Graphql APIs.",
+  "scripts": {
+    "build": "babel src --out-dir .",
+    "format": "prettier --write 'src/**/*.js' README.md",
+    "prepublish": "npm run build",
+    "watch": "npm run build -- --watch"
+  },
+  "homepage": "https://github.com/AbeCole/gatsby-source-shopify-admin",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AbeCole/gatsby-source-shopify-admin.git"
+  },
+  "keywords": [
+    "gatsby",
+    "gatsby-plugin",
+    "gatsby-source-plugin",
+    "shopify"
+  ],
+  "author": "Abe Cole",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.7.0",
+    "prettier": "^2.6.2"
+  },
+  "dependencies": {
+    "axios": "^0.27.2",
+    "btoa": "^1.2.1",
+    "chalk": "^5.0.1",
+    "gatsby": "^4.14.1",
+    "gatsby-node-helpers": "^1.2.1",
+    "gatsby-source-filesystem": "^4.14.0",
+    "graphql-request": "^4.2.0",
+    "isomorphic-unfetch": "^3.1.0",
+    "prettyjson": "^1.2.5",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0"
+  }
 }

@@ -3,16 +3,51 @@ import parseImageMetafields from '../helpers/parseImageMetafields'
 import parseRelatedCollectionMetafields from '../helpers/parseRelatedCollectionMetafields'
 
 const products = async (data, helpers, collections) => {
-  const ProductNode = helpers.createNodeFactory('PRODUCT', async (node) => {
+  const createProductNode = helpers.createNodeFactory('PRODUCT')
+
+  const createImageNode = helpers.createNodeFactory('IMAGE')
+  const createImageNodes = (nodeId, node) => {
+    const n = createImageNode(node)
+    helpers.createNode({
+      ...n,
+      id: nodeId
+    })
+    return nodeId
+  }
+  const createVariantNode = helpers.createNodeFactory('PRODUCTVARIANT')
+  const createVariantNodes = (nodeId, node) => {
+    const n = createVariantNode(node)
+    helpers.createNode({
+      ...n,
+      id: nodeId
+    })
+    return nodeId
+  }
+
+  const transformData = async (nodeId, node) => {
+    node.collections = collections
+      .filter((c) => c.products.find((p) => p.id === node.id))
+      .map((c) => ({
+        id: c.id,
+        handle: c.handle,
+        title: c.title
+      }))
+
     if (node.images) {
       await Promise.all(
         node.images.map(async (i) => {
-          i.localFile___NODE = await downloadImageNode({
+          const imageNodeId = helpers.createNodeId(i.id)
+          const imageNode = await downloadImageNode({
             id: i.id,
+            parentNodeId: imageNodeId,
             url: i.originalSrc,
             prefix: helpers.TYPE_PREFIX,
             ...helpers
           })
+          i.localFile = {
+            id: imageNode.id
+          }
+          return createImageNodes(imageNodeId, i)
         })
       )
     }
@@ -21,13 +56,21 @@ const products = async (data, helpers, collections) => {
       await Promise.all(
         node.variants
           .filter((v) => v.image && v.image.originalSrc)
-          .map(async (v) => {
-            v.image.localFile___NODE = await downloadImageNode({
-              id: v.image.id,
-              url: v.image.originalSrc,
+          .map(async (variant) => {
+            const variantImageNodeId = helpers.createNodeId(variant.image.id)
+            const imageNode = await downloadImageNode({
+              id: variant.image.id,
+              parentNodeId: variantImageNodeId,
+              url: variant.image.originalSrc,
               prefix: helpers.TYPE_PREFIX,
               ...helpers
             })
+            variant.image.localFile = {
+              id: imageNode.id
+            }
+            return createImageNodes(variantImageNodeId, variant.image)
+            // const variantNodeId = helpers.createNodeId(variant.id)
+            // return createVariantNodes(variantNodeId, variant)
           })
       )
     }
@@ -61,20 +104,13 @@ const products = async (data, helpers, collections) => {
     }
 
     return node
-  })
+  }
 
   return Promise.all(
     data.map(async (d) => {
-      d.collections = collections
-        .filter((c) => c.products.find((p) => p.id === d.id))
-        .map((c) => ({
-          id: c.id,
-          handle: c.handle,
-          title: c.title
-        }))
-
-      const node = await ProductNode(d)
       const id = helpers.createNodeId(`PRODUCT${d.id}`)
+      const transformedData = await transformData(id, d)
+      const node = await createProductNode(transformedData)
 
       return helpers.createNode({
         ...node,

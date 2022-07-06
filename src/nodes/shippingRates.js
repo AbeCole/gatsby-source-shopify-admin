@@ -1,17 +1,19 @@
 const shippingRates = async (data, helpers) => {
-  const ShippingRateNode = helpers.createNodeFactory("SHIPPINGRATE", async node => {
-    return node;
-  });
-
-  if (data.length && Array.isArray(data)) {
-    data.forEach(async d => {
-      d.id = d.handle;
-      const node = await ShippingRateNode(d);
-      helpers.createNode(node);
-    });
+  const ShippingRateNode = helpers.createNodeFactory('SHIPPINGRATE')
+  const transformData = async (node) => {
+    return node
   }
 
-  return true;
-};
+  if (data.length && Array.isArray(data)) {
+    data.forEach(async (d) => {
+      d.id = d.handle
+      const transformedData = transformData(d)
+      const node = await ShippingRateNode(transformedData)
+      helpers.createNode(node)
+    })
+  }
 
-export default shippingRates;
+  return true
+}
+
+export default shippingRates

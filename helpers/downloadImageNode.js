@@ -22,6 +22,7 @@ var downloadImageNode = function () {
         url = _ref2.url,
         createNode = _ref2.createNode,
         createNodeId = _ref2.createNodeId,
+        getCache = _ref2.getCache,
         getNode = _ref2.getNode,
         touchNode = _ref2.touchNode,
         store = _ref2.store,
@@ -54,39 +55,51 @@ var downloadImageNode = function () {
             return _context.abrupt('return', node);
 
           case 10:
-            _context.next = 12;
+            _context.prev = 10;
+            _context.next = 13;
             return (0, _gatsbySourceFilesystem.createRemoteFileNode)({
               url: url,
               store: store,
               cache: cache,
               createNode: createNode,
-              createNodeId: createNodeId
+              createNodeId: createNodeId,
+              getCache: getCache
             });
 
-          case 12:
+          case 13:
             fileNode = _context.sent;
 
             if (!fileNode) {
-              _context.next = 18;
+              _context.next = 19;
               break;
             }
 
             fileNodeID = fileNode.id;
-            _context.next = 17;
+            _context.next = 18;
             return cache.set(mediaDataCacheKey, { fileNodeID: fileNodeID });
 
-          case 17:
+          case 18:
             return _context.abrupt('return', fileNode);
 
-          case 18:
+          case 19:
+            _context.next = 24;
+            break;
+
+          case 21:
+            _context.prev = 21;
+            _context.t0 = _context['catch'](10);
+
+            console.error('downloadImageNode error', _context.t0);
+
+          case 24:
             return _context.abrupt('return', undefined);
 
-          case 19:
+          case 25:
           case 'end':
             return _context.stop();
         }
       }
-    }, _callee, undefined);
+    }, _callee, undefined, [[10, 21]]);
   }));
 
   return function downloadImageNode(_x) {

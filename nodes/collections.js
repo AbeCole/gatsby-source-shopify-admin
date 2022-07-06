@@ -32,19 +32,22 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var collections = function () {
   var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3(data, helpers) {
-    var CollectionNode;
+    var CollectionNode, transformData;
     return _regenerator2.default.wrap(function _callee3$(_context3) {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
-            CollectionNode = helpers.createNodeFactory('COLLECTION', function () {
-              var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(node) {
+            CollectionNode = helpers.createNodeFactory('COLLECTION');
+
+            transformData = function () {
+              var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(nodeId, node) {
+                var imageNode;
                 return _regenerator2.default.wrap(function _callee$(_context) {
                   while (1) {
                     switch (_context.prev = _context.next) {
                       case 0:
                         if (!node.image) {
-                          _context.next = 4;
+                          _context.next = 5;
                           break;
                         }
 
@@ -52,25 +55,30 @@ var collections = function () {
                         return (0, _downloadImageNode2.default)((0, _extends3.default)({
                           id: node.image.id,
                           url: node.image.src,
+                          parentNodeId: nodeId,
                           prefix: helpers.TYPE_PREFIX
                         }, helpers));
 
                       case 3:
-                        node.image.localFile___NODE = _context.sent;
+                        imageNode = _context.sent;
 
-                      case 4:
+                        node.image.localFile = {
+                          id: imageNode.id
+                        };
+
+                      case 5:
                         if (!(node.metafields && helpers.imageMetafields && helpers.imageMetafields.collection)) {
-                          _context.next = 7;
+                          _context.next = 8;
                           break;
                         }
 
-                        _context.next = 7;
+                        _context.next = 8;
                         return _promise2.default.all((0, _parseImageMetafields2.default)(node, helpers.imageMetafields.collection, helpers));
 
-                      case 7:
+                      case 8:
                         return _context.abrupt('return', node);
 
-                      case 8:
+                      case 9:
                       case 'end':
                         return _context.stop();
                     }
@@ -78,13 +86,14 @@ var collections = function () {
                 }, _callee, undefined);
               }));
 
-              return function (_x3) {
+              return function transformData(_x3, _x4) {
                 return _ref2.apply(this, arguments);
               };
-            }());
+            }();
+
             return _context3.abrupt('return', _promise2.default.all(data.map(function () {
               var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(d) {
-                var node;
+                var id, transformedData, node;
                 return _regenerator2.default.wrap(function _callee2$(_context2) {
                   while (1) {
                     switch (_context2.prev = _context2.next) {
@@ -95,14 +104,22 @@ var collections = function () {
                           });
                         }
 
-                        _context2.next = 3;
-                        return CollectionNode(d);
+                        id = helpers.createNodeId('COLLECTION' + d.id);
+                        _context2.next = 4;
+                        return transformData(id, d);
 
-                      case 3:
+                      case 4:
+                        transformedData = _context2.sent;
+                        _context2.next = 7;
+                        return CollectionNode(transformedData);
+
+                      case 7:
                         node = _context2.sent;
-                        return _context2.abrupt('return', helpers.createNode(node));
+                        return _context2.abrupt('return', helpers.createNode((0, _extends3.default)({}, node, {
+                          id: id
+                        })));
 
-                      case 5:
+                      case 9:
                       case 'end':
                         return _context2.stop();
                     }
@@ -110,12 +127,12 @@ var collections = function () {
                 }, _callee2, undefined);
               }));
 
-              return function (_x4) {
+              return function (_x5) {
                 return _ref3.apply(this, arguments);
               };
             }())));
 
-          case 2:
+          case 3:
           case 'end':
             return _context3.stop();
         }

@@ -3,27 +3,26 @@
 ======================================================== */
 
 import { GraphQLClient } from 'graphql-request'
-// import chalk from 'chalk'
-import { createNodeHelpers } from 'gatsby-node-helpers'
+// import { createNodeHelpers } from 'gatsby-node-helpers'
+const { createNodeHelpers } = require('gatsby-node-helpers')
 import collectionsQuery from './queries/collectionsQuery'
 import productsQuery from './queries/productsQuery'
 import shippingRatesQuery from './queries/shippingRatesQuery'
 import createCollectionNodes from './nodes/collections'
 import createProductNodes from './nodes/products'
 import createShippingRateNodes from './nodes/shippingRates'
-import camelcase from './helpers/camelcase'
 
 const TYPE_PREFIX = 'shopify'
 
 exports.sourceNodes = async (
   {
-    // boundActionCreators: { createNode, touchNode },
     store,
     cache,
     createNodeId,
     createContentDigest,
     actions,
-    getNode
+    getNode,
+    getCache
   },
   {
     storeName,
@@ -40,9 +39,7 @@ exports.sourceNodes = async (
 ) => {
   const { createNode, touchNode } = actions
 
-  return new Promise(async (resolve, reject) => {
-    // const format = (msg) =>
-    //   chalk.blue(`{blue gatsby-source-shopify-admin/${storeName}} ${msg}`)
+  return new Promise(async (resolve) => {
     const format = (msg) =>
       `-- gatsby-source-shopify-admin/${storeName} -- ${msg}`
 
@@ -71,7 +68,6 @@ exports.sourceNodes = async (
       TYPE_PREFIX,
       ...nodeHelpers
     }
-    let imageHelpers = { ...nodeHelpers, store, cache, imageMetafields }
 
     const helpers = {
       store,
@@ -79,6 +75,7 @@ exports.sourceNodes = async (
       createNodeFactory,
       createNode,
       createNodeId,
+      getCache,
       getNode,
       touchNode,
       TYPE_PREFIX,
@@ -230,20 +227,24 @@ exports.createSchemaCustomization = ({ actions }) => {
     type ShopifyProductVariants implements Node {
       compareAtPrice: String
       storefrontId: String
+      image: ShopifyImage
+    }
+    type ShopifyImage implements Node {
+      localFile: File @link(from: "localFile.id")
     }
     type ShopifyProduct implements Node {
+      images: [ShopifyImage]
+      variants: [ShopifyProductVariants]
       relatedPr: ShopifyCollection
-    }
-    type ShopifyProductImages implements Node {
-      localFile: File
     }
     type ShopifyProductVariantsImage implements Node {
       localFile: File
     }
     type ShopifyCollection implements Node {
+      image: ShopifyImage
       products: [ShopifyProduct] @link(by: "id")
     }
-  `
+    `
 
   // if (imageMetafields) {
   // typeDefs += `

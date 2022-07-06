@@ -5,6 +5,7 @@ const downloadImageNode = async ({
   url,
   createNode,
   createNodeId,
+  getCache,
   getNode,
   touchNode,
   store,
@@ -24,24 +25,34 @@ const downloadImageNode = async ({
     return node
   }
 
-  // try {
-  const fileNode = await createRemoteFileNode({
-    url,
-    store,
-    cache,
-    createNode,
-    createNodeId
-  })
+  // fileNode = await createRemoteFileNode({
+  //   url: node.source_url,
+  //   parentNodeId: node.id,
+  //   getCache,
+  //   createNode,
+  //   createNodeId,
+  //   auth: _auth,
+  // })
 
-  if (fileNode) {
-    fileNodeID = fileNode.id
-    await cache.set(mediaDataCacheKey, { fileNodeID })
+  try {
+    const fileNode = await createRemoteFileNode({
+      url,
+      store,
+      cache,
+      createNode,
+      createNodeId,
+      getCache
+    })
 
-    return fileNode
+    if (fileNode) {
+      fileNodeID = fileNode.id
+      await cache.set(mediaDataCacheKey, { fileNodeID })
+
+      return fileNode
+    }
+  } catch (e) {
+    console.error('downloadImageNode error', e)
   }
-  // } catch(e) {
-  //     console.error('Logging error', e);
-  // }
 
   return undefined
 }

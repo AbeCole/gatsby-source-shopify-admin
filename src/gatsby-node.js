@@ -47,7 +47,7 @@ exports.sourceNodes = async (
       console.log(format('starting: shopify queries > node creation'))
 
     const client = new GraphQLClient(
-      `https://${storeName}.myshopify.com/admin/api/2020-04/graphql.json`,
+      `https://${storeName}.myshopify.com/admin/api/2023-07/graphql.json`,
       {
         headers: {
           'X-Shopify-Access-Token': apiKey

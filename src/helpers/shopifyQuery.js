@@ -1,7 +1,7 @@
 const shopifyQuery = (client, query) =>
-  client.rawRequest(query).catch(error => {
+  client.rawRequest(query).catch((error) => {
     // todo: handle error here
-    console.log("shopifyQuery error: ", error);
-  });
+    console.log('shopifyQuery Error: ', error, ' - Query: ', query)
+  })
 
-export default shopifyQuery;
+export default shopifyQuery

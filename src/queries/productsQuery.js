@@ -47,7 +47,7 @@ const productsQuery = async (props) => {
                 namespace
                 key
                 value
-                valueType
+                type
                 description
               }
             }
@@ -79,7 +79,7 @@ const productsQuery = async (props) => {
                       namespace
                       key
                       value
-                      valueType
+                      type
                       description
                     }
                   }

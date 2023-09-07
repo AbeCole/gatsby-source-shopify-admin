@@ -35,7 +35,7 @@ const collectionsQuery = async (props, restrictedQuery = false) => {
                 namespace
                 key
                 value
-                valueType
+                type
                 description
               }
             }

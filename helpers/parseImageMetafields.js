@@ -29,7 +29,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var parseImageMetafields = function parseImageMetafields(node, fields, helpers) {
   return fields.map(function () {
     var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(metafieldKey) {
-      var metafield, fileNodeId;
+      var metafield, fileNode;
       return _regenerator2.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -41,7 +41,7 @@ var parseImageMetafields = function parseImageMetafields(node, fields, helpers) 
               // this was added because if you passed a non-valid URL to 'downloadImageAndCreateFileNode'
               // it would throw an error and stop the build process
 
-              if (!(!metafield || !metafield.value.startsWith("http"))) {
+              if (!(!metafield || !metafield.value.startsWith('http'))) {
                 _context.next = 3;
                 break;
               }
@@ -57,13 +57,15 @@ var parseImageMetafields = function parseImageMetafields(node, fields, helpers) 
               }, helpers));
 
             case 5:
-              fileNodeId = _context.sent;
+              fileNode = _context.sent;
 
-              if (fileNodeId) {
+              if (fileNode) {
                 node[(0, _camelcase2.default)(metafieldKey)] = {
                   id: metafield.id,
                   originalSrc: metafield.value,
-                  localFile___NODE: fileNodeId
+                  localFile: {
+                    id: fileNode.id
+                  }
                 };
               }
 

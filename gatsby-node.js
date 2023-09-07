@@ -97,7 +97,7 @@ exports.sourceNodes = function () {
 
                         if (verbose) console.log(format('starting: shopify queries > node creation'));
 
-                        client = new _graphqlRequest.GraphQLClient('https://' + storeName + '.myshopify.com/admin/api/2020-04/graphql.json', {
+                        client = new _graphqlRequest.GraphQLClient('https://' + storeName + '.myshopify.com/admin/api/2023-07/graphql.json', {
                           headers: {
                             'X-Shopify-Access-Token': apiKey
                           }

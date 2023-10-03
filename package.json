@@ -11,7 +11,7 @@
   "homepage": "https://github.com/AbeCole/gatsby-source-shopify-admin",
   "repository": {
     "type": "git",
-    "url": "https://github.com/AbeCole/gatsby-source-shopify-admin.git"
+    "url": "git+https://github.com/AbeCole/gatsby-source-shopify-admin.git"
   },
   "keywords": [
     "gatsby",

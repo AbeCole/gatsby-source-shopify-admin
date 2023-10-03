@@ -44,8 +44,10 @@ const products = async (data, helpers, collections) => {
             prefix: helpers.TYPE_PREFIX,
             ...helpers
           })
-          i.localFile = {
-            id: imageNode.id
+          if (imageNode) {
+            i.localFile = {
+              id: imageNode.id
+            }
           }
           return createImageNodes(imageNodeId, i)
         })

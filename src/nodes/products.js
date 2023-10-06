@@ -67,8 +67,10 @@ const products = async (data, helpers, collections) => {
               prefix: helpers.TYPE_PREFIX,
               ...helpers
             })
-            variant.image.localFile = {
-              id: imageNode.id
+            if (imageNode) {
+              variant.image.localFile = {
+                id: imageNode.id
+              }
             }
             return createImageNodes(variantImageNodeId, variant.image)
             // const variantNodeId = helpers.createNodeId(variant.id)

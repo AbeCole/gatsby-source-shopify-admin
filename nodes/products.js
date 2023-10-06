@@ -153,9 +153,11 @@ var products = function () {
                                   case 3:
                                     imageNode = _context2.sent;
 
-                                    variant.image.localFile = {
-                                      id: imageNode.id
-                                    };
+                                    if (imageNode) {
+                                      variant.image.localFile = {
+                                        id: imageNode.id
+                                      };
+                                    }
                                     return _context2.abrupt('return', createImageNodes(variantImageNodeId, variant.image));
 
                                   case 6:

@@ -105,6 +105,7 @@ var products = function () {
                                   case 3:
                                     imageNode = _context.sent;
 
+
                                     if (imageNode) {
                                       i.localFile = {
                                         id: imageNode.id

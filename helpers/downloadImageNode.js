@@ -43,20 +43,25 @@ var downloadImageNode = function () {
             cacheMediaData = _context.sent;
 
             if (!cacheMediaData) {
-              _context.next = 10;
+              _context.next = 11;
               break;
             }
 
             fileNodeID = cacheMediaData.fileNodeID;
             node = getNode(fileNodeID);
 
+            if (!node) {
+              _context.next = 11;
+              break;
+            }
+
             touchNode(node);
 
             return _context.abrupt('return', node);
 
-          case 10:
-            _context.prev = 10;
-            _context.next = 13;
+          case 11:
+            _context.prev = 11;
+            _context.next = 14;
             return (0, _gatsbySourceFilesystem.createRemoteFileNode)({
               url: url,
               store: store,
@@ -66,40 +71,40 @@ var downloadImageNode = function () {
               getCache: getCache
             });
 
-          case 13:
+          case 14:
             fileNode = _context.sent;
 
             if (!fileNode) {
-              _context.next = 19;
+              _context.next = 20;
               break;
             }
 
             fileNodeID = fileNode.id;
-            _context.next = 18;
+            _context.next = 19;
             return cache.set(mediaDataCacheKey, { fileNodeID: fileNodeID });
 
-          case 18:
+          case 19:
             return _context.abrupt('return', fileNode);
 
-          case 19:
-            _context.next = 24;
+          case 20:
+            _context.next = 25;
             break;
 
-          case 21:
-            _context.prev = 21;
-            _context.t0 = _context['catch'](10);
+          case 22:
+            _context.prev = 22;
+            _context.t0 = _context['catch'](11);
 
             console.error('downloadImageNode error', _context.t0);
 
-          case 24:
+          case 25:
             return _context.abrupt('return', undefined);
 
-          case 25:
+          case 26:
           case 'end':
             return _context.stop();
         }
       }
-    }, _callee, undefined, [[10, 21]]);
+    }, _callee, undefined, [[11, 22]]);
   }));
 
   return function downloadImageNode(_x) {

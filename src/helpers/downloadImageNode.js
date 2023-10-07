@@ -20,9 +20,11 @@ const downloadImageNode = async ({
   if (cacheMediaData) {
     fileNodeID = cacheMediaData.fileNodeID
     const node = getNode(fileNodeID)
-    touchNode(node)
+    if (node) {
+      touchNode(node)
 
-    return node
+      return node
+    }
   }
 
   // fileNode = await createRemoteFileNode({

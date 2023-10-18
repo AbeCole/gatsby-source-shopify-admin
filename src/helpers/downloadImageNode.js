@@ -19,7 +19,6 @@ const downloadImageNode = async ({
   
   if (cacheMediaData) {
     fileNodeID = cacheMediaData.file
-    NodeID
     const node = getNode(fileNodeID)
     if (node) {
       node.children = []

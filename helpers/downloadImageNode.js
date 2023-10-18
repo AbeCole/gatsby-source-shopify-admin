@@ -43,16 +43,15 @@ var downloadImageNode = function () {
             cacheMediaData = _context.sent;
 
             if (!cacheMediaData) {
-              _context.next = 13;
+              _context.next = 12;
               break;
             }
 
             fileNodeID = cacheMediaData.file;
-            NodeID;
             node = getNode(fileNodeID);
 
             if (!node) {
-              _context.next = 13;
+              _context.next = 12;
               break;
             }
 
@@ -61,9 +60,9 @@ var downloadImageNode = function () {
 
             return _context.abrupt('return', node);
 
-          case 13:
-            _context.prev = 13;
-            _context.next = 16;
+          case 12:
+            _context.prev = 12;
+            _context.next = 15;
             return (0, _gatsbySourceFilesystem.createRemoteFileNode)({
               url: url,
               store: store,
@@ -74,40 +73,40 @@ var downloadImageNode = function () {
               getCache: getCache
             });
 
-          case 16:
+          case 15:
             fileNode = _context.sent;
 
             if (!fileNode) {
-              _context.next = 22;
+              _context.next = 21;
               break;
             }
 
             fileNodeID = fileNode.id;
-            _context.next = 21;
+            _context.next = 20;
             return cache.set(mediaDataCacheKey, { fileNodeID: fileNodeID });
 
-          case 21:
+          case 20:
             return _context.abrupt('return', fileNode);
 
-          case 22:
-            _context.next = 27;
+          case 21:
+            _context.next = 26;
             break;
 
-          case 24:
-            _context.prev = 24;
-            _context.t0 = _context['catch'](13);
+          case 23:
+            _context.prev = 23;
+            _context.t0 = _context['catch'](12);
 
             console.error('downloadImageNode error', _context.t0);
 
-          case 27:
+          case 26:
             return _context.abrupt('return', undefined);
 
-          case 28:
+          case 27:
           case 'end':
             return _context.stop();
         }
       }
-    }, _callee, undefined, [[13, 24]]);
+    }, _callee, undefined, [[12, 23]]);
   }));
 
   return function downloadImageNode(_x) {

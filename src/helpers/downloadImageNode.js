@@ -1,10 +1,10 @@
 import { createRemoteFileNode } from 'gatsby-source-filesystem'
 
 const downloadImageNode = async ({
-  id,
   url,
   createNode,
   createNodeId,
+  parentNodeId,
   getCache,
   getNode,
   touchNode,
@@ -16,25 +16,18 @@ const downloadImageNode = async ({
 
   const mediaDataCacheKey = `${prefix}__Media__${url}`
   const cacheMediaData = await cache.get(mediaDataCacheKey)
-
+  
   if (cacheMediaData) {
-    fileNodeID = cacheMediaData.fileNodeID
+    fileNodeID = cacheMediaData.file
+    NodeID
     const node = getNode(fileNodeID)
     if (node) {
+      node.children = []
       touchNode(node)
 
       return node
     }
   }
-
-  // fileNode = await createRemoteFileNode({
-  //   url: node.source_url,
-  //   parentNodeId: node.id,
-  //   getCache,
-  //   createNode,
-  //   createNodeId,
-  //   auth: _auth,
-  // })
 
   try {
     const fileNode = await createRemoteFileNode({
@@ -43,13 +36,13 @@ const downloadImageNode = async ({
       cache,
       createNode,
       createNodeId,
+      parentNodeId,
       getCache
     })
 
     if (fileNode) {
       fileNodeID = fileNode.id
       await cache.set(mediaDataCacheKey, { fileNodeID })
-
       return fileNode
     }
   } catch (e) {

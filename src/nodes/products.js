@@ -14,15 +14,15 @@ const products = async (data, helpers, collections) => {
     })
     return nodeId
   }
-  const createVariantNode = helpers.createNodeFactory('PRODUCTVARIANT')
-  const createVariantNodes = (nodeId, node) => {
-    const n = createVariantNode(node)
-    helpers.createNode({
-      ...n,
-      id: nodeId
-    })
-    return nodeId
-  }
+  // const createVariantNode = helpers.createNodeFactory('PRODUCTVARIANT')
+  // const createVariantNodes = (nodeId, node) => {
+  //   const n = createVariantNode(node)
+  //   helpers.createNode({
+  //     ...n,
+  //     id: nodeId
+  //   })
+  //   return nodeId
+  // }
 
   const transformData = async (nodeId, node) => {
     node.collections = collections
@@ -46,6 +46,7 @@ const products = async (data, helpers, collections) => {
           })
 
           if (imageNode) {
+            // createNodeField({ node, name: "localFile", value: fileNode.id })
             i.localFile = {
               id: imageNode.id
             }

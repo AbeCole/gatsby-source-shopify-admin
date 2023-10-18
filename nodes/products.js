@@ -36,7 +36,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var products = function () {
   var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee5(data, helpers, collections) {
-    var createProductNode, createImageNode, createImageNodes, createVariantNode, createVariantNodes, transformData;
+    var createProductNode, createImageNode, createImageNodes, transformData;
     return _regenerator2.default.wrap(function _callee5$(_context5) {
       while (1) {
         switch (_context5.prev = _context5.next) {
@@ -51,16 +51,15 @@ var products = function () {
               }));
               return nodeId;
             };
-
-            createVariantNode = helpers.createNodeFactory('PRODUCTVARIANT');
-
-            createVariantNodes = function createVariantNodes(nodeId, node) {
-              var n = createVariantNode(node);
-              helpers.createNode((0, _extends3.default)({}, n, {
-                id: nodeId
-              }));
-              return nodeId;
-            };
+            // const createVariantNode = helpers.createNodeFactory('PRODUCTVARIANT')
+            // const createVariantNodes = (nodeId, node) => {
+            //   const n = createVariantNode(node)
+            //   helpers.createNode({
+            //     ...n,
+            //     id: nodeId
+            //   })
+            //   return nodeId
+            // }
 
             transformData = function () {
               var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3(nodeId, node) {
@@ -107,6 +106,7 @@ var products = function () {
 
 
                                     if (imageNode) {
+                                      // createNodeField({ node, name: "localFile", value: fileNode.id })
                                       i.localFile = {
                                         id: imageNode.id
                                       };
@@ -258,7 +258,7 @@ var products = function () {
               };
             }())));
 
-          case 7:
+          case 5:
           case 'end':
             return _context5.stop();
         }

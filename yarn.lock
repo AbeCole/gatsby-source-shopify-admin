@@ -2842,9 +2842,9 @@ axios@^0.21.1:
     follow-redirects "^1.14.0"
 
 axios@^0.31.0:
-  version "0.31.0"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-0.31.0.tgz#cd2c9a365d12e4324398834b06abc0d8af767ba6"
-  integrity sha512-HGIUj/P74co3rSLBV9SHz9LMgCmrXFEtkfMcC5r6bS5j3dBHUcAje2tS4fmU6WM20kuhvUX04XE58594dpgi1g==
+  version "0.31.1"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-0.31.1.tgz#05b4c8f99e0b6f897708c74d6788d7535c6ac0c3"
+  integrity sha512-Ef8DUZSZQP6igY48mjGaoEjwhely97lserep0IFJifBH4YdKvwH5eMLniy3kig2HQoBNR8EkZpDjowxwTJcmbg==
   dependencies:
     follow-redirects "^1.15.4"
     form-data "^4.0.4"
